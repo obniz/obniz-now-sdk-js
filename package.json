@@ -1,0 +1,50 @@
+{
+  "name": "@obniz/obniz-now-sdk",
+  "version": "0.1.0",
+  "description": "Official TypeScript/JavaScript SDK for Obniz Now API",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "generate": "openapi-generator-cli generate -i openapi/full-spec-en.json -g typescript-fetch -o src/sdk-core --additional-properties=typescriptThreePlus=true,supportsES6=true,useSingleRequestParameter=true,prefixParameterInterfaces=true,withoutRuntimeChecks=true",
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build",
+    "typecheck": "tsc --noEmit"
+  },
+  "author": "Obniz",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/obniz/obniz-now-sdk-js.git"
+  },
+  "keywords": [
+    "obniz"
+  ],
+  "bugs": {
+    "url": "https://forum.obniz.com"
+  },
+  "homepage": "https://obniz.com/",
+  "private": true,
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.28.3",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.3.0",
+    "rollup": "4.41.1"
+  }
+}

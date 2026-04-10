@@ -17,7 +17,6 @@ import {
   ThreadsApi,
   UnitsApi,
 } from "./sdk-core";
-import { wrapApiWithErrorHandling } from "./ObnizNowApiError";
 
 // Internal use only
 export interface CookieAuthOptions {
@@ -43,38 +42,36 @@ type WithCookies = {
 export type ObnizNowTokenOptions = BaseOptions & WithoutCookies;
 export type ObnizNowCookiesOptions = BaseOptions & WithCookies;
 
-export type ObnizNowOptions = 
-  | (BaseOptions & WithoutCookies)
-  | (BaseOptions & WithCookies);
+export type ObnizNowOptions = (BaseOptions & WithoutCookies) | (BaseOptions & WithCookies);
 
 /**
  * ObnizNow SDK main class
- * 
+ *
  * Provides access to all Obniz Now API endpoints.
- * 
+ *
  * @example
  * ```typescript
  * import { ObnizNow } from '@obniz/sdk';
- * 
+ *
  * // Initialize with your API token
- * const client = new ObnizNow({ 
- *   token: 'your-api-token' 
+ * const client = new ObnizNow({
+ *   token: 'your-api-token'
  * });
- * 
+ *
  * // List machines
  * const machines = await client.machines.listMachines({ limit: 10 });
- * 
+ *
  * // Get analytics results
  * const analytics = await client.analytics.getAnalyticsResults(
  *   'basic_statistics',
  *   'machine-123'
  * );
  * ```
- * 
+ *
  * @example
  * ```typescript
  * // Custom base URL for local development
- * const devClient = new ObnizNow({ 
+ * const devClient = new ObnizNow({
  *   token: 'your-token',
  *   baseUrl: 'http://localhost:8080'
  * });
@@ -83,62 +80,62 @@ export type ObnizNowOptions =
 export class ObnizNow {
   /** Analytics API - Execute and retrieve analytics results */
   public readonly analytics: AnalyticsApi;
-  
+
   /** Connection Models API - Manage connection model configurations */
   public readonly connectionModels: ConnectionModelsApi;
-  
+
   /** Connections API - Manage machine connections */
   public readonly connections: ConnectionsApi;
-  
+
   /** Events API - Access event data and history */
   public readonly events: EventsApi;
-  
+
   /** Groups API - Organize machines into groups */
   public readonly groups: GroupsApi;
-  
+
   /** Inbound Connections API - Manage inbound data connections */
   public readonly inboundConnections: InboundConnectionsApi;
-  
+
   /** Inbound Sources API - Configure data sources */
   public readonly inboundSources: InboundSourcesApi;
-  
+
   /** Integrations API - Manage third-party integrations */
   public readonly integrations: IntegrationsApi;
-  
+
   /** Intelligences API - AI and intelligence features */
   public readonly intelligences: IntelligencesApi;
-  
+
   /** Issues API - Track and manage issues */
   public readonly issues: IssuesApi;
-  
+
   /** Machine API - Single machine operations */
   public readonly machine: MachineApi;
-  
+
   /** Machines API - Machine management and operations */
   public readonly machines: MachinesApi;
-  
+
   /** Notifications API - Manage notification settings */
   public readonly notifications: NotificationsApi;
-  
+
   /** Reports API - Generate and retrieve reports */
   public readonly reports: ReportsApi;
-  
+
   /** Threads API - Discussion threads and communications */
   public readonly threads: ThreadsApi;
-  
+
   /** Units API - Unit data and state management */
   public readonly units: UnitsApi;
 
   /**
    * Creates a new ObnizNow SDK client instance
-   * 
+   *
    * @param options - Configuration options
    * @param options.token - API authentication token (required)
    * @param options.baseUrl - Base URL for API requests (optional, defaults to 'https://api.obniz.com')
    * @param options.fetch - Custom fetch implementation (optional, for Node.js < 18 or custom scenarios)
-   * 
+   *
    * @throws {Error} When token is not provided
-   * 
+   *
    * @example
    * ```typescript
    * const client = new ObnizNow({ token: 'your-api-token' });
@@ -180,22 +177,21 @@ export class ObnizNow {
       credentials: cookies ? "include" : undefined,
     });
 
-    // Wrap all APIs with automatic error handling
-    this.analytics = wrapApiWithErrorHandling(new AnalyticsApi(config));
-    this.connectionModels = wrapApiWithErrorHandling(new ConnectionModelsApi(config));
-    this.connections = wrapApiWithErrorHandling(new ConnectionsApi(config));
-    this.events = wrapApiWithErrorHandling(new EventsApi(config));
-    this.groups = wrapApiWithErrorHandling(new GroupsApi(config));
-    this.inboundConnections = wrapApiWithErrorHandling(new InboundConnectionsApi(config));
-    this.inboundSources = wrapApiWithErrorHandling(new InboundSourcesApi(config));
-    this.integrations = wrapApiWithErrorHandling(new IntegrationsApi(config));
-    this.intelligences = wrapApiWithErrorHandling(new IntelligencesApi(config));
-    this.issues = wrapApiWithErrorHandling(new IssuesApi(config));
-    this.machine = wrapApiWithErrorHandling(new MachineApi(config));
-    this.machines = wrapApiWithErrorHandling(new MachinesApi(config));
-    this.notifications = wrapApiWithErrorHandling(new NotificationsApi(config));
-    this.reports = wrapApiWithErrorHandling(new ReportsApi(config));
-    this.threads = wrapApiWithErrorHandling(new ThreadsApi(config));
-    this.units = wrapApiWithErrorHandling(new UnitsApi(config));
+    this.analytics = new AnalyticsApi(config);
+    this.connectionModels = new ConnectionModelsApi(config);
+    this.connections = new ConnectionsApi(config);
+    this.events = new EventsApi(config);
+    this.groups = new GroupsApi(config);
+    this.inboundConnections = new InboundConnectionsApi(config);
+    this.inboundSources = new InboundSourcesApi(config);
+    this.integrations = new IntegrationsApi(config);
+    this.intelligences = new IntelligencesApi(config);
+    this.issues = new IssuesApi(config);
+    this.machine = new MachineApi(config);
+    this.machines = new MachinesApi(config);
+    this.notifications = new NotificationsApi(config);
+    this.reports = new ReportsApi(config);
+    this.threads = new ThreadsApi(config);
+    this.units = new UnitsApi(config);
   }
 }

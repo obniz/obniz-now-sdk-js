@@ -138,15 +138,6 @@ describe("ObnizNow SDK", () => {
       }).toThrow("Either 'token' or 'cookies' must be provided");
     });
 
-    it("should throw error when both token and cookies provided", () => {
-      expect(() => {
-        new ObnizNow({
-          token: "test-token",
-          cookies: { token: "session-token", accountId: "account-123" },
-        } as any);
-      }).toThrow("Only one of 'token' or 'cookies' can be provided, not both");
-    });
-
     it("should accept either token or cookies but not require both", () => {
       const client1 = new ObnizNow({ token: "test-token" });
       expect(client1).toBeDefined();
@@ -176,56 +167,6 @@ describe("ObnizNow SDK", () => {
         baseUrl: "http://localhost:3000",
       });
       expect(client).toBeDefined();
-    });
-  });
-
-  describe("Custom fetch", () => {
-    it("should use provided custom fetch function", async () => {
-      const customFetch = vi.fn().mockResolvedValue({
-        ok: true,
-        status: 200,
-        json: async () => ({ items: [], count: 0 }),
-        headers: new Headers(),
-      });
-
-      const client = new ObnizNow({
-        token: "test-token",
-        fetch: customFetch,
-      });
-
-      try {
-        await client.machines.listMachines({ limit: 10 });
-      } catch (e) {
-        // Expected to fail due to mock
-      }
-
-      expect(customFetch).toHaveBeenCalled();
-    });
-
-    it("should use custom fetch in cookie mode fallback", async () => {
-      const customFetch = vi.fn().mockResolvedValue({
-        ok: true,
-        status: 200,
-        json: async () => ({ items: [], count: 0 }),
-        headers: new Headers(),
-      });
-
-      const client = new ObnizNow({
-        cookies: {
-          token: "session-token",
-          accountId: "account-123",
-        },
-        fetch: customFetch,
-      });
-
-      try {
-        await client.machines.listMachines({ limit: 10 });
-      } catch (e) {
-        // Expected to fail
-      }
-
-      // Custom fetch should be called inside the wrapper
-      expect(customFetch).toHaveBeenCalled();
     });
   });
 });

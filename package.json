@@ -1,5 +1,5 @@
 {
-  "name": "@obniz/obniz-now-sdk",
+  "name": "obniz-now-sdk",
   "version": "0.1.0",
   "description": "Official TypeScript/JavaScript SDK for Obniz Now API",
   "main": "./dist/index.js",
@@ -21,7 +21,6 @@
     "generate": "openapi-generator-cli generate -i openapi/full-spec-en.json -g typescript-fetch -o src/sdk-core --additional-properties=typescriptThreePlus=true,supportsES6=true,useSingleRequestParameter=true,prefixParameterInterfaces=true,withoutRuntimeChecks=true",
     "build": "tsup",
     "dev": "tsup --watch",
-    "prepublishOnly": "npm run build",
     "typecheck": "tsc --noEmit"
   },
   "author": "Obniz",
@@ -37,7 +36,7 @@
     "url": "https://forum.obniz.com"
   },
   "homepage": "https://obniz.com/",
-  "private": true,
+  "private": false,
   "engines": {
     "node": ">=18.0.0"
   },

@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "generator-cli": {
+    "version": "7.10.0",
+    "generators": {
+      "typescript-fetch": {
+        "inputSpec": "openapi/full-spec-en.json",
+        "output": "src/sdk-core",
+        "generatorName": "typescript-fetch",
+        "additionalProperties": {
+          "typescriptThreePlus": true,
+          "supportsES6": true,
+          "useSingleRequestParameter": true,
+          "prefixParameterInterfaces": true,
+          "withoutRuntimeChecks": true
+        }
+      }
+    }
+  }
+}

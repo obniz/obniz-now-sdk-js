@@ -19,9 +19,12 @@ import type {
   CreateNotificationResponse,
   ErrorResponse,
   ForbiddenPermissionsError,
+  ListNotificationHistoryResponse,
   ListNotificationsResponse,
+  TestNotificationRequest,
   TestNotificationResponse,
   UnauthorizedError,
+  UpdateNotificationTemplateRequest,
 } from '../models/index';
 
 export interface NotificationsApiCreateNotificationOperationRequest {
@@ -32,14 +35,26 @@ export interface NotificationsApiDeleteNotificationRequest {
     id: string;
 }
 
+export interface NotificationsApiListNotificationHistoryRequest {
+    id: string;
+    limit?: number;
+    offset?: number;
+}
+
 export interface NotificationsApiListNotificationsRequest {
     limit?: number;
     offset?: number;
     groupId?: string;
 }
 
-export interface NotificationsApiTestNotificationRequest {
+export interface NotificationsApiTestNotificationOperationRequest {
     id: string;
+    testNotificationRequest?: TestNotificationRequest;
+}
+
+export interface NotificationsApiUpdateNotificationTemplateOperationRequest {
+    id: string;
+    updateNotificationTemplateRequest: UpdateNotificationTemplateRequest;
 }
 
 /**
@@ -128,6 +143,49 @@ export class NotificationsApi extends runtime.BaseAPI {
     }
 
     /**
+     * Retrieves the send history for a specific notification destination with pagination  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `notifications:read` permission is required 
+     * Get notification history
+     */
+    async listNotificationHistoryRaw(requestParameters: NotificationsApiListNotificationHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListNotificationHistoryResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling listNotificationHistory().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/1/notifications/{id}/history`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Retrieves the send history for a specific notification destination with pagination  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `notifications:read` permission is required 
+     * Get notification history
+     */
+    async listNotificationHistory(requestParameters: NotificationsApiListNotificationHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListNotificationHistoryResponse> {
+        const response = await this.listNotificationHistoryRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Retrieves notification destinations within the account with pagination  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `notifications:read` permission is required 
      * Get notifications list
      */
@@ -175,7 +233,7 @@ export class NotificationsApi extends runtime.BaseAPI {
      * Sends a test notification to verify the configuration is working correctly  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `notifications:write` permission is required 
      * Test a notification destination
      */
-    async testNotificationRaw(requestParameters: NotificationsApiTestNotificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestNotificationResponse>> {
+    async testNotificationRaw(requestParameters: NotificationsApiTestNotificationOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TestNotificationResponse>> {
         if (requestParameters['id'] == null) {
             throw new runtime.RequiredError(
                 'id',
@@ -187,6 +245,8 @@ export class NotificationsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        headerParameters['Content-Type'] = 'application/json';
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
         }
@@ -196,6 +256,7 @@ export class NotificationsApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
+            body: requestParameters['testNotificationRequest'],
         }, initOverrides);
 
         return new runtime.JSONApiResponse(response);
@@ -205,9 +266,57 @@ export class NotificationsApi extends runtime.BaseAPI {
      * Sends a test notification to verify the configuration is working correctly  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `notifications:write` permission is required 
      * Test a notification destination
      */
-    async testNotification(requestParameters: NotificationsApiTestNotificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestNotificationResponse> {
+    async testNotification(requestParameters: NotificationsApiTestNotificationOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TestNotificationResponse> {
         const response = await this.testNotificationRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     * Updates the title/body templates for a notification destination. Templates support {:key} placeholders that are dynamically replaced when sending notifications. Set to null to clear the template and use the controller-generated values as-is.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `notifications:write` permission is required 
+     * Update notification template
+     */
+    async updateNotificationTemplateRaw(requestParameters: NotificationsApiUpdateNotificationTemplateOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling updateNotificationTemplate().'
+            );
+        }
+
+        if (requestParameters['updateNotificationTemplateRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateNotificationTemplateRequest',
+                'Required parameter "updateNotificationTemplateRequest" was null or undefined when calling updateNotificationTemplate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/notifications/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['updateNotificationTemplateRequest'],
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Updates the title/body templates for a notification destination. Templates support {:key} placeholders that are dynamically replaced when sending notifications. Set to null to clear the template and use the controller-generated values as-is.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `notifications:write` permission is required 
+     * Update notification template
+     */
+    async updateNotificationTemplate(requestParameters: NotificationsApiUpdateNotificationTemplateOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.updateNotificationTemplateRaw(requestParameters, initOverrides);
     }
 
 }

@@ -13,6 +13,7 @@ export * from './IntelligencesApi';
 export * from './IssuesApi';
 export * from './MachineApi';
 export * from './MachinesApi';
+export * from './NotificationHistoryApi';
 export * from './NotificationsApi';
 export * from './ReportsApi';
 export * from './ThreadsApi';

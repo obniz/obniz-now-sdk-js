@@ -4,8 +4,8 @@
     "title": "API EN",
     "version": "1.0.0",
     "license": {
-      "name": "MIT",
-      "url": "https://opensource.org/licenses/MIT"
+      "name": "ISC",
+      "url": "https://opensource.org/licenses/ISC"
     }
   },
   "servers": [
@@ -3767,6 +3767,170 @@
         }
       }
     },
+    "/api/1/notification_history": {
+      "get": {
+        "operationId": "listAllNotificationHistory",
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
+        "summary": "Get all notification history",
+        "description": "Retrieves the notification send history for the entire account with filtering and pagination\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `notifications:read` permission is required\n",
+        "tags": [
+          "Notification History"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "description": "Maximum number of history records to return",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "example": 100,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "offset",
+            "description": "Number of history records to skip for pagination",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "status",
+            "description": "Filter by status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "success",
+                "error"
+              ],
+              "example": "success"
+            }
+          },
+          {
+            "name": "type",
+            "description": "Filter by notification type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "email",
+                "webhook",
+                "slack",
+                "slackApp",
+                "sms",
+                "call"
+              ],
+              "example": "email"
+            }
+          },
+          {
+            "name": "start",
+            "description": "Start date-time filter (ISO8601)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-01-01T00:00:00Z"
+            }
+          },
+          {
+            "name": "end",
+            "description": "End date-time filter (ISO8601)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-01-31T23:59:59Z"
+            }
+          },
+          {
+            "name": "notification_id",
+            "description": "Filter by notification destination ID",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "beb47634-832f-44bd-a883-a8d8ddf91aae"
+            }
+          },
+          {
+            "name": "group_id",
+            "description": "Filter by group ID",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "group-123"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "Sort order (by sent_at ascending/descending)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc",
+              "example": "desc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification history retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListAllNotificationHistoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameter",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "Invalid status parameter"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenPermissions"
+          }
+        }
+      }
+    },
     "/api/1/notifications/{id}": {
       "delete": {
         "operationId": "deleteNotification",
@@ -3818,6 +3982,183 @@
           },
           "404": {
             "description": "Notification not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "通知先が見つかりません"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateNotificationTemplate",
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ],
+        "summary": "Update notification template",
+        "description": "Updates the title/body templates for a notification destination.\nTemplates support {:key} placeholders that are dynamically replaced when sending notifications.\nSet to null to clear the template and use the controller-generated values as-is.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `notifications:write` permission is required\n",
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Unique identifier of the notification to update (UUID)",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "beb47634-832f-44bd-a883-a8d8ddf91aae"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "template_title": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Subject template. Supports {:key} placeholders for dynamic values.\nSet to null to clear the template.\n",
+                    "example": "[{:level}] {:device} alert"
+                  },
+                  "template_body": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Body template. Supports {:key} placeholders for dynamic values.\nSet to null to clear the template.\n",
+                    "example": "{:device} detected {:value}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Template updated successfully"
+          },
+          "400": {
+            "description": "Bad request - validation error or group mismatch",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "groupMismatch": {
+                    "summary": "Group mismatch",
+                    "value": {
+                      "error": "同一グループでの指定が必要です"
+                    }
+                  },
+                  "invalidTitle": {
+                    "summary": "Invalid template_title type",
+                    "value": {
+                      "error": "template_titleは文字列またはnullで指定してください"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenPermissions"
+          },
+          "404": {
+            "description": "Notification not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "error": "通知先が見つかりません"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/1/notifications/{id}/history": {
+      "get": {
+        "operationId": "listNotificationHistory",
+        "summary": "Get notification history",
+        "description": "Retrieves the send history for a specific notification destination with pagination\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `notifications:read` permission is required\n",
+        "tags": [
+          "Notifications"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "description": "Unique identifier of the notification destination (UUID)",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "beb47634-832f-44bd-a883-a8d8ddf91aae"
+            }
+          },
+          {
+            "name": "limit",
+            "description": "Maximum number of history records to return",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "example": 100,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "offset",
+            "description": "Number of history records to skip for pagination",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 0,
+              "minimum": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Notification history retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListNotificationHistoryResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenPermissions"
+          },
+          "404": {
+            "description": "Notification destination not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3959,12 +4300,6 @@
                       "error": "メールアドレスが重複しています。"
                     },
                     "summary": "Duplicate email addresses"
-                  },
-                  "group_mismatch": {
-                    "value": {
-                      "error": "同一グループでの指定が必要です"
-                    },
-                    "summary": "Group mismatch"
                   }
                 }
               }
@@ -4018,6 +4353,30 @@
             }
           }
         ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "placeholders": {
+                    "type": "object",
+                    "description": "Values to pass to template placeholders",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "example": {
+                      "device": "Sensor-1",
+                      "value": "42",
+                      "level": "WARN"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": "Test notification sent successfully",
@@ -6435,31 +6794,35 @@
         }
       },
       "ErrorResponse": {
-        "type": "object",
+        "description": "Generic error response",
         "properties": {
           "error": {
-            "type": "string",
             "description": "Error message",
-            "example": "Unauthorized"
+            "example": "Unauthorized",
+            "type": "string"
           }
-        }
+        },
+        "type": "object"
       },
       "ErrorResponseWithSuccess": {
+        "description": "Error response with success flag",
+        "properties": {
+          "success": {
+            "description": "Success status (always false for errors)",
+            "example": false,
+            "type": "boolean"
+          },
+          "error": {
+            "description": "Error message",
+            "example": "Access denied",
+            "type": "string"
+          }
+        },
         "type": "object",
         "required": [
           "success",
           "error"
-        ],
-        "properties": {
-          "success": {
-            "type": "boolean",
-            "example": false
-          },
-          "error": {
-            "type": "string",
-            "example": "Access denied"
-          }
-        }
+        ]
       },
       "Machine": {
         "description": "Machine object",
@@ -6723,6 +7086,18 @@
             "example": "2024-11-16T07:23:28.073Z",
             "type": "string",
             "format": "date-time"
+          },
+          "template_title": {
+            "description": "Subject template with {:key} placeholders",
+            "example": "[{:level}] {:device} alert",
+            "type": "string",
+            "nullable": true
+          },
+          "template_body": {
+            "description": "Body template with {:key} placeholders",
+            "example": "{:device} detected {:value}",
+            "type": "string",
+            "nullable": true
           }
         },
         "type": "object"
@@ -9057,6 +9432,118 @@
         "description": "Empty success response for obniz unregistration",
         "example": {}
       },
+      "ListAllNotificationHistoryResponse": {
+        "type": "object",
+        "description": "Paginated list of all notification history",
+        "required": [
+          "limit",
+          "offset",
+          "count",
+          "items"
+        ],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of records returned",
+            "example": 100
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Number of records skipped",
+            "example": 0
+          },
+          "count": {
+            "type": "integer",
+            "description": "Total number of records matching the filter criteria",
+            "example": 50
+          },
+          "items": {
+            "type": "array",
+            "description": "Array of notification history objects",
+            "items": {
+              "$ref": "#/components/schemas/NotificationHistoryWithName"
+            }
+          }
+        }
+      },
+      "NotificationHistoryWithName": {
+        "type": "object",
+        "description": "Notification send history record with notification name",
+        "required": [
+          "id",
+          "notification_id",
+          "account_id",
+          "status",
+          "message",
+          "sent_at",
+          "notification_name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier of the history record",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "notification_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Target notification destination ID",
+            "example": "beb47634-832f-44bd-a883-a8d8ddf91aae"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "Account ID",
+            "example": "account-123"
+          },
+          "status": {
+            "type": "string",
+            "description": "Send status",
+            "enum": [
+              "pending",
+              "success",
+              "error"
+            ],
+            "example": "success"
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error message (null on success)",
+            "example": null
+          },
+          "message": {
+            "type": "string",
+            "description": "Sent message content",
+            "example": "Temperature exceeded threshold"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "Notification type",
+            "enum": [
+              "email",
+              "webhook",
+              "slack",
+              "slackApp",
+              "sms",
+              "call"
+            ],
+            "example": "email"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Sent at timestamp",
+            "example": "2026-01-15T10:30:00Z"
+          },
+          "notification_name": {
+            "type": "string",
+            "description": "Name of the notification destination",
+            "example": "Email Alert"
+          }
+        }
+      },
       "ListNotificationsResponse": {
         "type": "object",
         "description": "Paginated list of notification destinations",
@@ -9125,6 +9612,18 @@
             "type": "string",
             "description": "JSON-encoded destination configuration. Structure depends on type.\nFor email: {\"to\": [\"email@example.com\"], \"cc\": [\"cc@example.com\"], \"bcc\": [\"bcc@example.com\"]}\n- to: required, can be comma-separated string or array\n- cc, bcc: optional, can be comma-separated string or array\nAll emails are validated for format and duplicates across to/cc/bcc\n",
             "example": "{\"to\": [\"admin@example.com\"], \"cc\": [], \"bcc\": []}"
+          },
+          "template_title": {
+            "type": "string",
+            "nullable": true,
+            "description": "Subject template. Supports {:key} placeholders for dynamic values.\nWhen not set (null), the subject generated by the controller is used as-is.\n",
+            "example": "[{:level}] {:device} alert"
+          },
+          "template_body": {
+            "type": "string",
+            "nullable": true,
+            "description": "Body template. Supports {:key} placeholders for dynamic values.\nWhen not set (null), the message generated by the controller is used as-is.\n",
+            "example": "{:device} detected {:value}"
           }
         }
       },
@@ -9149,6 +9648,112 @@
         "properties": {
           "notification": {
             "$ref": "#/components/schemas/Notification"
+          }
+        }
+      },
+      "ListNotificationHistoryResponse": {
+        "type": "object",
+        "description": "Paginated list of notification history records",
+        "required": [
+          "limit",
+          "offset",
+          "count",
+          "items"
+        ],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of history records returned",
+            "example": 100
+          },
+          "offset": {
+            "type": "integer",
+            "description": "Number of history records skipped",
+            "example": 0
+          },
+          "count": {
+            "type": "integer",
+            "description": "Total number of history records for the notification",
+            "example": 25
+          },
+          "items": {
+            "type": "array",
+            "description": "Array of notification history objects",
+            "items": {
+              "$ref": "#/components/schemas/NotificationHistory"
+            }
+          }
+        }
+      },
+      "NotificationHistory": {
+        "type": "object",
+        "description": "Notification send history record",
+        "required": [
+          "id",
+          "notification_id",
+          "account_id",
+          "status",
+          "message",
+          "sent_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier of the history record",
+            "example": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+          },
+          "notification_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the notification destination",
+            "example": "beb47634-832f-44bd-a883-a8d8ddf91aae"
+          },
+          "account_id": {
+            "type": "string",
+            "description": "Account ID",
+            "example": "account-123"
+          },
+          "status": {
+            "type": "string",
+            "description": "Send status",
+            "enum": [
+              "pending",
+              "success",
+              "error"
+            ],
+            "example": "success"
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true,
+            "description": "Error message when failed (null on success)",
+            "example": null
+          },
+          "message": {
+            "type": "string",
+            "description": "Content of the sent message",
+            "example": "Temperature exceeded threshold"
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "description": "Notification type",
+            "enum": [
+              "email",
+              "webhook",
+              "slack",
+              "slackApp",
+              "sms",
+              "call"
+            ],
+            "example": "email"
+          },
+          "sent_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Date and time when the notification was sent",
+            "example": "2025-01-15T10:30:00Z"
           }
         }
       },
@@ -10336,7 +10941,25 @@
           }
         }
       },
+      "ForbiddenOwnerOnlyError": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      },
       "ForbiddenPermissionOrOwnerOnly": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ForbiddenPermissionsError"
+          },
+          {
+            "$ref": "#/components/schemas/ForbiddenOwnerOnlyError"
+          }
+        ]
+      },
+      "NotFound": {
         "type": "object",
         "properties": {
           "error": {
@@ -10788,6 +11411,24 @@
           }
         }
       },
+      "ForbiddenOwnerOnly": {
+        "description": "Only account owner can perform this action.\nThis operation requires owner privileges.\n",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ForbiddenOwnerOnlyError"
+            },
+            "examples": {
+              "ownerOnly": {
+                "summary": "Owner role required",
+                "value": {
+                  "error": "Only owner can access this resource"
+                }
+              }
+            }
+          }
+        }
+      },
       "ForbiddenPermissionOrOwnerOnly": {
         "description": "Access forbidden.\nThe request was authenticated, but the user does not have sufficient permissions or is not an account owner.\n",
         "content": {
@@ -10806,6 +11447,20 @@
                 "summary": "Owner role required",
                 "value": {
                   "error": "Only owner can access this resource"
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The requested resource was not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "error": {
+                  "example": "Not found"
                 }
               }
             }

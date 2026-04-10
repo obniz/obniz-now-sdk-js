@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Obniz SDK Example</title>
+  </head>
+  <body>
+    <h1>Obniz SDK Browser Example</h1>
+
+    <button id="btn">Load machines</button>
+
+    <pre id="output"></pre>
+
+    <script type="module">
+      const { ObnizNow } =
+        await import("https://cdn.jsdelivr.net/npm/@obniz/sdk@latest/dist/index.mjs");
+
+      const button = document.getElementById("btn");
+      const output = document.getElementById("output");
+
+      const client = new ObnizNow({
+        token: process.env.OBNIZ_TOKEN || "your-api-token",
+      });
+
+      button.addEventListener("click", async () => {
+        output.textContent = "Loading...";
+
+        try {
+          const response = await client.machines.listMachines({
+            limit: 10,
+            offset: 0,
+          });
+
+          if (!response.items?.length) {
+            output.textContent = "No machines found";
+            return;
+          }
+
+          const lines = response.items.map(
+            (item) => `${item.machine.name || "Unnamed"} (${item.machine.id})`,
+          );
+
+          output.textContent =
+            `Found ${response.count} machines\n\n` + lines.join("\n");
+        } catch (err) {
+          output.textContent = "Error: " + err.message;
+        }
+      });
+    </script>
+  </body>
+</html>

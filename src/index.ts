@@ -1,2 +1,2 @@
 export * from "./ObnizNow";
-export * from "./sdk-core";
+export { ObnizNowApiError } from "./ObnizNowApiError";

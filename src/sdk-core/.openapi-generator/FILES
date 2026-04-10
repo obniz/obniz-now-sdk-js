@@ -11,6 +11,7 @@ apis/IntelligencesApi.ts
 apis/IssuesApi.ts
 apis/MachineApi.ts
 apis/MachinesApi.ts
+apis/NotificationHistoryApi.ts
 apis/NotificationsApi.ts
 apis/ReportsApi.ts
 apis/ThreadsApi.ts

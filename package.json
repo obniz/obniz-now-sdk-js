@@ -12,12 +12,16 @@
       "require": "./dist/index.js"
     }
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "generate": "openapi-generator-cli generate",
-    "build": "rollup -c",
+    "build": "rm -rf dist && rollup -c",
     "dev": "rollup -c --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -30,7 +34,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "https://github.com/obniz/obniz-now-sdk-js.git"
+    "url": "git+https://github.com/obniz/obniz-now-sdk-js.git"
   },
   "keywords": [
     "obniz"

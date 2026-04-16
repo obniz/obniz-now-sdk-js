@@ -5,7 +5,7 @@
  * - Retrieving machine events
  * - Filtering events by time range
  * - Working with event data
- * - Automatic error handling with ObnizApiError
+ * - Automatic error handling with ObnizNowApiError
  */
 
 import { ObnizNow, ObnizNowApiError } from '../src/index';
@@ -53,10 +53,17 @@ async function main() {
       console.log(`Total: ${machineEvents.count}`);
     }
   } catch (error) {
-    console.error('Error:', error);
-    console.log((error as ObnizNowApiError).originalError.response.headers);
-    console.log((error as ObnizNowApiError).originalError.message);
-
+    if (error instanceof ObnizNowApiError) {
+      console.error(`API Error [${error.status}]: ${error.message}`);
+      console.error('Error data:', error.data);
+      
+      // Use methods to access response details
+      const headers = error.getResponseHeaders();
+      console.log('Content-Type:', headers.get('content-type'));
+      console.log('Request URL:', error.getRequestUrl());
+    } else {
+      console.error('Unexpected error:', error);
+    }
   }
 }
 

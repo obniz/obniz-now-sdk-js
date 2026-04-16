@@ -4,7 +4,7 @@ TypeScript/JavaScript SDK for Obniz Now API
 
 ## Installation
 ```bash
-npm install @obniz/obniz-now-sdk-js
+npm install @obniz/obniz-now-sdk
 ```
 
 ## Authentication
@@ -32,7 +32,7 @@ const client = new ObnizNow({
 ### List Machines
 
 ```typescript
-import { ObnizNow } from '@obniz/obniz-now-sdk-js';
+import { ObnizNow } from '@obniz/obniz-now-sdk';
 
 const client = new ObnizNow({ token: process.env.OBNIZ_TOKEN });
 
@@ -76,7 +76,7 @@ console.log(`Found ${events.count} events`);
 All API errors are automatically converted to `ObnizNowApiError` with parsed response data.
 
 ```typescript
-import { ObnizNow, ObnizNowApiError } from '@obniz/obniz-now-sdk-js';
+import { ObnizNow, ObnizNowApiError } from '@obniz/obniz-now-sdk';
 
 try {
   const machine = await client.machine.getMachine({ machineId: 'invalid-id' });
@@ -103,7 +103,7 @@ try {
 ### Option 1: Cookie-based Authentication (Recommended)
 ```typescript
 // In your Svelte component
-import { ObnizNow } from '@obniz/obniz-now-sdk-js';
+import { ObnizNow } from '@obniz/obniz-now-sdk';
 
 const client = new ObnizNow({
   cookies: {
@@ -138,7 +138,7 @@ app.get('/api/obniz/machines', async (req, res) => {
 ### SvelteKit Server-Side Example
 ```typescript
 // src/routes/+page.server.ts
-import { ObnizNow } from '@obniz/sdk';
+import { ObnizNow } from '@obniz/obniz-now-sdk';
 
 export async function load() {
   const client = new ObnizNow({ token: process.env.OBNIZ_TOKEN });

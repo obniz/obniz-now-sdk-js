@@ -42,7 +42,9 @@ type WithCookies = {
 export type ObnizNowTokenOptions = BaseOptions & WithoutCookies;
 export type ObnizNowCookiesOptions = BaseOptions & WithCookies;
 
-export type ObnizNowOptions = (BaseOptions & WithoutCookies) | (BaseOptions & WithCookies);
+export type ObnizNowOptions =
+  | (BaseOptions & WithoutCookies)
+  | (BaseOptions & WithCookies);
 
 /**
  * ObnizNow SDK main class
@@ -145,28 +147,48 @@ export class ObnizNow {
     const token = (options as ObnizNowTokenOptions).token;
     const cookies = (options as ObnizNowCookiesOptions).cookies;
     const baseUrl = options.baseUrl ?? "https://api.obniz.com";
-    const fetchApi = options.fetch || (typeof fetch !== "undefined" ? fetch : undefined);
+    const fetchApi =
+      options.fetch || (typeof fetch !== "undefined" ? fetch : undefined);
 
     if (!token && !cookies) {
       throw new Error("Either 'token' or 'cookies' must be provided");
     }
 
     if (token && cookies) {
-      throw new Error("Only one of 'token' or 'cookies' can be provided, not both");
+      throw new Error(
+        "Only one of 'token' or 'cookies' can be provided, not both",
+      );
     }
 
     let customFetch: typeof fetch | undefined;
     if (cookies) {
-      customFetch = async (url: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-        const finalInit = {
+      const isBrowser =
+        typeof window !== "undefined" && typeof document !== "undefined";
+
+      customFetch = async (
+        url: RequestInfo | URL,
+        init?: RequestInit,
+      ): Promise<Response> => {
+        const headers = new Headers(init?.headers);
+
+        if (!isBrowser) {
+          const cookieString = [
+            cookies.token ? `token=${cookies.token}` : "",
+            cookies.accountId ? `account_id=${cookies.accountId}` : "",
+          ]
+            .filter(Boolean)
+            .join("; ");
+
+          if (cookieString) {
+            headers.set("Cookie", cookieString);
+          }
+        }
+
+        return (fetchApi || fetch)(url, {
           ...init,
-          credentials: "include" as RequestCredentials,
-          headers: {
-            ...init?.headers,
-            Cookie: `token=${cookies.token}; account_id=${cookies.accountId}`,
-          },
-        };
-        return (fetchApi || fetch)(url, finalInit);
+          headers,
+          credentials: "include",
+        });
       };
     }
 
@@ -174,7 +196,6 @@ export class ObnizNow {
       basePath: baseUrl,
       apiKey: token ? `Bearer ${token}` : undefined,
       fetchApi: customFetch || fetchApi,
-      credentials: cookies ? "include" : undefined,
     });
 
     this.analytics = new AnalyticsApi(config);
@@ -195,3 +216,5 @@ export class ObnizNow {
     this.units = new UnitsApi(config);
   }
 }
+
+export * from "./sdk-core";

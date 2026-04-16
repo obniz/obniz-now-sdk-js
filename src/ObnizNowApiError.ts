@@ -42,13 +42,13 @@ export class ObnizNowApiError extends Error {
     Object.defineProperty(this, 'originalError', {
       value: responseError,
       writable: false,
-      enumerable: false, // Не будет засирать console.log!
+      enumerable: false,
       configurable: false
     });
     
-    // Maintain proper stack trace (ES2015+)
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, ObnizNowApiError);
+    // Maintain proper stack trace (Node.js only)
+    if ('captureStackTrace' in Error) {
+      (Error as any).captureStackTrace(this, ObnizNowApiError);
     }
   }
 

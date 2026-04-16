@@ -43,7 +43,10 @@ describe("ObnizNow SDK", () => {
       const headers = callArgs[1]?.headers;
 
       if (headers) {
-        const authHeader = headers.Authorization || headers.authorization;
+        // Headers can be either a Headers instance or a plain object
+        const authHeader = headers instanceof Headers 
+          ? headers.get('Authorization')
+          : (headers.Authorization || headers.authorization);
         expect(authHeader).toContain("Bearer test-token");
       }
     });
@@ -91,8 +94,9 @@ describe("ObnizNow SDK", () => {
       const callArgs = mockFetch.mock.calls[0];
       const init = callArgs[1];
 
-      // Check that Cookie header is set
-      expect(init?.headers?.Cookie).toBe("token=session-token; account_id=account-123");
+      // Check that Cookie header is set (headers is now a Headers instance)
+      expect(init?.headers).toBeInstanceOf(Headers);
+      expect((init?.headers as Headers).get('Cookie')).toBe("token=session-token; account_id=account-123");
       expect(init?.credentials).toBe("include");
     });
 
@@ -124,10 +128,9 @@ describe("ObnizNow SDK", () => {
       const callArgs = mockFetch.mock.calls[0];
       const headers = callArgs[1]?.headers;
 
-      if (headers) {
-        expect(headers.Authorization).toBeUndefined();
-        expect(headers.authorization).toBeUndefined();
-      }
+      // Headers is now a Headers instance, not a plain object
+      expect(headers).toBeInstanceOf(Headers);
+      expect((headers as Headers).get('Authorization')).toBeNull();
     });
   });
 

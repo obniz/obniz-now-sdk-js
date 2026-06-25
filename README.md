@@ -13,7 +13,7 @@ The SDK supports authentication using an API token (Bearer token). You can obtai
 
 ### Using API Token
 ```typescript
-import { ObnizNow } from '@obniz/sdk';
+import { ObnizNow } from '@obniz/obniz-now-sdk';
 
 const client = new ObnizNow({ 
   token: 'your-api-token-here'
@@ -100,27 +100,40 @@ try {
 ### ⚠️ Security Warning
 **Never expose your API token in client-side code!** Use one of these safe approaches:
 
-### Option 1: Cookie-based Authentication (Recommended)
+### Option 1: Cookie-based Authentication (Recommended for custom pages)
 ```typescript
-// In your Svelte component
 import { ObnizNow } from '@obniz/obniz-now-sdk';
 
 const client = new ObnizNow({
+  baseUrl: window.location.origin,
   cookies: {
-    token: getCookie('token'),
-    accountId: getCookie('account_id'),
+    // In browsers, existing same-origin cookies are sent by fetch(credentials: "include").
+    // These values are used only by non-browser runtimes where Cookie headers can be set.
+    token: '',
+    accountId: '',
   },
 });
 
-function getCookie(name: string): string {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop()?.split(';').shift() || '';
-  return '';
-}
+const machines = await client.machines.listMachines({ limit: 20 });
 ```
 
 Your backend should set httpOnly cookies after user authentication.
+
+For plain custom page HTML, import the browser bundle from a CDN or from a file hosted with the page:
+
+```html
+<script type="module">
+  import { ObnizNow } from "https://cdn.jsdelivr.net/npm/@obniz/obniz-now-sdk@0.1.11/dist/index.mjs";
+
+  const client = new ObnizNow({
+    baseUrl: window.location.origin,
+    cookies: { token: "", accountId: "" },
+  });
+
+  const response = await client.machines.listMachines({ limit: 10, offset: 0 });
+  console.log(response.items);
+</script>
+```
 
 ### Option 2: Backend Proxy
 ```typescript
@@ -176,6 +189,12 @@ See the examples/ directory for more detailed examples:
 `custom-config.ts` - Advanced configuration (retry, logging)
 
 `advanced-error-handling.ts` - Error inspection and debugging
+
+## API Categories
+
+The `ObnizNow` client exposes generated API groups including:
+
+`account`, `analytics`, `auditLogs`, `connectionModels`, `connections`, `converters`, `customizes`, `events`, `firmware`, `groups`, `inboundConnections`, `inboundSources`, `integrations`, `intelligences`, `invitations`, `issues`, `machine`, `machines`, `notificationHistory`, `notifications`, `obniz`, `reports`, `session`, `threads`, `units`, and `users`.
 
 ### Run any example:
 ```bash

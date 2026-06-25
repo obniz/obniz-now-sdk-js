@@ -15,15 +15,37 @@
 
 import * as runtime from '../runtime';
 import type {
+  AddMachinesToGroup200Response,
+  AddMachinesToGroupRequest,
+  CreateGroup201Response,
+  CreateGroupRequest,
   ErrorResponse,
   ErrorResponseWithSuccess,
   ForbiddenPermissionsError,
   GetGroupResponse,
   ListGroupsResponse,
+  RemoveMachinesFromGroup200Response,
   UnauthorizedError,
+  UpdateGroup200Response,
   UpdateGroupCustomFieldsRequest,
   UpdateGroupCustomFieldsResponse,
+  UpdateGroupRequest,
+  UpsertUserAuthority200Response,
+  UpsertUserAuthorityRequest,
 } from '../models/index';
+
+export interface GroupsApiAddMachinesToGroupOperationRequest {
+    groupId: string;
+    addMachinesToGroupRequest: AddMachinesToGroupRequest;
+}
+
+export interface GroupsApiCreateGroupOperationRequest {
+    createGroupRequest: CreateGroupRequest;
+}
+
+export interface GroupsApiDeleteGroupRequest {
+    groupId: string;
+}
 
 export interface GroupsApiGetGroupRequest {
     groupId: string;
@@ -37,15 +59,165 @@ export interface GroupsApiListGroupsRequest {
     limit?: number;
 }
 
+export interface GroupsApiRemoveMachinesFromGroupRequest {
+    groupId: string;
+    addMachinesToGroupRequest: AddMachinesToGroupRequest;
+}
+
+export interface GroupsApiRemoveUserFromGroupRequest {
+    groupId: string;
+    userId: string;
+}
+
+export interface GroupsApiUpdateGroupOperationRequest {
+    groupId: string;
+    updateGroupRequest: UpdateGroupRequest;
+}
+
 export interface GroupsApiUpdateGroupCustomFieldsOperationRequest {
     groupId: string;
     updateGroupCustomFieldsRequest: UpdateGroupCustomFieldsRequest;
+}
+
+export interface GroupsApiUpsertUserAuthorityOperationRequest {
+    groupId: string;
+    userId: string;
+    upsertUserAuthorityRequest: UpsertUserAuthorityRequest;
 }
 
 /**
  * 
  */
 export class GroupsApi extends runtime.BaseAPI {
+
+    /**
+     * Attaches multiple machines to the specified group. Machines already in the group are returned in `skipped`.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `machine_groups:write` 
+     * Attach machines to a group
+     */
+    async addMachinesToGroupRaw(requestParameters: GroupsApiAddMachinesToGroupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AddMachinesToGroup200Response>> {
+        if (requestParameters['groupId'] == null) {
+            throw new runtime.RequiredError(
+                'groupId',
+                'Required parameter "groupId" was null or undefined when calling addMachinesToGroup().'
+            );
+        }
+
+        if (requestParameters['addMachinesToGroupRequest'] == null) {
+            throw new runtime.RequiredError(
+                'addMachinesToGroupRequest',
+                'Required parameter "addMachinesToGroupRequest" was null or undefined when calling addMachinesToGroup().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/groups/{group_id}/machines`.replace(`{${"group_id"}}`, encodeURIComponent(String(requestParameters['groupId']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['addMachinesToGroupRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Attaches multiple machines to the specified group. Machines already in the group are returned in `skipped`.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `machine_groups:write` 
+     * Attach machines to a group
+     */
+    async addMachinesToGroup(requestParameters: GroupsApiAddMachinesToGroupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AddMachinesToGroup200Response> {
+        const response = await this.addMachinesToGroupRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates a new group with the specified name. Plan limits and name uniqueness are enforced.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `groups:write` permission and OWNER role are required 
+     * Create a group
+     */
+    async createGroupRaw(requestParameters: GroupsApiCreateGroupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateGroup201Response>> {
+        if (requestParameters['createGroupRequest'] == null) {
+            throw new runtime.RequiredError(
+                'createGroupRequest',
+                'Required parameter "createGroupRequest" was null or undefined when calling createGroup().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/groups`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['createGroupRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Creates a new group with the specified name. Plan limits and name uniqueness are enforced.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `groups:write` permission and OWNER role are required 
+     * Create a group
+     */
+    async createGroup(requestParameters: GroupsApiCreateGroupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateGroup201Response> {
+        const response = await this.createGroupRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Deletes the specified group. Rejected with 409 if any user (member/guest) still belongs to the group; remove their membership first. Referencing threads have their `group_id` cleared, and related `machine_group` and `group_parents` records (in both directions) are cleaned up consistently.  **Permissions** - `groups:delete` permission and OWNER role are required 
+     * Delete a group
+     */
+    async deleteGroupRaw(requestParameters: GroupsApiDeleteGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['groupId'] == null) {
+            throw new runtime.RequiredError(
+                'groupId',
+                'Required parameter "groupId" was null or undefined when calling deleteGroup().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/groups/{group_id}`.replace(`{${"group_id"}}`, encodeURIComponent(String(requestParameters['groupId']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Deletes the specified group. Rejected with 409 if any user (member/guest) still belongs to the group; remove their membership first. Referencing threads have their `group_id` cleared, and related `machine_group` and `group_parents` records (in both directions) are cleaned up consistently.  **Permissions** - `groups:delete` permission and OWNER role are required 
+     * Delete a group
+     */
+    async deleteGroup(requestParameters: GroupsApiDeleteGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteGroupRaw(requestParameters, initOverrides);
+    }
 
     /**
      * Returns group information along with machines belonging to the group.  The user must belong to the same account and have sufficient permissions (owner role or explicit membership in the requested group).  Pagination is applied to the machines list using limit and offset.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `groups:read` permission is required 
@@ -139,6 +311,149 @@ export class GroupsApi extends runtime.BaseAPI {
     }
 
     /**
+     * Detaches multiple machines from the specified group. Machines that aren\'t currently in the group are silently ignored.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `machine_groups:delete` 
+     * Detach machines from a group
+     */
+    async removeMachinesFromGroupRaw(requestParameters: GroupsApiRemoveMachinesFromGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<RemoveMachinesFromGroup200Response>> {
+        if (requestParameters['groupId'] == null) {
+            throw new runtime.RequiredError(
+                'groupId',
+                'Required parameter "groupId" was null or undefined when calling removeMachinesFromGroup().'
+            );
+        }
+
+        if (requestParameters['addMachinesToGroupRequest'] == null) {
+            throw new runtime.RequiredError(
+                'addMachinesToGroupRequest',
+                'Required parameter "addMachinesToGroupRequest" was null or undefined when calling removeMachinesFromGroup().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/groups/{group_id}/machines`.replace(`{${"group_id"}}`, encodeURIComponent(String(requestParameters['groupId']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['addMachinesToGroupRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Detaches multiple machines from the specified group. Machines that aren\'t currently in the group are silently ignored.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `machine_groups:delete` 
+     * Detach machines from a group
+     */
+    async removeMachinesFromGroup(requestParameters: GroupsApiRemoveMachinesFromGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<RemoveMachinesFromGroup200Response> {
+        const response = await this.removeMachinesFromGroupRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Removes the user from the group. Only deletes if the authority\'s group_id matches; account-wide owners (group_id=null) are not affected.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `account_members:delete` 
+     * Remove user from a group
+     */
+    async removeUserFromGroupRaw(requestParameters: GroupsApiRemoveUserFromGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['groupId'] == null) {
+            throw new runtime.RequiredError(
+                'groupId',
+                'Required parameter "groupId" was null or undefined when calling removeUserFromGroup().'
+            );
+        }
+
+        if (requestParameters['userId'] == null) {
+            throw new runtime.RequiredError(
+                'userId',
+                'Required parameter "userId" was null or undefined when calling removeUserFromGroup().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/groups/{group_id}/users/{user_id}`.replace(`{${"group_id"}}`, encodeURIComponent(String(requestParameters['groupId']))).replace(`{${"user_id"}}`, encodeURIComponent(String(requestParameters['userId']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Removes the user from the group. Only deletes if the authority\'s group_id matches; account-wide owners (group_id=null) are not affected.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `account_members:delete` 
+     * Remove user from a group
+     */
+    async removeUserFromGroup(requestParameters: GroupsApiRemoveUserFromGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.removeUserFromGroupRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Updates the name of the specified group. OWNER can update any group. Members with `member` role can only update the group they belong to.  **Permissions** - `groups:write` permission is required 
+     * Update group name
+     */
+    async updateGroupRaw(requestParameters: GroupsApiUpdateGroupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateGroup200Response>> {
+        if (requestParameters['groupId'] == null) {
+            throw new runtime.RequiredError(
+                'groupId',
+                'Required parameter "groupId" was null or undefined when calling updateGroup().'
+            );
+        }
+
+        if (requestParameters['updateGroupRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateGroupRequest',
+                'Required parameter "updateGroupRequest" was null or undefined when calling updateGroup().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/groups/{group_id}`.replace(`{${"group_id"}}`, encodeURIComponent(String(requestParameters['groupId']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['updateGroupRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Updates the name of the specified group. OWNER can update any group. Members with `member` role can only update the group they belong to.  **Permissions** - `groups:write` permission is required 
+     * Update group name
+     */
+    async updateGroup(requestParameters: GroupsApiUpdateGroupOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateGroup200Response> {
+        const response = await this.updateGroupRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Replaces custom fields for the specified group.  The user must be an account owner or belong to the target group. Existing custom fields are fully replaced by the provided object.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `groups:write` permission is required 
      * Update group custom fields
      */
@@ -184,6 +499,62 @@ export class GroupsApi extends runtime.BaseAPI {
      */
     async updateGroupCustomFields(requestParameters: GroupsApiUpdateGroupCustomFieldsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateGroupCustomFieldsResponse> {
         const response = await this.updateGroupCustomFieldsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Adds the user to the group or updates the existing membership/role. Only `member` and `guest` roles can be assigned; `owner` is rejected with 400. The target user must already exist, otherwise 404 is returned.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `account_members:write` 
+     * Create or update user authority for a group
+     */
+    async upsertUserAuthorityRaw(requestParameters: GroupsApiUpsertUserAuthorityOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpsertUserAuthority200Response>> {
+        if (requestParameters['groupId'] == null) {
+            throw new runtime.RequiredError(
+                'groupId',
+                'Required parameter "groupId" was null or undefined when calling upsertUserAuthority().'
+            );
+        }
+
+        if (requestParameters['userId'] == null) {
+            throw new runtime.RequiredError(
+                'userId',
+                'Required parameter "userId" was null or undefined when calling upsertUserAuthority().'
+            );
+        }
+
+        if (requestParameters['upsertUserAuthorityRequest'] == null) {
+            throw new runtime.RequiredError(
+                'upsertUserAuthorityRequest',
+                'Required parameter "upsertUserAuthorityRequest" was null or undefined when calling upsertUserAuthority().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/groups/{group_id}/users/{user_id}`.replace(`{${"group_id"}}`, encodeURIComponent(String(requestParameters['groupId']))).replace(`{${"user_id"}}`, encodeURIComponent(String(requestParameters['userId']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['upsertUserAuthorityRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Adds the user to the group or updates the existing membership/role. Only `member` and `guest` roles can be assigned; `owner` is rejected with 400. The target user must already exist, otherwise 404 is returned.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `account_members:write` 
+     * Create or update user authority for a group
+     */
+    async upsertUserAuthority(requestParameters: GroupsApiUpsertUserAuthorityOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpsertUserAuthority200Response> {
+        const response = await this.upsertUserAuthorityRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

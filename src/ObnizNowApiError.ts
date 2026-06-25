@@ -114,12 +114,18 @@ export class ObnizNowApiError extends Error {
  * Wraps an API object to automatically convert ResponseError to ObnizNowApiError
  */
 export function wrapApiWithErrorHandling<T extends object>(api: T): T {
+  const passthroughMethods = new Set([
+    "withMiddleware",
+    "withPreMiddleware",
+    "withPostMiddleware",
+  ]);
+
   return new Proxy(api, {
     get(target, prop) {
       const original = target[prop as keyof T];
       
       // Only wrap functions
-      if (typeof original !== 'function') {
+      if (typeof original !== 'function' || passthroughMethods.has(String(prop))) {
         return original;
       }
       

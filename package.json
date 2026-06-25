@@ -1,6 +1,6 @@
 {
   "name": "@obniz/obniz-now-sdk",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "TypeScript/JavaScript SDK for obniz Now API",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -21,7 +21,7 @@
   },
   "scripts": {
     "generate": "openapi-generator-cli generate",
-    "build": "rm -rf dist && rollup -c",
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && rollup -c",
     "dev": "rollup -c --watch",
     "test": "vitest",
     "test:ui": "vitest --ui",

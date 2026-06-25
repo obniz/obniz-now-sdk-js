@@ -22,6 +22,7 @@ import type {
   Intelligence,
   IntelligenceInput,
   IntelligenceSuccessResponse,
+  ListIntelligences200Response,
   UnauthorizedError,
 } from '../models/index';
 
@@ -43,6 +44,12 @@ export interface IntelligencesApiEditIntelligenceRequest {
 export interface IntelligencesApiGetIntelligenceRequest {
     name: string;
     version: number;
+}
+
+export interface IntelligencesApiListIntelligencesRequest {
+    offset?: number;
+    limit?: number;
+    search?: string;
 }
 
 /**
@@ -268,6 +275,50 @@ export class IntelligencesApi extends runtime.BaseAPI {
      */
     async getIntelligence(requestParameters: IntelligencesApiGetIntelligenceRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetIntelligenceResponse> {
         const response = await this.getIntelligenceRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Returns a paginated list of intelligence controllers.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `intelligences:read` permission is required  **Visibility Rules** - Public intelligences are visible to all users - Private intelligences are visible only if user has authority  **Pagination** - Use `offset` and `limit` parameters to paginate results - Default limit is 100, maximum is 100 
+     * List intelligences with pagination
+     */
+    async listIntelligencesRaw(requestParameters: IntelligencesApiListIntelligencesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListIntelligences200Response>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['search'] != null) {
+            queryParameters['search'] = requestParameters['search'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/intelligences`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Returns a paginated list of intelligence controllers.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `intelligences:read` permission is required  **Visibility Rules** - Public intelligences are visible to all users - Private intelligences are visible only if user has authority  **Pagination** - Use `offset` and `limit` parameters to paginate results - Default limit is 100, maximum is 100 
+     * List intelligences with pagination
+     */
+    async listIntelligences(requestParameters: IntelligencesApiListIntelligencesRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListIntelligences200Response> {
+        const response = await this.listIntelligencesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

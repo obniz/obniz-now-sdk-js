@@ -22,6 +22,7 @@ import type {
   ForbiddenPermissionsError,
   ListCSVExportsResponse,
   ListReportsResponse,
+  ReportDetail,
   UnauthorizedError,
 } from '../models/index';
 
@@ -29,8 +30,16 @@ export interface ReportsApiCreateCSVExportOperationRequest {
     createCSVExportRequest: CreateCSVExportRequest;
 }
 
+export interface ReportsApiDownloadReportRequest {
+    id: string;
+}
+
 export interface ReportsApiGetCSVExportStatusRequest {
     exportId: string;
+}
+
+export interface ReportsApiGetReportRequest {
+    id: string;
 }
 
 export interface ReportsApiListCSVExportsRequest {
@@ -94,6 +103,45 @@ export class ReportsApi extends runtime.BaseAPI {
     }
 
     /**
+     * Downloads the generated report file (PDF / CSV) as a stream. Members and guests can only download reports associated with their group.  Returns 404 when the report does not exist, is not accessible, or the file is not available yet.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `reports:read` permission is required 
+     * Download report file
+     */
+    async downloadReportRaw(requestParameters: ReportsApiDownloadReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Blob>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling downloadReport().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/reports/{id}/download`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.BlobApiResponse(response);
+    }
+
+    /**
+     * Downloads the generated report file (PDF / CSV) as a stream. Members and guests can only download reports associated with their group.  Returns 404 when the report does not exist, is not accessible, or the file is not available yet.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `reports:read` permission is required 
+     * Download report file
+     */
+    async downloadReport(requestParameters: ReportsApiDownloadReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Blob> {
+        const response = await this.downloadReportRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Retrieves the status and details of a specific CSV export job. - User must own the export (account_id must match)  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `reports:read` permission is required  **Export Status** - pending: Export queued but not started - processing: Export in progress - completed: Export finished, file available for download - failed: Export failed 
      * Get CSV export status
      */
@@ -129,6 +177,45 @@ export class ReportsApi extends runtime.BaseAPI {
      */
     async getCSVExportStatus(requestParameters: ReportsApiGetCSVExportStatusRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CSVExportStatusResponse> {
         const response = await this.getCSVExportStatusRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Retrieves detail and generation status of a specific report (PDF / CSV) by ID. Members and guests can only view reports associated with their group.  The raw file location is never returned. When the report generation is completed and the file is available, `download_url` points to the download endpoint.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `reports:read` permission is required 
+     * Get report detail
+     */
+    async getReportRaw(requestParameters: ReportsApiGetReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ReportDetail>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling getReport().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/reports/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Retrieves detail and generation status of a specific report (PDF / CSV) by ID. Members and guests can only view reports associated with their group.  The raw file location is never returned. When the report generation is completed and the file is available, `download_url` points to the download endpoint.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `reports:read` permission is required 
+     * Get report detail
+     */
+    async getReport(requestParameters: ReportsApiGetReportRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ReportDetail> {
+        const response = await this.getReportRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

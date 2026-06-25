@@ -17,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   AddConnectionsRequest,
   AddConnectionsResponse,
+  ConnectionWithController,
   ErrorResponse,
   ForbiddenPermissionOrOwnerOnly,
   ForbiddenPermissionsError,
@@ -32,6 +33,10 @@ export interface ConnectionsApiDeleteConnectionRequest {
     machineId: string;
     modelName: string;
     modelVersion: number;
+}
+
+export interface ConnectionsApiGetConnectionRequest {
+    connectionId: number;
 }
 
 export interface ConnectionsApiListConnectionsRequest {
@@ -137,6 +142,45 @@ export class ConnectionsApi extends runtime.BaseAPI {
      */
     async deleteConnection(requestParameters: ConnectionsApiDeleteConnectionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.deleteConnectionRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Retrieves a single connection model associated with a machine in the account.  Connections link controller models to machines, enabling specific functionality.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `connections:read` permission is required 
+     * Get a connection
+     */
+    async getConnectionRaw(requestParameters: ConnectionsApiGetConnectionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ConnectionWithController>> {
+        if (requestParameters['connectionId'] == null) {
+            throw new runtime.RequiredError(
+                'connectionId',
+                'Required parameter "connectionId" was null or undefined when calling getConnection().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/connections/{connection_id}`.replace(`{${"connection_id"}}`, encodeURIComponent(String(requestParameters['connectionId']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Retrieves a single connection model associated with a machine in the account.  Connections link controller models to machines, enabling specific functionality.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `connections:read` permission is required 
+     * Get a connection
+     */
+    async getConnection(requestParameters: ConnectionsApiGetConnectionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ConnectionWithController> {
+        const response = await this.getConnectionRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
     /**

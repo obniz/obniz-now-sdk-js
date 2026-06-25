@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ObnizNow } from "./ObnizNow";
+import { ObnizNowApiError } from "./ObnizNowApiError";
 
 describe("ObnizNow SDK", () => {
   beforeEach(() => {
@@ -13,7 +14,17 @@ describe("ObnizNow SDK", () => {
         baseUrl: "https://api.obniz.com",
       });
       expect(client).toBeDefined();
+      expect(client.account).toBeDefined();
+      expect(client.auditLogs).toBeDefined();
+      expect(client.converters).toBeDefined();
+      expect(client.customizes).toBeDefined();
+      expect(client.firmware).toBeDefined();
       expect(client.inboundSources).toBeDefined();
+      expect(client.invitations).toBeDefined();
+      expect(client.notificationHistory).toBeDefined();
+      expect(client.obniz).toBeDefined();
+      expect(client.session).toBeDefined();
+      expect(client.users).toBeDefined();
     });
 
     it("should use Bearer token in requests", async () => {
@@ -44,7 +55,7 @@ describe("ObnizNow SDK", () => {
 
       if (headers) {
         // Headers can be either a Headers instance or a plain object
-        const authHeader = headers instanceof Headers 
+        const authHeader = headers instanceof Headers
           ? headers.get('Authorization')
           : (headers.Authorization || headers.authorization);
         expect(authHeader).toContain("Bearer test-token");
@@ -149,6 +160,30 @@ describe("ObnizNow SDK", () => {
         cookies: { token: "session-token", accountId: "account-123" },
       });
       expect(client2).toBeDefined();
+    });
+
+    it("should convert response errors to ObnizNowApiError", async () => {
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: false,
+        status: 404,
+        statusText: "Not Found",
+        url: "https://api.obniz.com/api/1/machines/missing",
+        text: async () => JSON.stringify({ error: "Machine not found" }),
+        headers: new Headers(),
+      });
+
+      const client = new ObnizNow({
+        token: "test-token",
+        fetch: mockFetch,
+      });
+
+      await expect(client.machine.getMachine({ machineId: "missing" })).rejects.toMatchObject({
+        name: "ObnizNowApiError",
+        status: 404,
+        message: "Machine not found",
+      });
+
+      await expect(client.machine.getMachine({ machineId: "missing" })).rejects.toBeInstanceOf(ObnizNowApiError);
     });
   });
 

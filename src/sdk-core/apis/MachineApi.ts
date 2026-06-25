@@ -434,8 +434,9 @@ export class MachineApi extends runtime.BaseAPI {
     }
 
     /**
-     * Updates the public visibility status of a machine. When a machine is public,   its data can be accessed without authentication through public endpoints.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Side effects** - Updates `is_public` flag on the machine 
+     * **Deprecated**: This endpoint is deprecated and will be removed in the future.  Public access to machines will be migrated to a read-only API key based mechanism.  Updates the public visibility status of a machine. When a machine is public,  its data can be accessed without authentication through public endpoints.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Side effects** - Updates `is_public` flag on the machine 
      * Update machine public visibility
+     * @deprecated
      */
     async updateMachinePublicRaw(requestParameters: MachineApiUpdateMachinePublicOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateMachinePublicResponse>> {
         if (requestParameters['machineId'] == null) {
@@ -474,8 +475,9 @@ export class MachineApi extends runtime.BaseAPI {
     }
 
     /**
-     * Updates the public visibility status of a machine. When a machine is public,   its data can be accessed without authentication through public endpoints.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Side effects** - Updates `is_public` flag on the machine 
+     * **Deprecated**: This endpoint is deprecated and will be removed in the future.  Public access to machines will be migrated to a read-only API key based mechanism.  Updates the public visibility status of a machine. When a machine is public,  its data can be accessed without authentication through public endpoints.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Side effects** - Updates `is_public` flag on the machine 
      * Update machine public visibility
+     * @deprecated
      */
     async updateMachinePublic(requestParameters: MachineApiUpdateMachinePublicOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateMachinePublicResponse> {
         const response = await this.updateMachinePublicRaw(requestParameters, initOverrides);

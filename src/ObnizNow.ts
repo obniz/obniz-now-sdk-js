@@ -1,22 +1,33 @@
 import {
   Configuration,
+  AccountApi,
   AnalyticsApi,
+  AuditLogsApi,
   ConnectionModelsApi,
   ConnectionsApi,
+  ConvertersApi,
+  CustomizesApi,
   EventsApi,
+  FirmwareApi,
   GroupsApi,
   InboundConnectionsApi,
   InboundSourcesApi,
   IntegrationsApi,
   IntelligencesApi,
+  InvitationsApi,
   IssuesApi,
   MachineApi,
   MachinesApi,
+  NotificationHistoryApi,
   NotificationsApi,
+  ObnizApi,
   ReportsApi,
+  SessionApi,
   ThreadsApi,
   UnitsApi,
+  UsersApi,
 } from "./sdk-core";
+import { wrapApiWithErrorHandling } from "./ObnizNowApiError";
 
 // Internal use only
 export interface CookieAuthOptions {
@@ -80,8 +91,14 @@ export type ObnizNowOptions =
  * ```
  */
 export class ObnizNow {
+  /** Account API - Manage current account settings, members, API keys, plan, entitlements, usages, and secrets */
+  public readonly account: AccountApi;
+
   /** Analytics API - Execute and retrieve analytics results */
   public readonly analytics: AnalyticsApi;
+
+  /** Audit Logs API - Access account audit log entries */
+  public readonly auditLogs: AuditLogsApi;
 
   /** Connection Models API - Manage connection model configurations */
   public readonly connectionModels: ConnectionModelsApi;
@@ -89,8 +106,17 @@ export class ObnizNow {
   /** Connections API - Manage machine connections */
   public readonly connections: ConnectionsApi;
 
+  /** Converters API - Data format conversions */
+  public readonly converters: ConvertersApi;
+
+  /** Customizes API - Resolve account, machine, group, and asset customizations */
+  public readonly customizes: CustomizesApi;
+
   /** Events API - Access event data and history */
   public readonly events: EventsApi;
+
+  /** Firmware API - Inspect and update device firmware */
+  public readonly firmware: FirmwareApi;
 
   /** Groups API - Organize machines into groups */
   public readonly groups: GroupsApi;
@@ -107,6 +133,9 @@ export class ObnizNow {
   /** Intelligences API - AI and intelligence features */
   public readonly intelligences: IntelligencesApi;
 
+  /** Invitations API - Manage account invitations */
+  public readonly invitations: InvitationsApi;
+
   /** Issues API - Track and manage issues */
   public readonly issues: IssuesApi;
 
@@ -116,17 +145,29 @@ export class ObnizNow {
   /** Machines API - Machine management and operations */
   public readonly machines: MachinesApi;
 
+  /** Notification History API - Access notification delivery history */
+  public readonly notificationHistory: NotificationHistoryApi;
+
   /** Notifications API - Manage notification settings */
   public readonly notifications: NotificationsApi;
 
+  /** Obniz API - Access obniz device metadata */
+  public readonly obniz: ObnizApi;
+
   /** Reports API - Generate and retrieve reports */
   public readonly reports: ReportsApi;
+
+  /** Session API - Browser session account selection and UI configuration */
+  public readonly session: SessionApi;
 
   /** Threads API - Discussion threads and communications */
   public readonly threads: ThreadsApi;
 
   /** Units API - Unit data and state management */
   public readonly units: UnitsApi;
+
+  /** Users API - Manage current user and profile pictures */
+  public readonly users: UsersApi;
 
   /**
    * Creates a new ObnizNow SDK client instance
@@ -198,22 +239,32 @@ export class ObnizNow {
       fetchApi: customFetch || fetchApi,
     });
 
-    this.analytics = new AnalyticsApi(config);
-    this.connectionModels = new ConnectionModelsApi(config);
-    this.connections = new ConnectionsApi(config);
-    this.events = new EventsApi(config);
-    this.groups = new GroupsApi(config);
-    this.inboundConnections = new InboundConnectionsApi(config);
-    this.inboundSources = new InboundSourcesApi(config);
-    this.integrations = new IntegrationsApi(config);
-    this.intelligences = new IntelligencesApi(config);
-    this.issues = new IssuesApi(config);
-    this.machine = new MachineApi(config);
-    this.machines = new MachinesApi(config);
-    this.notifications = new NotificationsApi(config);
-    this.reports = new ReportsApi(config);
-    this.threads = new ThreadsApi(config);
-    this.units = new UnitsApi(config);
+    this.account = wrapApiWithErrorHandling(new AccountApi(config));
+    this.analytics = wrapApiWithErrorHandling(new AnalyticsApi(config));
+    this.auditLogs = wrapApiWithErrorHandling(new AuditLogsApi(config));
+    this.connectionModels = wrapApiWithErrorHandling(new ConnectionModelsApi(config));
+    this.connections = wrapApiWithErrorHandling(new ConnectionsApi(config));
+    this.converters = wrapApiWithErrorHandling(new ConvertersApi(config));
+    this.customizes = wrapApiWithErrorHandling(new CustomizesApi(config));
+    this.events = wrapApiWithErrorHandling(new EventsApi(config));
+    this.firmware = wrapApiWithErrorHandling(new FirmwareApi(config));
+    this.groups = wrapApiWithErrorHandling(new GroupsApi(config));
+    this.inboundConnections = wrapApiWithErrorHandling(new InboundConnectionsApi(config));
+    this.inboundSources = wrapApiWithErrorHandling(new InboundSourcesApi(config));
+    this.integrations = wrapApiWithErrorHandling(new IntegrationsApi(config));
+    this.intelligences = wrapApiWithErrorHandling(new IntelligencesApi(config));
+    this.invitations = wrapApiWithErrorHandling(new InvitationsApi(config));
+    this.issues = wrapApiWithErrorHandling(new IssuesApi(config));
+    this.machine = wrapApiWithErrorHandling(new MachineApi(config));
+    this.machines = wrapApiWithErrorHandling(new MachinesApi(config));
+    this.notificationHistory = wrapApiWithErrorHandling(new NotificationHistoryApi(config));
+    this.notifications = wrapApiWithErrorHandling(new NotificationsApi(config));
+    this.obniz = wrapApiWithErrorHandling(new ObnizApi(config));
+    this.reports = wrapApiWithErrorHandling(new ReportsApi(config));
+    this.session = wrapApiWithErrorHandling(new SessionApi(config));
+    this.threads = wrapApiWithErrorHandling(new ThreadsApi(config));
+    this.units = wrapApiWithErrorHandling(new UnitsApi(config));
+    this.users = wrapApiWithErrorHandling(new UsersApi(config));
   }
 }
 

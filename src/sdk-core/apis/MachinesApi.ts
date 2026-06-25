@@ -20,6 +20,7 @@ import type {
   AddBleMachineResponse,
   AddMachineRequest,
   AddMachineResponse,
+  DevicesListResponse,
   ErrorResponse,
   ForbiddenPermissionOrOwnerOnly,
   ForbiddenPermissionsError,
@@ -27,6 +28,8 @@ import type {
   SimpleMachine,
   UnauthorizedError,
   UnregisterObnizRequest,
+  UpdateMachineRequest,
+  UpdateMachineResponse,
 } from '../models/index';
 
 export interface MachinesApiAddBleMachineOperationRequest {
@@ -42,6 +45,14 @@ export interface MachinesApiGetAvailableMachinesForModelRequest {
     modelVersion: string;
 }
 
+export interface MachinesApiGetDevicesListRequest {
+    limit?: number;
+    offset?: number;
+    searchFilter?: GetDevicesListSearchFilterEnum;
+    searchWord?: string;
+    groupId?: string;
+}
+
 export interface MachinesApiListMachinesRequest {
     limit?: number;
     offset?: number;
@@ -52,6 +63,11 @@ export interface MachinesApiListMachinesRequest {
 
 export interface MachinesApiUnregisterObnizOperationRequest {
     unregisterObnizRequest: UnregisterObnizRequest;
+}
+
+export interface MachinesApiUpdateMachineOperationRequest {
+    machineId: string;
+    updateMachineRequest: UpdateMachineRequest;
 }
 
 /**
@@ -198,6 +214,58 @@ export class MachinesApi extends runtime.BaseAPI {
     }
 
     /**
+     * Returns a paginated list of machines that have connected obniz_id, including their states and groups.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - Requires appropriate permissions for machines - Non-owner users are automatically filtered to their assigned group  **Filtering** - `only_with_obniz: true` - Only returns machines with obniz_id - Only firmware_version and hardware_type states are returned - Optional search by machine name or obniz ID - Optional filter by group_id 
+     * Get paginated list of devices (machines with obniz_id)
+     */
+    async getDevicesListRaw(requestParameters: MachinesApiGetDevicesListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DevicesListResponse>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        if (requestParameters['searchFilter'] != null) {
+            queryParameters['search_filter'] = requestParameters['searchFilter'];
+        }
+
+        if (requestParameters['searchWord'] != null) {
+            queryParameters['search_word'] = requestParameters['searchWord'];
+        }
+
+        if (requestParameters['groupId'] != null) {
+            queryParameters['group_id'] = requestParameters['groupId'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/machines/devices-list`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Returns a paginated list of machines that have connected obniz_id, including their states and groups.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - Requires appropriate permissions for machines - Non-owner users are automatically filtered to their assigned group  **Filtering** - `only_with_obniz: true` - Only returns machines with obniz_id - Only firmware_version and hardware_type states are returned - Optional search by machine name or obniz ID - Optional filter by group_id 
+     * Get paginated list of devices (machines with obniz_id)
+     */
+    async getDevicesList(requestParameters: MachinesApiGetDevicesListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DevicesListResponse> {
+        const response = await this.getDevicesListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Retrieves machines within the account with optional filtering by name, obniz ID, group, or state conditions  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:read` permission is required 
      * Get machines list
      */
@@ -291,8 +359,65 @@ export class MachinesApi extends runtime.BaseAPI {
         return await response.value();
     }
 
+    /**
+     * Updates the name and/or metadata of a machine.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Notes** - At least one of `name` or `metadata` must be specified - Fields not specified in the request body keep their current values - Public visibility (`is_public`) cannot be updated with this endpoint 
+     * Update machine
+     */
+    async updateMachineRaw(requestParameters: MachinesApiUpdateMachineOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateMachineResponse>> {
+        if (requestParameters['machineId'] == null) {
+            throw new runtime.RequiredError(
+                'machineId',
+                'Required parameter "machineId" was null or undefined when calling updateMachine().'
+            );
+        }
+
+        if (requestParameters['updateMachineRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateMachineRequest',
+                'Required parameter "updateMachineRequest" was null or undefined when calling updateMachine().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/machines/{machine_id}`.replace(`{${"machine_id"}}`, encodeURIComponent(String(requestParameters['machineId']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['updateMachineRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Updates the name and/or metadata of a machine.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Notes** - At least one of `name` or `metadata` must be specified - Fields not specified in the request body keep their current values - Public visibility (`is_public`) cannot be updated with this endpoint 
+     * Update machine
+     */
+    async updateMachine(requestParameters: MachinesApiUpdateMachineOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateMachineResponse> {
+        const response = await this.updateMachineRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
 }
 
+/**
+ * @export
+ */
+export const GetDevicesListSearchFilterEnum = {
+    MachineName: 'machine_name',
+    ObnizId: 'obniz_id'
+} as const;
+export type GetDevicesListSearchFilterEnum = typeof GetDevicesListSearchFilterEnum[keyof typeof GetDevicesListSearchFilterEnum];
 /**
  * @export
  */

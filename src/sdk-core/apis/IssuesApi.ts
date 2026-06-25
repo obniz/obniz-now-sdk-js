@@ -18,11 +18,17 @@ import type {
   CloseIssueResponse,
   ErrorResponse,
   ForbiddenPermissionsError,
+  GetIssueResponse,
   ListIssuesResponse,
+  ReopenIssueResponse,
   UnauthorizedError,
 } from '../models/index';
 
 export interface IssuesApiCloseIssueRequest {
+    id: string;
+}
+
+export interface IssuesApiGetIssueRequest {
     id: string;
 }
 
@@ -32,6 +38,10 @@ export interface IssuesApiListIssuesRequest {
     searchFilter?: ListIssuesSearchFilterEnum;
     searchWord?: string;
     isOpen?: ListIssuesIsOpenEnum;
+}
+
+export interface IssuesApiReopenIssueRequest {
+    id: string;
 }
 
 /**
@@ -75,6 +85,45 @@ export class IssuesApi extends runtime.BaseAPI {
      */
     async closeIssue(requestParameters: IssuesApiCloseIssueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CloseIssueResponse> {
         const response = await this.closeIssueRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Retrieves a specific issue by ID. Members and guests can only view issues associated with their group  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `issues:read` permission is required 
+     * Get issue by ID
+     */
+    async getIssueRaw(requestParameters: IssuesApiGetIssueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetIssueResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling getIssue().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/issues/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Retrieves a specific issue by ID. Members and guests can only view issues associated with their group  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `issues:read` permission is required 
+     * Get issue by ID
+     */
+    async getIssue(requestParameters: IssuesApiGetIssueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetIssueResponse> {
+        const response = await this.getIssueRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -127,6 +176,45 @@ export class IssuesApi extends runtime.BaseAPI {
      */
     async listIssues(requestParameters: IssuesApiListIssuesRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListIssuesResponse> {
         const response = await this.listIssuesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Reopens a closed issue by setting the closed_at timestamp back to null  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `issues:write` permission is required 
+     * Reopen an issue
+     */
+    async reopenIssueRaw(requestParameters: IssuesApiReopenIssueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ReopenIssueResponse>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling reopenIssue().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/issues/{id}/reopen`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Reopens a closed issue by setting the closed_at timestamp back to null  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `issues:write` permission is required 
+     * Reopen an issue
+     */
+    async reopenIssue(requestParameters: IssuesApiReopenIssueRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ReopenIssueResponse> {
+        const response = await this.reopenIssueRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

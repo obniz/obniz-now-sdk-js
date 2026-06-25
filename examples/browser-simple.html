@@ -18,9 +18,14 @@
       const button = document.getElementById("btn");
       const output = document.getElementById("output");
 
-      // In production, use: https://cdn.jsdelivr.net/npm/@obniz/obniz-now-sdk@latest/dist/index.mjs
+      // In production, use: https://cdn.jsdelivr.net/npm/@obniz/obniz-now-sdk@0.1.11/dist/index.mjs
       const client = new ObnizNow({
-        token: "your-api-token", // Replace with your actual token
+        baseUrl: window.location.origin,
+        cookies: {
+          // Browser requests use the existing same-origin session cookies.
+          token: "",
+          accountId: "",
+        },
       });
 
       button.addEventListener("click", async () => {

@@ -11,7 +11,7 @@ export interface AccountEntitlementsResponse {
      * @type {string}
      * @memberof AccountEntitlementsResponse
      */
-    accountId: string;
+    account_id: string;
     /**
      * 
      * @type {PlanName}
@@ -44,13 +44,13 @@ export interface AccountMember {
      * @type {string}
      * @memberof AccountMember
      */
-    accountId: string;
+    account_id: string;
     /**
      * 
      * @type {string}
      * @memberof AccountMember
      */
-    userId: string;
+    user_id: string;
     /**
      * 
      * @type {string}
@@ -68,19 +68,19 @@ export interface AccountMember {
      * @type {string}
      * @memberof AccountMember
      */
-    profilePictureUrl?: string | null;
+    profile_picture_url?: string | null;
     /**
      * 
      * @type {string}
      * @memberof AccountMember
      */
-    groupId: string | null;
+    group_id: string | null;
     /**
      * 
      * @type {string}
      * @memberof AccountMember
      */
-    groupName?: string | null;
+    group_name?: string | null;
     /**
      * 
      * @type {AccountMemberRole}
@@ -101,13 +101,13 @@ export interface AccountMemberAuthority {
      * @type {string}
      * @memberof AccountMemberAuthority
      */
-    accountId: string;
+    account_id: string;
     /**
      * 
      * @type {string}
      * @memberof AccountMemberAuthority
      */
-    userId: string;
+    user_id: string;
     /**
      * 
      * @type {AccountMemberRole}
@@ -119,7 +119,7 @@ export interface AccountMemberAuthority {
      * @type {string}
      * @memberof AccountMemberAuthority
      */
-    groupId: string | null;
+    group_id: string | null;
 }
 
 
@@ -159,7 +159,7 @@ export interface AccountPlanResponse {
      * @type {string}
      * @memberof AccountPlanResponse
      */
-    accountId: string;
+    account_id: string;
     /**
      * 
      * @type {PlanName}
@@ -171,13 +171,13 @@ export interface AccountPlanResponse {
      * @type {{ [key: string]: PlanLimitation; }}
      * @memberof AccountPlanResponse
      */
-    basePlan: { [key: string]: PlanLimitation; };
+    base_plan: { [key: string]: PlanLimitation; };
     /**
      * 
      * @type {{ [key: string]: PlanLimitation; }}
      * @memberof AccountPlanResponse
      */
-    effectivePlan: { [key: string]: PlanLimitation; };
+    effective_plan: { [key: string]: PlanLimitation; };
     /**
      * 
      * @type {{ [key: string]: object; }}
@@ -198,7 +198,7 @@ export interface AccountUsagesResponse {
      * @type {string}
      * @memberof AccountUsagesResponse
      */
-    accountId: string;
+    account_id: string;
     /**
      * 
      * @type {PlanName}
@@ -306,7 +306,7 @@ export interface AddBleMachineResponse {
      * @type {string}
      * @memberof AddBleMachineResponse
      */
-    accountId: string;
+    account_id: string;
     /**
      * Converter ID (format - bluetooth-{address})
      * @type {string}
@@ -318,7 +318,7 @@ export interface AddBleMachineResponse {
      * @type {string}
      * @memberof AddBleMachineResponse
      */
-    destUnitId: string;
+    dest_unit_id: string;
 }
 /**
  * 
@@ -511,7 +511,7 @@ export interface AddIntegrationsRequestService {
      * @type {string}
      * @memberof AddIntegrationsRequestService
      */
-    topicName?: string;
+    topic_name?: string;
 }
 /**
  * 
@@ -543,7 +543,7 @@ export interface AddMachineRequest {
      * @type {string}
      * @memberof AddMachineRequest
      */
-    obnizRegistrateUrl: string;
+    obniz_registrate_url: string;
 }
 /**
  * Response containing created machine and registered obniz device
@@ -613,7 +613,7 @@ export interface AddMachinesToGroupRequest {
      * @type {Array<string>}
      * @memberof AddMachinesToGroupRequest
      */
-    machineIds: Array<string>;
+    machine_ids: Array<string>;
 }
 /**
  * 
@@ -661,7 +661,7 @@ export interface AnalyticsResultItem {
      * @type {number}
      * @memberof AnalyticsResultItem
      */
-    intervalMs: number;
+    interval_ms: number;
     /**
      * Calculated value 0
      * @type {number}
@@ -710,13 +710,13 @@ export interface AuditLog {
      * @type {string}
      * @memberof AuditLog
      */
-    userId: string;
+    user_id: string;
     /**
      * Account ID
      * @type {string}
      * @memberof AuditLog
      */
-    accountId: string;
+    account_id: string;
     /**
      * Request path or operation target
      * @type {string}
@@ -783,7 +783,7 @@ export interface AvailableController {
      * @type {string}
      * @memberof AvailableController
      */
-    controllerType?: AvailableControllerControllerTypeEnum;
+    controller_type?: AvailableControllerControllerTypeEnum;
     /**
      * Minimum role required to install (0=Owner, 100=User, 200=Guest)
      * @type {number}
@@ -795,7 +795,7 @@ export interface AvailableController {
      * @type {Array<InstallConfigStructure>}
      * @memberof AvailableController
      */
-    installConfigStructure?: Array<InstallConfigStructure>;
+    install_config_structure?: Array<InstallConfigStructure>;
     /**
      * Conditions that must be met before installation
      * @type {Array<AvailableControllerConditionsInner>}
@@ -916,7 +916,7 @@ export interface BatchCreateError {
      * @type {string}
      * @memberof BatchCreateError
      */
-    externalDeviceId: string;
+    external_device_id: string;
     /**
      * Error message
      * @type {string}
@@ -941,13 +941,13 @@ export interface BatchCreateSuccess {
      * @type {string}
      * @memberof BatchCreateSuccess
      */
-    unitId: string;
+    unit_id: string;
     /**
      * External device ID
      * @type {string}
      * @memberof BatchCreateSuccess
      */
-    externalDeviceId: string;
+    external_device_id: string;
 }
 /**
  * Request body for creating invitations in bulk
@@ -966,13 +966,13 @@ export interface BulkCreateInvitationsRequest {
      * @type {number}
      * @memberof BulkCreateInvitationsRequest
      */
-    expirationDays?: number;
+    expiration_days?: number;
     /**
      * When `true`, the invitations are approved automatically when the invitees follow the links
      * @type {boolean}
      * @memberof BulkCreateInvitationsRequest
      */
-    autoApprove?: boolean;
+    auto_approve?: boolean;
 }
 /**
  * Success response of creating invitations in bulk
@@ -991,37 +991,37 @@ export interface BulkCreateInvitationsResponse {
      * @type {number}
      * @memberof BulkCreateInvitationsResponse
      */
-    invitedCount: number;
+    invited_count: number;
     /**
      * Expiry of the invitation links in `YYYY/MM/DD HH:mm` format (server-local time). The string `無期限` is returned when `expiration_days` was omitted (no expiry)
      * @type {string}
      * @memberof BulkCreateInvitationsResponse
      */
-    expiresAt: string;
+    expires_at: string;
     /**
      * Whether auto approval is enabled
      * @type {boolean}
      * @memberof BulkCreateInvitationsResponse
      */
-    autoApprove: boolean;
+    auto_approve: boolean;
     /**
      * Number of invitation emails sent successfully
      * @type {number}
      * @memberof BulkCreateInvitationsResponse
      */
-    emailSent: number;
+    email_sent: number;
     /**
      * Number of invitation emails that failed to send
      * @type {number}
      * @memberof BulkCreateInvitationsResponse
      */
-    emailFailed: number;
+    email_failed: number;
     /**
      * Error messages of the failed email sends
      * @type {Array<string>}
      * @memberof BulkCreateInvitationsResponse
      */
-    emailErrors: Array<string>;
+    email_errors: Array<string>;
     /**
      * Array of created invitations
      * @type {Array<BulkInvitationResult>}
@@ -1040,7 +1040,7 @@ export interface BulkInvitationResult {
      * @type {string}
      * @memberof BulkInvitationResult
      */
-    inviteId: string;
+    invite_id: string;
     /**
      * Destination email address of the invitation
      * @type {string}
@@ -1077,13 +1077,13 @@ export interface BulkInvitationUser {
      * @type {string}
      * @memberof BulkInvitationUser
      */
-    groupId?: string;
+    group_id?: string;
     /**
      * Group name to assign on approval. Takes precedence over `group_id` and must match exactly one group in the account
      * @type {string}
      * @memberof BulkInvitationUser
      */
-    groupName?: string;
+    group_name?: string;
 }
 
 
@@ -1108,7 +1108,7 @@ export interface CSVExportItem {
      * @type {string}
      * @memberof CSVExportItem
      */
-    exportId?: string;
+    export_id?: string;
     /**
      * Current status of the export
      * @type {string}
@@ -1132,7 +1132,7 @@ export interface CSVExportItem {
      * @type {string}
      * @memberof CSVExportItem
      */
-    fileUrl?: string | null;
+    file_url?: string | null;
     /**
      * Export metadata
      * @type {{ [key: string]: any; }}
@@ -1144,13 +1144,13 @@ export interface CSVExportItem {
      * @type {string}
      * @memberof CSVExportItem
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * Timestamp when export was completed
      * @type {string}
      * @memberof CSVExportItem
      */
-    completedAt?: string | null;
+    completed_at?: string | null;
 }
 
 
@@ -1176,7 +1176,7 @@ export interface CSVExportStatusResponse {
      * @type {string}
      * @memberof CSVExportStatusResponse
      */
-    exportId: string;
+    export_id: string;
     /**
      * Current status of the export
      * @type {string}
@@ -1200,7 +1200,7 @@ export interface CSVExportStatusResponse {
      * @type {string}
      * @memberof CSVExportStatusResponse
      */
-    fileUrl?: string | null;
+    file_url?: string | null;
     /**
      * Export metadata (units, properties, dates, etc.)
      * @type {{ [key: string]: any; }}
@@ -1212,13 +1212,13 @@ export interface CSVExportStatusResponse {
      * @type {string}
      * @memberof CSVExportStatusResponse
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Timestamp when export was completed
      * @type {string}
      * @memberof CSVExportStatusResponse
      */
-    completedAt?: string | null;
+    completed_at?: string | null;
 }
 
 
@@ -1352,43 +1352,43 @@ export interface ConnectionModel {
      * @type {string}
      * @memberof ConnectionModel
      */
-    machineId?: string;
+    machine_id?: string;
     /**
      * Controller model name
      * @type {string}
      * @memberof ConnectionModel
      */
-    modelName?: string;
+    model_name?: string;
     /**
      * Controller model version
      * @type {number}
      * @memberof ConnectionModel
      */
-    modelVersion?: number;
+    model_version?: number;
     /**
      * Minimum role level required to view this connection (0=Owner, 100=User, 200=Guest)
      * @type {number}
      * @memberof ConnectionModel
      */
-    viewRoleLevel?: number;
+    view_role_level?: number;
     /**
      * Configuration for the controller installation
      * @type {{ [key: string]: any; }}
      * @memberof ConnectionModel
      */
-    installConfig?: { [key: string]: any; } | null;
+    install_config?: { [key: string]: any; } | null;
     /**
      * Timestamp when the connection was created
      * @type {string}
      * @memberof ConnectionModel
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * Timestamp when the connection was last updated
      * @type {string}
      * @memberof ConnectionModel
      */
-    updatedAt?: string;
+    updated_at?: string;
 }
 /**
  * Detailed connection model with configuration and permissions
@@ -1407,43 +1407,43 @@ export interface ConnectionModelDetailed {
      * @type {string}
      * @memberof ConnectionModelDetailed
      */
-    machineId: string;
+    machine_id: string;
     /**
      * Controller model name (identity)
      * @type {string}
      * @memberof ConnectionModelDetailed
      */
-    modelName: string;
+    model_name: string;
     /**
      * Controller version
      * @type {number}
      * @memberof ConnectionModelDetailed
      */
-    modelVersion: number;
+    model_version: number;
     /**
      * Minimum role level required to view this model (0=Owner, 100=User, 200=Guest)
      * @type {number}
      * @memberof ConnectionModelDetailed
      */
-    viewRoleLevel: number;
+    view_role_level: number;
     /**
      * Installation configuration for the controller
      * @type {{ [key: string]: any; }}
      * @memberof ConnectionModelDetailed
      */
-    installConfig?: { [key: string]: any; } | null;
+    install_config?: { [key: string]: any; } | null;
     /**
      * Schema defining the structure of install_config
      * @type {Array<InstallConfigStructure>}
      * @memberof ConnectionModelDetailed
      */
-    installConfigStructure?: Array<InstallConfigStructure> | null;
+    install_config_structure?: Array<InstallConfigStructure> | null;
     /**
      * Whether the current user has permission to delete this model
      * @type {boolean}
      * @memberof ConnectionModelDetailed
      */
-    canDelete?: boolean;
+    can_delete?: boolean;
     /**
      * Conditions that must be met for installation
      * @type {Array<object>}
@@ -1455,13 +1455,13 @@ export interface ConnectionModelDetailed {
      * @type {string}
      * @memberof ConnectionModelDetailed
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * Last update timestamp
      * @type {string}
      * @memberof ConnectionModelDetailed
      */
-    updatedAt?: string;
+    updated_at?: string;
 }
 /**
  * Result of a single connection model operation
@@ -1474,7 +1474,7 @@ export interface ConnectionModelOperationResult {
      * @type {string}
      * @memberof ConnectionModelOperationResult
      */
-    modelName: string;
+    model_name: string;
     /**
      * 
      * @type {string}
@@ -1518,25 +1518,25 @@ export interface ConnectionModelUpdateItem {
      * @type {string}
      * @memberof ConnectionModelUpdateItem
      */
-    modelName: string;
+    model_name: string;
     /**
      * Controller version
      * @type {number}
      * @memberof ConnectionModelUpdateItem
      */
-    modelVersion: number;
+    model_version: number;
     /**
      * Minimum role level required to view this model (0=Owner, 1=User, 2=Guest)
      * @type {number}
      * @memberof ConnectionModelUpdateItem
      */
-    viewRoleLevel?: number;
+    view_role_level?: number;
     /**
      * Installation configuration for the controller
      * @type {{ [key: string]: any; }}
      * @memberof ConnectionModelUpdateItem
      */
-    installConfig?: { [key: string]: any; } | null;
+    install_config?: { [key: string]: any; } | null;
 }
 /**
  * Connection model with associated controller and machine information
@@ -1555,43 +1555,43 @@ export interface ConnectionWithController {
      * @type {string}
      * @memberof ConnectionWithController
      */
-    modelName?: string;
+    model_name?: string;
     /**
      * Version of the controller model
      * @type {number}
      * @memberof ConnectionWithController
      */
-    modelVersion?: number;
+    model_version?: number;
     /**
      * ID of the machine this connection is linked to
      * @type {string}
      * @memberof ConnectionWithController
      */
-    machineId?: string;
+    machine_id?: string;
     /**
      * Name of the machine
      * @type {string}
      * @memberof ConnectionWithController
      */
-    machineName?: string;
+    machine_name?: string;
     /**
      * Type of the controller
      * @type {string}
      * @memberof ConnectionWithController
      */
-    controllerType?: ConnectionWithControllerControllerTypeEnum;
+    controller_type?: ConnectionWithControllerControllerTypeEnum;
     /**
      * Display title of the controller
      * @type {string}
      * @memberof ConnectionWithController
      */
-    controllerTitle?: string;
+    controller_title?: string;
     /**
      * Timestamp when the connection was created
      * @type {string}
      * @memberof ConnectionWithController
      */
-    createdAt?: string;
+    created_at?: string;
 }
 
 
@@ -1649,13 +1649,13 @@ export interface Converter {
      * @type {string}
      * @memberof Converter
      */
-    accountId: string;
+    account_id: string;
     /**
      * Destination unit ID where data should be routed. Typically in the format machine-{machine_id}
      * @type {string}
      * @memberof Converter
      */
-    destUnitId: string;
+    dest_unit_id: string;
 }
 /**
  * Request to create a new CSV export job
@@ -1680,19 +1680,19 @@ export interface CreateCSVExportRequest {
      * @type {string}
      * @memberof CreateCSVExportRequest
      */
-    startDate: string;
+    start_date: string;
     /**
      * End date for data export
      * @type {string}
      * @memberof CreateCSVExportRequest
      */
-    endDate: string;
+    end_date: string;
     /**
      * Type of export (optional)
      * @type {string}
      * @memberof CreateCSVExportRequest
      */
-    exportType?: string;
+    export_type?: string;
     /**
      * 
      * @type {CreateCSVExportRequestOptions}
@@ -1704,7 +1704,7 @@ export interface CreateCSVExportRequest {
      * @type {string}
      * @memberof CreateCSVExportRequest
      */
-    groupId?: string | null;
+    group_id?: string | null;
     /**
      * Custom name for the export
      * @type {string}
@@ -1781,7 +1781,7 @@ export interface CreateCSVExportRequestUnitsInner {
      * @type {string}
      * @memberof CreateCSVExportRequestUnitsInner
      */
-    unitId: string;
+    unit_id: string;
     /**
      * Human-readable label for the unit
      * @type {string}
@@ -1800,7 +1800,7 @@ export interface CreateCSVExportResponse {
      * @type {string}
      * @memberof CreateCSVExportResponse
      */
-    exportId: string;
+    export_id: string;
     /**
      * Current status of the export
      * @type {string}
@@ -1818,7 +1818,7 @@ export interface CreateCSVExportResponse {
      * @type {string}
      * @memberof CreateCSVExportResponse
      */
-    createdAt: string;
+    created_at: string;
 }
 /**
  * 
@@ -1850,7 +1850,7 @@ export interface CreateCurrentAccountApiKeyResponse {
      * @type {CurrentAccountApiKeySummary}
      * @memberof CreateCurrentAccountApiKeyResponse
      */
-    apiKey: CurrentAccountApiKeySummary;
+    api_key: CurrentAccountApiKeySummary;
     /**
      * Full API token. Returned only once when the key is created.
      * @type {string}
@@ -1882,7 +1882,7 @@ export interface CreateCurrentAccountMemberRequest {
      * @type {string}
      * @memberof CreateCurrentAccountMemberRequest
      */
-    userId: string;
+    user_id: string;
     /**
      * 
      * @type {AccountMemberRole}
@@ -1894,7 +1894,7 @@ export interface CreateCurrentAccountMemberRequest {
      * @type {string}
      * @memberof CreateCurrentAccountMemberRequest
      */
-    groupId?: string | null;
+    group_id?: string | null;
 }
 
 
@@ -1972,19 +1972,19 @@ export interface CreateInvitationRequest {
      * @type {string}
      * @memberof CreateInvitationRequest
      */
-    groupId?: string;
+    group_id?: string;
     /**
      * Validity period of the invitation link in days (1-30). When omitted, the link never expires
      * @type {number}
      * @memberof CreateInvitationRequest
      */
-    expirationDays?: number;
+    expiration_days?: number;
     /**
      * When `true`, the invitation is approved automatically when the invitee follows the link
      * @type {boolean}
      * @memberof CreateInvitationRequest
      */
-    autoApprove?: boolean;
+    auto_approve?: boolean;
 }
 
 
@@ -2009,25 +2009,25 @@ export interface CreateInvitationResponse {
      * @type {string}
      * @memberof CreateInvitationResponse
      */
-    inviteId: string;
+    invite_id: string;
     /**
      * Expiry of the invitation link in `YYYY/MM/DD HH:mm` format (server-local time). The string `無期限` is returned when `expiration_days` was omitted (no expiry)
      * @type {string}
      * @memberof CreateInvitationResponse
      */
-    expiresAt: string;
+    expires_at: string;
     /**
      * Whether auto approval is enabled
      * @type {boolean}
      * @memberof CreateInvitationResponse
      */
-    autoApprove: boolean;
+    auto_approve: boolean;
     /**
      * Whether the invitation email was queued for sending
      * @type {boolean}
      * @memberof CreateInvitationResponse
      */
-    emailQueued: boolean;
+    email_queued: boolean;
 }
 /**
  * Request to create a new notification destination
@@ -2052,7 +2052,7 @@ export interface CreateNotificationRequest {
      * @type {string}
      * @memberof CreateNotificationRequest
      */
-    groupId?: string | null;
+    group_id?: string | null;
     /**
      * JSON-encoded destination configuration. Structure depends on type.
      * For email: {"to": ["email@example.com"], "cc": ["cc@example.com"], "bcc": ["bcc@example.com"]}
@@ -2071,7 +2071,7 @@ export interface CreateNotificationRequest {
      * @type {string}
      * @memberof CreateNotificationRequest
      */
-    templateTitle?: string | null;
+    template_title?: string | null;
     /**
      * Body template. Supports {:key} placeholders for dynamic values.
      * When not set (null), the message generated by the controller is used as-is.
@@ -2079,7 +2079,7 @@ export interface CreateNotificationRequest {
      * @type {string}
      * @memberof CreateNotificationRequest
      */
-    templateBody?: string | null;
+    template_body?: string | null;
 }
 
 
@@ -2142,13 +2142,13 @@ export interface CreateThreadRequest {
      * @type {string}
      * @memberof CreateThreadRequest
      */
-    groupId?: string;
+    group_id?: string;
     /**
      * 
      * @type {InitialPost}
      * @memberof CreateThreadRequest
      */
-    initialPost: InitialPost;
+    initial_post: InitialPost;
 }
 /**
  * 
@@ -2186,7 +2186,7 @@ export interface CreatedMachine {
      * @type {string}
      * @memberof CreatedMachine
      */
-    accountId?: string;
+    account_id?: string;
     /**
      * Machine name
      * @type {string}
@@ -2198,7 +2198,7 @@ export interface CreatedMachine {
      * @type {string}
      * @memberof CreatedMachine
      */
-    connectedObnizId?: string;
+    connected_obniz_id?: string;
 }
 /**
  * 
@@ -2229,31 +2229,31 @@ export interface CurrentAccountApiKeyDetail {
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
-    createdAt: string;
+    created_at: string;
     /**
      * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
-    lastUsedAt: string | null;
+    last_used_at: string | null;
     /**
      * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
-    createdByUserId: string;
+    created_by_user_id: string;
     /**
      * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
-    lastUsedIp: string;
+    last_used_ip: string;
 }
 /**
  * 
@@ -2316,19 +2316,19 @@ export interface CurrentAccountApiKeySummary {
      * @type {string}
      * @memberof CurrentAccountApiKeySummary
      */
-    createdAt: string;
+    created_at: string;
     /**
      * 
      * @type {string}
      * @memberof CurrentAccountApiKeySummary
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * 
      * @type {string}
      * @memberof CurrentAccountApiKeySummary
      */
-    lastUsedAt: string | null;
+    last_used_at: string | null;
 }
 /**
  * 
@@ -2427,7 +2427,7 @@ export interface CurrentUser {
      * @type {string}
      * @memberof CurrentUser
      */
-    profilePictureUrl: string | null;
+    profile_picture_url: string | null;
     /**
      * 
      * @type {string}
@@ -2439,19 +2439,19 @@ export interface CurrentUser {
      * @type {string}
      * @memberof CurrentUser
      */
-    accountId: string | null;
+    account_id: string | null;
     /**
      * 
      * @type {string}
      * @memberof CurrentUser
      */
-    accountName: string | null;
+    account_name: string | null;
     /**
      * 
      * @type {string}
      * @memberof CurrentUser
      */
-    groupId: string | null;
+    group_id: string | null;
 }
 
 
@@ -2537,7 +2537,7 @@ export interface CustomizeComponent {
      * @type {string}
      * @memberof CustomizeComponent
      */
-    assetUrl: string;
+    asset_url: string;
 }
 
 
@@ -2586,7 +2586,7 @@ export interface DeleteMachineResponse {
      * @type {string}
      * @memberof DeleteMachineResponse
      */
-    deletedMachineId: string;
+    deleted_machine_id: string;
 }
 /**
  * Device details
@@ -2704,7 +2704,7 @@ export interface DeviceInfoBatchItemConnectedNetwork {
      * @type {string}
      * @memberof DeviceInfoBatchItemConnectedNetwork
      */
-    onlineAt?: string;
+    online_at?: string;
     /**
      * Network type
      * @type {string}
@@ -2953,7 +2953,7 @@ export interface EntitlementSummary {
      * @type {string}
      * @memberof EntitlementSummary
      */
-    usageSource: EntitlementSummaryUsageSourceEnum;
+    usage_source: EntitlementSummaryUsageSourceEnum;
     /**
      * 
      * @type {boolean}
@@ -3048,7 +3048,7 @@ export interface Event {
      * @type {string}
      * @memberof Event
      */
-    accountId: string;
+    account_id: string;
     /**
      * Unique event identifier (UUID)
      * @type {string}
@@ -3072,7 +3072,7 @@ export interface Event {
      * @type {string}
      * @memberof Event
      */
-    machineId?: string | null;
+    machine_id?: string | null;
     /**
      * Human-readable event name
      * @type {string}
@@ -3179,7 +3179,7 @@ export interface EventLink {
      * @type {string}
      * @memberof EventLink
      */
-    eventId: string;
+    event_id: string;
 }
 /**
  * @type Field
@@ -3284,13 +3284,13 @@ export interface FileUploadErrorDetailsInner {
      * @type {string}
      * @memberof FileUploadErrorDetailsInner
      */
-    fileName?: string;
+    file_name?: string;
     /**
      * Type of error
      * @type {string}
      * @memberof FileUploadErrorDetailsInner
      */
-    errorType?: FileUploadErrorDetailsInnerErrorTypeEnum;
+    error_type?: FileUploadErrorDetailsInnerErrorTypeEnum;
     /**
      * Human-readable error message
      * @type {string}
@@ -3471,19 +3471,19 @@ export interface FirmwareVersionInfo {
      * @type {string}
      * @memberof FirmwareVersionInfo
      */
-    appUrl?: string;
+    app_url?: string;
     /**
      * URL to download the bootloader binary
      * @type {string}
      * @memberof FirmwareVersionInfo
      */
-    bootloaderUrl?: string;
+    bootloader_url?: string;
     /**
      * URL to download the partition binary
      * @type {string}
      * @memberof FirmwareVersionInfo
      */
-    partitionUrl?: string;
+    partition_url?: string;
 }
 /**
  * 
@@ -3618,7 +3618,7 @@ export interface GetObnizCloudDeviceResponse {
      * @type {{ [key: string]: GetObnizCloudDeviceResponseObnizStatValue; }}
      * @memberof GetObnizCloudDeviceResponse
      */
-    obnizStat: { [key: string]: GetObnizCloudDeviceResponseObnizStatValue; };
+    obniz_stat: { [key: string]: GetObnizCloudDeviceResponseObnizStatValue; };
 }
 /**
  * @type GetObnizCloudDeviceResponseObnizStatValue
@@ -3693,13 +3693,13 @@ export interface Group {
      * @type {string}
      * @memberof Group
      */
-    accountId: string;
+    account_id: string;
     /**
      * Custom fields (arbitrary key-value pairs)
      * @type {{ [key: string]: any; }}
      * @memberof Group
      */
-    customFields?: { [key: string]: any; };
+    custom_fields?: { [key: string]: any; };
 }
 /**
  * Group object with associated machines
@@ -3724,13 +3724,13 @@ export interface GroupWithMachines {
      * @type {string}
      * @memberof GroupWithMachines
      */
-    accountId: string;
+    account_id: string;
     /**
      * Custom fields (arbitrary key-value pairs)
      * @type {{ [key: string]: any; }}
      * @memberof GroupWithMachines
      */
-    customFields?: { [key: string]: any; };
+    custom_fields?: { [key: string]: any; };
     /**
      * Array of machines belonging to this group
      * @type {Array<Machine>}
@@ -3755,61 +3755,61 @@ export interface InboundConnection {
      * @type {string}
      * @memberof InboundConnection
      */
-    accountId: string;
+    account_id: string;
     /**
      * ID of the inbound source
      * @type {string}
      * @memberof InboundConnection
      */
-    inboundSourceId: string;
+    inbound_source_id: string;
     /**
      * ID of the external device/sensor
      * @type {string}
      * @memberof InboundConnection
      */
-    inboundDeviceId: string;
+    inbound_device_id: string;
     /**
      * ID of the connected machine
      * @type {string}
      * @memberof InboundConnection
      */
-    machineId: string;
+    machine_id: string;
     /**
      * Controller model name
      * @type {string}
      * @memberof InboundConnection
      */
-    modelName: string;
+    model_name: string;
     /**
      * Controller model version
      * @type {number}
      * @memberof InboundConnection
      */
-    modelVersion: number;
+    model_version: number;
     /**
      * Timestamp when the connection was created
      * @type {string}
      * @memberof InboundConnection
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Timestamp when the connection was last updated
      * @type {string}
      * @memberof InboundConnection
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * Associated unit ID
      * @type {string}
      * @memberof InboundConnection
      */
-    unitId?: string;
+    unit_id?: string;
     /**
      * External sensor/device identifier
      * @type {string}
      * @memberof InboundConnection
      */
-    externalDeviceId?: string;
+    external_device_id?: string;
 }
 /**
  * Inbound data source that receives external sensor data
@@ -3834,19 +3834,19 @@ export interface InboundSource {
      * @type {string}
      * @memberof InboundSource
      */
-    accountId: string;
+    account_id: string;
     /**
      * Timestamp when the inbound source was created
      * @type {string}
      * @memberof InboundSource
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Timestamp when the inbound source was last updated
      * @type {string}
      * @memberof InboundSource
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * Data format for incoming requests
      * @type {string}
@@ -3858,19 +3858,19 @@ export interface InboundSource {
      * @type {string}
      * @memberof InboundSource
      */
-    gatewayModel: string;
+    gateway_model: string;
     /**
      * Unique identifier of the gateway device
      * @type {string}
      * @memberof InboundSource
      */
-    gatewayId: string;
+    gateway_id: string;
     /**
      * List of detected external sensor IDs
      * @type {Array<string>}
      * @memberof InboundSource
      */
-    externalDetections: Array<string>;
+    external_detections: Array<string>;
 }
 
 
@@ -3900,7 +3900,7 @@ export interface InitialPost {
      * @type {Array<string>}
      * @memberof InitialPost
      */
-    filePaths?: Array<string>;
+    file_paths?: Array<string>;
     /**
      * Links to machines, issues, or events
      * @type {Array<EntityLink>}
@@ -3912,7 +3912,7 @@ export interface InitialPost {
      * @type {string}
      * @memberof InitialPost
      */
-    updateStatus?: InitialPostUpdateStatusEnum;
+    update_status?: InitialPostUpdateStatusEnum;
 }
 
 
@@ -3936,13 +3936,13 @@ export interface InstallConfigStructure {
      * @type {string}
      * @memberof InstallConfigStructure
      */
-    controllerName: string;
+    controller_name: string;
     /**
      * Version of the controller
      * @type {number}
      * @memberof InstallConfigStructure
      */
-    controllerVersion: number;
+    controller_version: number;
     /**
      * Array of configuration fields required for installation
      * @type {Array<Field>}
@@ -3973,13 +3973,13 @@ export interface IntegrationAPIPull {
      * @type {string}
      * @memberof IntegrationAPIPull
      */
-    accountId: string;
+    account_id: string;
     /**
      * Machine ID (optional, null for account-level integrations)
      * @type {string}
      * @memberof IntegrationAPIPull
      */
-    machineId?: string | null;
+    machine_id?: string | null;
     /**
      * 
      * @type {string}
@@ -3997,7 +3997,7 @@ export interface IntegrationAPIPull {
      * @type {boolean}
      * @memberof IntegrationAPIPull
      */
-    isEnabled: boolean;
+    is_enabled: boolean;
     /**
      * Integration schema definition
      * @type {{ [key: string]: any; }}
@@ -4015,19 +4015,19 @@ export interface IntegrationAPIPull {
      * @type {string}
      * @memberof IntegrationAPIPull
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Last update timestamp
      * @type {string}
      * @memberof IntegrationAPIPull
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * Last time the integration was used
      * @type {string}
      * @memberof IntegrationAPIPull
      */
-    lastUsedAt?: string | null;
+    last_used_at?: string | null;
     /**
      * 
      * @type {IntegrationAPIPullSettings}
@@ -4075,13 +4075,13 @@ export interface IntegrationAPIPush {
      * @type {string}
      * @memberof IntegrationAPIPush
      */
-    accountId: string;
+    account_id: string;
     /**
      * Machine ID (optional, null for account-level integrations)
      * @type {string}
      * @memberof IntegrationAPIPush
      */
-    machineId?: string | null;
+    machine_id?: string | null;
     /**
      * 
      * @type {string}
@@ -4099,7 +4099,7 @@ export interface IntegrationAPIPush {
      * @type {boolean}
      * @memberof IntegrationAPIPush
      */
-    isEnabled: boolean;
+    is_enabled: boolean;
     /**
      * Integration schema definition
      * @type {{ [key: string]: any; }}
@@ -4117,19 +4117,19 @@ export interface IntegrationAPIPush {
      * @type {string}
      * @memberof IntegrationAPIPush
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Last update timestamp
      * @type {string}
      * @memberof IntegrationAPIPush
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * Last time the integration was used
      * @type {string}
      * @memberof IntegrationAPIPush
      */
-    lastUsedAt?: string | null;
+    last_used_at?: string | null;
     /**
      * 
      * @type {IntegrationAPIPushSettings}
@@ -4230,13 +4230,13 @@ export interface IntegrationBase {
      * @type {string}
      * @memberof IntegrationBase
      */
-    accountId: string;
+    account_id: string;
     /**
      * Machine ID (optional, null for account-level integrations)
      * @type {string}
      * @memberof IntegrationBase
      */
-    machineId?: string | null;
+    machine_id?: string | null;
     /**
      * 
      * @type {IntegrationType}
@@ -4254,7 +4254,7 @@ export interface IntegrationBase {
      * @type {boolean}
      * @memberof IntegrationBase
      */
-    isEnabled: boolean;
+    is_enabled: boolean;
     /**
      * Integration schema definition
      * @type {{ [key: string]: any; }}
@@ -4272,19 +4272,19 @@ export interface IntegrationBase {
      * @type {string}
      * @memberof IntegrationBase
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Last update timestamp
      * @type {string}
      * @memberof IntegrationBase
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * Last time the integration was used
      * @type {string}
      * @memberof IntegrationBase
      */
-    lastUsedAt?: string | null;
+    last_used_at?: string | null;
 }
 
 
@@ -4305,13 +4305,13 @@ export interface IntegrationPubSub {
      * @type {string}
      * @memberof IntegrationPubSub
      */
-    accountId: string;
+    account_id: string;
     /**
      * Machine ID (optional, null for account-level integrations)
      * @type {string}
      * @memberof IntegrationPubSub
      */
-    machineId?: string | null;
+    machine_id?: string | null;
     /**
      * 
      * @type {string}
@@ -4329,7 +4329,7 @@ export interface IntegrationPubSub {
      * @type {boolean}
      * @memberof IntegrationPubSub
      */
-    isEnabled: boolean;
+    is_enabled: boolean;
     /**
      * Integration schema definition
      * @type {{ [key: string]: any; }}
@@ -4347,19 +4347,19 @@ export interface IntegrationPubSub {
      * @type {string}
      * @memberof IntegrationPubSub
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Last update timestamp
      * @type {string}
      * @memberof IntegrationPubSub
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * Last time the integration was used
      * @type {string}
      * @memberof IntegrationPubSub
      */
-    lastUsedAt?: string | null;
+    last_used_at?: string | null;
     /**
      * 
      * @type {IntegrationPubSubSettings}
@@ -4388,7 +4388,7 @@ export interface IntegrationPubSubSettings {
      * @type {string}
      * @memberof IntegrationPubSubSettings
      */
-    topicName: string;
+    topic_name: string;
     /**
      * PubSub credentials
      * @type {{ [key: string]: any; }}
@@ -4461,7 +4461,7 @@ export interface Intelligence {
      * @type {CodeType}
      * @memberof Intelligence
      */
-    codeType: CodeType;
+    code_type: CodeType;
     /**
      * Intelligence code (when code_type is 'code')
      * @type {string}
@@ -4542,7 +4542,7 @@ export interface IntelligenceInput {
      * @type {CodeType}
      * @memberof IntelligenceInput
      */
-    codeType: CodeType;
+    code_type: CodeType;
     /**
      * Intelligence code (required when code_type is 'code')
      * @type {string}
@@ -4600,7 +4600,7 @@ export interface Invite {
      * @type {string}
      * @memberof Invite
      */
-    accountId?: string;
+    account_id?: string;
     /**
      * Role granted on approval
      * @type {string}
@@ -4612,31 +4612,31 @@ export interface Invite {
      * @type {string}
      * @memberof Invite
      */
-    groupId?: string | null;
+    group_id?: string | null;
     /**
      * User ID who created the invitation
      * @type {string}
      * @memberof Invite
      */
-    createdBy?: string;
+    created_by?: string;
     /**
      * User ID linked while awaiting approval
      * @type {string}
      * @memberof Invite
      */
-    userId?: string | null;
+    user_id?: string | null;
     /**
      * Destination email address of the invitation
      * @type {string}
      * @memberof Invite
      */
-    sentTo?: string | null;
+    sent_to?: string | null;
     /**
      * Timestamp the invitation email was sent (ISO8601 / UTC). null if not sent
      * @type {string}
      * @memberof Invite
      */
-    sentAt?: string | null;
+    sent_at?: string | null;
     /**
      * 
      * @type {InviteStatus}
@@ -4648,13 +4648,13 @@ export interface Invite {
      * @type {string}
      * @memberof Invite
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * Expiry of the invitation link (ISO8601 / UTC). null if no expiry
      * @type {string}
      * @memberof Invite
      */
-    expiresAt?: string | null;
+    expires_at?: string | null;
 }
 
 
@@ -4770,25 +4770,25 @@ export interface InviteWithDetails {
      * @type {string}
      * @memberof InviteWithDetails
      */
-    accountId?: string;
+    account_id?: string;
     /**
      * Account name
      * @type {string}
      * @memberof InviteWithDetails
      */
-    accountName?: string | null;
+    account_name?: string | null;
     /**
      * User ID linked while awaiting approval
      * @type {string}
      * @memberof InviteWithDetails
      */
-    userId?: string | null;
+    user_id?: string | null;
     /**
      * Email of the linked user
      * @type {string}
      * @memberof InviteWithDetails
      */
-    userEmail?: string | null;
+    user_email?: string | null;
     /**
      * Role granted on approval
      * @type {string}
@@ -4800,13 +4800,13 @@ export interface InviteWithDetails {
      * @type {string}
      * @memberof InviteWithDetails
      */
-    groupId?: string | null;
+    group_id?: string | null;
     /**
      * Group name
      * @type {string}
      * @memberof InviteWithDetails
      */
-    groupName?: string | null;
+    group_name?: string | null;
     /**
      * 
      * @type {InviteStatus}
@@ -4818,25 +4818,25 @@ export interface InviteWithDetails {
      * @type {string}
      * @memberof InviteWithDetails
      */
-    sentTo?: string | null;
+    sent_to?: string | null;
     /**
      * Timestamp the invitation email was sent (ISO8601 / UTC). null if not sent
      * @type {string}
      * @memberof InviteWithDetails
      */
-    sentAt?: string | null;
+    sent_at?: string | null;
     /**
      * Invitation creation timestamp (ISO8601 / UTC). The client converts it to local time for display
      * @type {string}
      * @memberof InviteWithDetails
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * Expiry of the invitation link (ISO8601 / UTC). null if no expiry
      * @type {string}
      * @memberof InviteWithDetails
      */
-    expiresAt?: string | null;
+    expires_at?: string | null;
 }
 
 
@@ -4873,13 +4873,13 @@ export interface Issue {
      * @type {string}
      * @memberof Issue
      */
-    accountId?: string;
+    account_id?: string;
     /**
      * Machine ID associated with the issue
      * @type {string}
      * @memberof Issue
      */
-    machineId?: string | null;
+    machine_id?: string | null;
     /**
      * Human-readable issue name/title
      * @type {string}
@@ -4897,7 +4897,7 @@ export interface Issue {
      * @type {string}
      * @memberof Issue
      */
-    uniqueKey?: string;
+    unique_key?: string;
     /**
      * Details of issue
      * @type {string}
@@ -4909,25 +4909,25 @@ export interface Issue {
      * @type {boolean}
      * @memberof Issue
      */
-    isOpening?: boolean;
+    is_opening?: boolean;
     /**
      * Timestamp when the issue was issued
      * @type {string}
      * @memberof Issue
      */
-    issuedAt?: string;
+    issued_at?: string;
     /**
      * Timestamp when the issue was created
      * @type {string}
      * @memberof Issue
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * Timestamp when the issue was closed (null if still open)
      * @type {string}
      * @memberof Issue
      */
-    closedAt?: string | null;
+    closed_at?: string | null;
 }
 /**
  * Issue entity details
@@ -4958,7 +4958,7 @@ export interface IssueEntity {
      * @type {string}
      * @memberof IssueEntity
      */
-    issuedAt?: string;
+    issued_at?: string;
 }
 /**
  * Link to an issue
@@ -4971,7 +4971,7 @@ export interface IssueLink {
      * @type {string}
      * @memberof IssueLink
      */
-    issueId: string;
+    issue_id: string;
 }
 /**
  * Batch response containing firmware update records
@@ -5788,7 +5788,7 @@ export interface Machine {
      * @type {string}
      * @memberof Machine
      */
-    accountId: string;
+    account_id: string;
     /**
      * Human-readable machine name
      * @type {string}
@@ -5800,13 +5800,13 @@ export interface Machine {
      * @type {string}
      * @memberof Machine
      */
-    connectedObnizId: string | null;
+    connected_obniz_id: string | null;
     /**
      * List of connection model names
      * @type {Array<string>}
      * @memberof Machine
      */
-    connectionModels: Array<string>;
+    connection_models?: Array<string>;
     /**
      * Custom metadata for the machine
      * @type {{ [key: string]: any; }}
@@ -5818,19 +5818,19 @@ export interface Machine {
      * @type {string}
      * @memberof Machine
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Timestamp when the machine was last updated
      * @type {string}
      * @memberof Machine
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * Whether the machine is publicly accessible
      * @type {boolean}
      * @memberof Machine
      */
-    isPublic: boolean;
+    is_public: boolean;
 }
 /**
  * Machine entity details
@@ -5887,7 +5887,7 @@ export interface MachineGroupsResponse {
      * @type {string}
      * @memberof MachineGroupsResponse
      */
-    machineId: string;
+    machine_id: string;
     /**
      * List of groups that the machine belongs to
      * @type {Array<MachineGroupsResponseGroupsInner>}
@@ -5925,7 +5925,7 @@ export interface MachineLink {
      * @type {string}
      * @memberof MachineLink
      */
-    machineId: string;
+    machine_id: string;
 }
 /**
  * Machine object with optional state data
@@ -5982,7 +5982,7 @@ export interface MachineWithState {
      * @type {{ [key: string]: any; }}
      * @memberof MachineWithState
      */
-    machineStat?: { [key: string]: any; };
+    machine_stat?: { [key: string]: any; };
     /**
      * Unique machine identifier (UUID)
      * @type {string}
@@ -5994,7 +5994,7 @@ export interface MachineWithState {
      * @type {string}
      * @memberof MachineWithState
      */
-    accountId: string;
+    account_id: string;
     /**
      * Human-readable machine name
      * @type {string}
@@ -6006,13 +6006,13 @@ export interface MachineWithState {
      * @type {string}
      * @memberof MachineWithState
      */
-    connectedObnizId: string | null;
+    connected_obniz_id: string | null;
     /**
      * List of connection model names
      * @type {Array<string>}
      * @memberof MachineWithState
      */
-    connectionModels: Array<string>;
+    connection_models?: Array<string>;
     /**
      * Custom metadata for the machine
      * @type {{ [key: string]: any; }}
@@ -6024,19 +6024,19 @@ export interface MachineWithState {
      * @type {string}
      * @memberof MachineWithState
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Timestamp when the machine was last updated
      * @type {string}
      * @memberof MachineWithState
      */
-    updatedAt: string;
+    updated_at: string;
     /**
      * Whether the machine is publicly accessible
      * @type {boolean}
      * @memberof MachineWithState
      */
-    isPublic: boolean;
+    is_public: boolean;
 }
 /**
  * 
@@ -6068,7 +6068,7 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
-    accountId?: string;
+    account_id?: string;
     /**
      * Human-readable notification name
      * @type {string}
@@ -6086,7 +6086,7 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
-    groupId?: string | null;
+    group_id?: string | null;
     /**
      * Notification destination configuration (structure depends on type)
      * @type {{ [key: string]: any; }}
@@ -6098,19 +6098,19 @@ export interface Notification {
      * @type {string}
      * @memberof Notification
      */
-    lastUsed?: string;
+    last_used?: string;
     /**
      * Subject template with {:key} placeholders
      * @type {string}
      * @memberof Notification
      */
-    templateTitle?: string | null;
+    template_title?: string | null;
     /**
      * Body template with {:key} placeholders
      * @type {string}
      * @memberof Notification
      */
-    templateBody?: string | null;
+    template_body?: string | null;
 }
 /**
  * Notification send history record
@@ -6129,13 +6129,13 @@ export interface NotificationHistory {
      * @type {string}
      * @memberof NotificationHistory
      */
-    notificationId: string;
+    notification_id: string;
     /**
      * Account ID
      * @type {string}
      * @memberof NotificationHistory
      */
-    accountId: string;
+    account_id: string;
     /**
      * Send status
      * @type {string}
@@ -6147,7 +6147,7 @@ export interface NotificationHistory {
      * @type {string}
      * @memberof NotificationHistory
      */
-    errorMessage?: string | null;
+    error_message?: string | null;
     /**
      * Content of the sent message
      * @type {string}
@@ -6165,7 +6165,7 @@ export interface NotificationHistory {
      * @type {string}
      * @memberof NotificationHistory
      */
-    sentAt: string;
+    sent_at: string;
 }
 
 
@@ -6209,13 +6209,13 @@ export interface NotificationHistoryWithName {
      * @type {string}
      * @memberof NotificationHistoryWithName
      */
-    notificationId: string;
+    notification_id: string;
     /**
      * Account ID
      * @type {string}
      * @memberof NotificationHistoryWithName
      */
-    accountId: string;
+    account_id: string;
     /**
      * Send status
      * @type {string}
@@ -6227,7 +6227,7 @@ export interface NotificationHistoryWithName {
      * @type {string}
      * @memberof NotificationHistoryWithName
      */
-    errorMessage?: string | null;
+    error_message?: string | null;
     /**
      * Sent message content
      * @type {string}
@@ -6245,13 +6245,13 @@ export interface NotificationHistoryWithName {
      * @type {string}
      * @memberof NotificationHistoryWithName
      */
-    sentAt: string;
+    sent_at: string;
     /**
      * Name of the notification destination
      * @type {string}
      * @memberof NotificationHistoryWithName
      */
-    notificationName: string;
+    notification_name: string;
 }
 
 
@@ -6514,7 +6514,7 @@ export interface ObnizCloudDevice {
      * @type {string}
      * @memberof ObnizCloudDevice
      */
-    accessToken?: string | null;
+    access_token?: string | null;
     /**
      * 
      * @type {string}
@@ -6630,7 +6630,7 @@ export interface PlanLimitation {
      * @type {number}
      * @memberof PlanLimitation
      */
-    limitTo: number;
+    limit_to: number;
     /**
      * 
      * @type {string}
@@ -6642,31 +6642,31 @@ export interface PlanLimitation {
      * @type {boolean}
      * @memberof PlanLimitation
      */
-    autoIncrement: boolean;
+    auto_increment: boolean;
     /**
      * 
      * @type {number}
      * @memberof PlanLimitation
      */
-    basePriceJpy: number;
+    base_price_jpy: number;
     /**
      * 
      * @type {number}
      * @memberof PlanLimitation
      */
-    baseStepCount: number;
+    base_step_count: number;
     /**
      * 
      * @type {number}
      * @memberof PlanLimitation
      */
-    unitPriceJpy: number;
+    unit_price_jpy: number;
     /**
      * 
      * @type {number}
      * @memberof PlanLimitation
      */
-    unitStepCount: number;
+    unit_step_count: number;
 }
 
 /**
@@ -6767,7 +6767,7 @@ export interface RemoveDetectionRequest {
      * @type {string}
      * @memberof RemoveDetectionRequest
      */
-    sensorId: string;
+    sensor_id: string;
 }
 /**
  * 
@@ -6831,7 +6831,7 @@ export interface Report {
      * @type {string}
      * @memberof Report
      */
-    groupId?: string | null;
+    group_id?: string | null;
     /**
      * Human-readable report name
      * @type {string}
@@ -6849,7 +6849,7 @@ export interface Report {
      * @type {string}
      * @memberof Report
      */
-    reportType: string;
+    report_type: string;
     /**
      * Export progress percentage (0-100)
      * @type {number}
@@ -6873,7 +6873,7 @@ export interface Report {
      * @type {string}
      * @memberof Report
      */
-    createdAt: string;
+    created_at: string;
 }
 
 
@@ -6911,7 +6911,7 @@ export interface ReportDetail {
      * @type {string}
      * @memberof ReportDetail
      */
-    reportType?: ReportDetailReportTypeEnum;
+    report_type?: ReportDetailReportTypeEnum;
     /**
      * Template name used for the report
      * @type {string}
@@ -6923,7 +6923,7 @@ export interface ReportDetail {
      * @type {string}
      * @memberof ReportDetail
      */
-    groupId: string | null;
+    group_id: string | null;
     /**
      * Generation status of the report
      * @type {string}
@@ -6941,19 +6941,19 @@ export interface ReportDetail {
      * @type {string}
      * @memberof ReportDetail
      */
-    createdAt: string;
+    created_at: string;
     /**
      * Timestamp when the report generation completed
      * @type {string}
      * @memberof ReportDetail
      */
-    completedAt: string | null;
+    completed_at: string | null;
     /**
      * Download endpoint URL. Available only when the report is completed and the file exists
      * @type {string}
      * @memberof ReportDetail
      */
-    downloadUrl: string | null;
+    download_url: string | null;
     /**
      * 
      * @type {ReportDetailMetadata}
@@ -7006,19 +7006,19 @@ export interface ReportDetailMetadata {
      * @type {string}
      * @memberof ReportDetailMetadata
      */
-    startDate?: string;
+    start_date?: string;
     /**
      * End date of the export range
      * @type {string}
      * @memberof ReportDetailMetadata
      */
-    endDate?: string;
+    end_date?: string;
     /**
      * Type of the export
      * @type {string}
      * @memberof ReportDetailMetadata
      */
-    exportType?: string;
+    export_type?: string;
     /**
      * 
      * @type {ReportDetailMetadataOptions}
@@ -7030,13 +7030,13 @@ export interface ReportDetailMetadata {
      * @type {number}
      * @memberof ReportDetailMetadata
      */
-    totalRows?: number;
+    total_rows?: number;
     /**
      * Error message when the generation failed
      * @type {string}
      * @memberof ReportDetailMetadata
      */
-    errorMessage?: string;
+    error_message?: string;
 }
 /**
  * 
@@ -7107,7 +7107,7 @@ export interface ReportDetailMetadataUnitsInner {
      * @type {string}
      * @memberof ReportDetailMetadataUnitsInner
      */
-    unitId?: string;
+    unit_id?: string;
     /**
      * 
      * @type {string}
@@ -7132,7 +7132,7 @@ export interface ResendCooldownResponse {
      * @type {number}
      * @memberof ResendCooldownResponse
      */
-    retryAfterMs?: number;
+    retry_after_ms?: number;
 }
 /**
  * 
@@ -7216,7 +7216,7 @@ export interface SelectSessionAccountRequest {
      * @type {string}
      * @memberof SelectSessionAccountRequest
      */
-    accountId: string;
+    account_id: string;
 }
 /**
  * 
@@ -7229,13 +7229,13 @@ export interface SelectSessionAccountResponse {
      * @type {string}
      * @memberof SelectSessionAccountResponse
      */
-    accountId: string;
+    account_id: string;
     /**
      * 
      * @type {string}
      * @memberof SelectSessionAccountResponse
      */
-    redirectTo: string;
+    redirect_to: string;
 }
 /**
  * 
@@ -7266,7 +7266,7 @@ export interface SessionAccountOption {
      * @type {string}
      * @memberof SessionAccountOption
      */
-    groupId: string | null;
+    group_id: string | null;
     /**
      * 
      * @type {boolean}
@@ -7328,7 +7328,7 @@ export interface SessionAccountsResponse {
      * @type {string}
      * @memberof SessionAccountsResponse
      */
-    currentAccountId: string | null;
+    current_account_id: string | null;
     /**
      * 
      * @type {Array<SessionAccountOption>}
@@ -7340,7 +7340,7 @@ export interface SessionAccountsResponse {
      * @type {Array<SessionPendingAccount>}
      * @memberof SessionAccountsResponse
      */
-    pendingAccounts: Array<SessionPendingAccount>;
+    pending_accounts: Array<SessionPendingAccount>;
 }
 /**
  * 
@@ -7384,7 +7384,7 @@ export interface SessionCurrentAuthority {
      * @type {string}
      * @memberof SessionCurrentAuthority
      */
-    groupId: string | null;
+    group_id: string | null;
 }
 
 
@@ -7409,7 +7409,7 @@ export interface SessionPendingAccount {
      * @type {string}
      * @memberof SessionPendingAccount
      */
-    inviteId: string;
+    invite_id: string;
     /**
      * 
      * @type {SessionPendingAccountAccount}
@@ -7600,7 +7600,7 @@ export interface SessionUiConfigResponse {
      * @type {Array<SessionAccountPage>}
      * @memberof SessionUiConfigResponse
      */
-    accountPages: Array<SessionAccountPage>;
+    account_pages: Array<SessionAccountPage>;
 }
 
 
@@ -7648,7 +7648,7 @@ export interface SessionUser {
      * @type {string}
      * @memberof SessionUser
      */
-    profilePictureUrl: string | null;
+    profile_picture_url: string | null;
 }
 
 
@@ -7811,7 +7811,7 @@ export interface SimpleMachine {
      * @type {string}
      * @memberof SimpleMachine
      */
-    accountId?: string;
+    account_id?: string;
     /**
      * Human-readable machine name
      * @type {string}
@@ -7823,7 +7823,7 @@ export interface SimpleMachine {
      * @type {string}
      * @memberof SimpleMachine
      */
-    createdAt?: string;
+    created_at?: string;
 }
 /**
  * Historical state data point
@@ -8054,55 +8054,55 @@ export interface Thread {
      * @type {boolean}
      * @memberof Thread
      */
-    isOpen?: boolean;
+    is_open?: boolean;
     /**
      * 
      * @type {string}
      * @memberof Thread
      */
-    accountId?: string;
+    account_id?: string;
     /**
      * 
      * @type {string}
      * @memberof Thread
      */
-    groupId?: string | null;
+    group_id?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Thread
      */
-    createdBy?: string;
+    created_by?: string;
     /**
      * 
      * @type {string}
      * @memberof Thread
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * 
      * @type {string}
      * @memberof Thread
      */
-    updatedAt?: string;
+    updated_at?: string;
     /**
      * 
      * @type {string}
      * @memberof Thread
      */
-    closedAt?: string | null;
+    closed_at?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Thread
      */
-    closedBy?: string | null;
+    closed_by?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Thread
      */
-    creatorName?: string;
+    creator_name?: string;
 }
 /**
  * 
@@ -8115,43 +8115,43 @@ export interface ThreadEntity {
      * @type {string}
      * @memberof ThreadEntity
      */
-    threadId?: string;
+    thread_id?: string;
     /**
      * 
      * @type {number}
      * @memberof ThreadEntity
      */
-    postNumber?: number;
+    post_number?: number;
     /**
      * 
      * @type {number}
      * @memberof ThreadEntity
      */
-    entityNumber?: number;
+    entity_number?: number;
     /**
      * 
      * @type {string}
      * @memberof ThreadEntity
      */
-    machineId?: string | null;
+    machine_id?: string | null;
     /**
      * 
      * @type {string}
      * @memberof ThreadEntity
      */
-    issueId?: string | null;
+    issue_id?: string | null;
     /**
      * 
      * @type {string}
      * @memberof ThreadEntity
      */
-    eventId?: string | null;
+    event_id?: string | null;
     /**
      * 
      * @type {string}
      * @memberof ThreadEntity
      */
-    createdAt?: string;
+    created_at?: string;
 }
 /**
  * 
@@ -8164,13 +8164,13 @@ export interface ThreadPost {
      * @type {string}
      * @memberof ThreadPost
      */
-    threadId?: string;
+    thread_id?: string;
     /**
      * 
      * @type {number}
      * @memberof ThreadPost
      */
-    postNumber?: number;
+    post_number?: number;
     /**
      * 
      * @type {string}
@@ -8182,37 +8182,37 @@ export interface ThreadPost {
      * @type {Array<string>}
      * @memberof ThreadPost
      */
-    filePaths?: Array<string>;
+    file_paths?: Array<string>;
     /**
      * 
      * @type {string}
      * @memberof ThreadPost
      */
-    accountId?: string;
+    account_id?: string;
     /**
      * 
      * @type {string}
      * @memberof ThreadPost
      */
-    createdBy?: string;
+    created_by?: string;
     /**
      * 
      * @type {string}
      * @memberof ThreadPost
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * 
      * @type {string}
      * @memberof ThreadPost
      */
-    updatedAt?: string;
+    updated_at?: string;
     /**
      * 
      * @type {string}
      * @memberof ThreadPost
      */
-    authorName?: string;
+    author_name?: string;
 }
 /**
  * 
@@ -8287,13 +8287,13 @@ export interface TransformIntegrationRequestConfiguration {
      * @type {boolean}
      * @memberof TransformIntegrationRequestConfiguration
      */
-    isSimplified?: boolean;
+    is_simplified?: boolean;
     /**
      * Return only latest values
      * @type {boolean}
      * @memberof TransformIntegrationRequestConfiguration
      */
-    latestOnly?: boolean;
+    latest_only?: boolean;
     /**
      * Source for ID field in output
      * @type {string}
@@ -8329,13 +8329,13 @@ export interface TransformIntegrationRequestConnectedControllersInner {
      * @type {string}
      * @memberof TransformIntegrationRequestConnectedControllersInner
      */
-    modelName?: string;
+    model_name?: string;
     /**
      * 
      * @type {number}
      * @memberof TransformIntegrationRequestConnectedControllersInner
      */
-    modelVersion?: number;
+    model_version?: number;
     /**
      * 
      * @type {Array<object>}
@@ -8355,19 +8355,19 @@ export interface TransformIntegrationRequestCredentials {
      * @type {string}
      * @memberof TransformIntegrationRequestCredentials
      */
-    projectId?: string;
+    project_id?: string;
     /**
      * 
      * @type {string}
      * @memberof TransformIntegrationRequestCredentials
      */
-    clientEmail?: string;
+    client_email?: string;
     /**
      * 
      * @type {string}
      * @memberof TransformIntegrationRequestCredentials
      */
-    privateKey?: string;
+    private_key?: string;
 }
 /**
  * @type TransformIntegrationRequestData
@@ -8411,7 +8411,7 @@ export interface UnitHistoryItem {
      * @type {number}
      * @memberof UnitHistoryItem
      */
-    tsTimestamp: number;
+    ts_timestamp: number;
     /**
      * Additional metadata for the data point
      * @type {{ [key: string]: any; }}
@@ -8436,7 +8436,7 @@ export interface UnitLoadResponse {
      * @type {string}
      * @memberof UnitLoadResponse
      */
-    tailDate?: string | null;
+    tail_date?: string | null;
     /**
      * Array of retrieved data points with parsed JSON
      * @type {Array<UnitLoadResponseRowsInner>}
@@ -8474,7 +8474,7 @@ export interface UnregisterObnizRequest {
      * @type {string}
      * @memberof UnregisterObnizRequest
      */
-    obnizId: string;
+    obniz_id: string;
 }
 /**
  * Request body for batch updating connection models
@@ -8538,7 +8538,7 @@ export interface UpdateCurrentAccountMemberRequest {
      * @type {string}
      * @memberof UpdateCurrentAccountMemberRequest
      */
-    groupId?: string | null;
+    group_id?: string | null;
 }
 
 
@@ -8571,7 +8571,7 @@ export interface UpdateCurrentUserRequest {
      * @type {string}
      * @memberof UpdateCurrentUserRequest
      */
-    profilePictureUrl?: string | null;
+    profile_picture_url?: string | null;
 }
 
 
@@ -8639,7 +8639,7 @@ export interface UpdateGroupCustomFieldsRequest {
      * @type {{ [key: string]: any; }}
      * @memberof UpdateGroupCustomFieldsRequest
      */
-    customFields: { [key: string]: any; };
+    custom_fields: { [key: string]: any; };
 }
 /**
  * 
@@ -8697,7 +8697,7 @@ export interface UpdateInboundSourceRequest {
      * @type {string}
      * @memberof UpdateInboundSourceRequest
      */
-    gatewayId?: string;
+    gateway_id?: string;
 }
 /**
  * Request body for updating connection model install configuration
@@ -8710,7 +8710,7 @@ export interface UpdateInstallConfigRequest {
      * @type {{ [key: string]: any; }}
      * @memberof UpdateInstallConfigRequest
      */
-    installConfig: { [key: string]: any; };
+    install_config: { [key: string]: any; };
 }
 /**
  * Response containing updated connection model with new install configuration
@@ -8729,43 +8729,43 @@ export interface UpdateInstallConfigResponse {
      * @type {string}
      * @memberof UpdateInstallConfigResponse
      */
-    machineId: string;
+    machine_id: string;
     /**
      * 
      * @type {string}
      * @memberof UpdateInstallConfigResponse
      */
-    modelName: string;
+    model_name: string;
     /**
      * 
      * @type {number}
      * @memberof UpdateInstallConfigResponse
      */
-    modelVersion: number;
+    model_version: number;
     /**
      * 
      * @type {number}
      * @memberof UpdateInstallConfigResponse
      */
-    viewRoleLevel: number;
+    view_role_level: number;
     /**
      * Updated installation configuration
      * @type {{ [key: string]: any; }}
      * @memberof UpdateInstallConfigResponse
      */
-    installConfig: { [key: string]: any; };
+    install_config: { [key: string]: any; };
     /**
      * 
      * @type {string}
      * @memberof UpdateInstallConfigResponse
      */
-    createdAt?: string;
+    created_at?: string;
     /**
      * 
      * @type {string}
      * @memberof UpdateInstallConfigResponse
      */
-    updatedAt?: string;
+    updated_at?: string;
 }
 /**
  * Fields to update (partial update)
@@ -8822,7 +8822,7 @@ export interface UpdateMachinePublicRequest {
      * @type {boolean}
      * @memberof UpdateMachinePublicRequest
      */
-    isPublic: boolean;
+    is_public: boolean;
 }
 /**
  * Response containing updated machine with new public visibility status
@@ -8882,7 +8882,7 @@ export interface UpdateNotificationTemplateRequest {
      * @type {string}
      * @memberof UpdateNotificationTemplateRequest
      */
-    templateTitle?: string | null;
+    template_title?: string | null;
     /**
      * Body template. Supports {:key} placeholders for dynamic values.
      * Set to null to clear the template.
@@ -8890,7 +8890,7 @@ export interface UpdateNotificationTemplateRequest {
      * @type {string}
      * @memberof UpdateNotificationTemplateRequest
      */
-    templateBody?: string | null;
+    template_body?: string | null;
 }
 /**
  * 
@@ -8929,7 +8929,7 @@ export interface UpdateThreadRequest {
      * @type {boolean}
      * @memberof UpdateThreadRequest
      */
-    isOpen: boolean;
+    is_open: boolean;
 }
 /**
  * 
@@ -9067,7 +9067,7 @@ export interface UsagePeriod {
      * @type {string}
      * @memberof UsagePeriod
      */
-    resetAt: string;
+    reset_at: string;
 }
 /**
  * 
@@ -9116,7 +9116,7 @@ export interface UsageSummary {
      * @type {string}
      * @memberof UsageSummary
      */
-    resetAt: string;
+    reset_at: string;
     /**
      * 
      * @type {string}

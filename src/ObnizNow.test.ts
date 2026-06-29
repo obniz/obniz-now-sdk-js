@@ -61,6 +61,52 @@ describe("ObnizNow SDK", () => {
         expect(authHeader).toContain("Bearer test-token");
       }
     });
+
+    it("should expose response models with original snake_case property names", async () => {
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          limit: 1,
+          offset: 0,
+          count: 1,
+          items: [
+            {
+              machine: {
+                id: "machine-1",
+                account_id: "account-1",
+                name: "Machine 1",
+                connected_obniz_id: "obniz-1",
+                metadata: {},
+                created_at: "2026-01-01T00:00:00.000Z",
+                updated_at: "2026-01-02T00:00:00.000Z",
+                is_public: false,
+              },
+            },
+          ],
+        }),
+        headers: new Headers(),
+      });
+
+      const client = new ObnizNow({
+        token: "test-token",
+        fetch: mockFetch,
+      });
+
+      const response = await client.machines.listMachines({
+        limit: 1,
+        offset: 0,
+      });
+      const machine = response.items[0].machine;
+
+      expect(machine.account_id).toBe("account-1");
+      expect(machine.connected_obniz_id).toBe("obniz-1");
+      expect(machine.connection_models).toBeUndefined();
+      expect(machine.created_at).toBe("2026-01-01T00:00:00.000Z");
+      expect(machine.is_public).toBe(false);
+      expect((machine as any).accountId).toBeUndefined();
+      expect((machine as any).connectedObnizId).toBeUndefined();
+    });
   });
 
   describe("Cookie-based Mode", () => {

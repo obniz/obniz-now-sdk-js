@@ -12,7 +12,8 @@
           "supportsES6": true,
           "useSingleRequestParameter": true,
           "prefixParameterInterfaces": true,
-          "withoutRuntimeChecks": true
+          "withoutRuntimeChecks": true,
+          "modelPropertyNaming": "original"
         }
       }
     }

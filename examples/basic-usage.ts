@@ -37,7 +37,7 @@ async function main() {
         console.log("\nMachine details:");
         console.log(`Name: ${machineWithState.machine.name}`);
         console.log(`ID: ${machineWithState.machine.id}`);
-        console.log(`Created: ${machineWithState.machine.createdAt}`);
+        console.log(`Created: ${machineWithState.machine.created_at}`);
       }
     }
   } catch (error) {

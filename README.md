@@ -56,7 +56,7 @@ const machine = await client.machine.getMachine({
 });
 
 console.log(`Name: ${machine.name}`);
-console.log(`Created: ${machine.createdAt}`);
+console.log(`Created: ${machine.created_at}`);
 ```
 
 ### Get Events

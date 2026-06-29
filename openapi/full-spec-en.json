@@ -7518,9 +7518,6 @@
                             "id": "machine-001",
                             "account_id": "acc-123",
                             "connected_obniz_id": "1234-5678",
-                            "connection_models": [
-                              "model-v1"
-                            ],
                             "name": "Temperature Sensor A",
                             "metadata": {},
                             "is_public": false,
@@ -7549,9 +7546,6 @@
                             "id": "machine-002",
                             "account_id": "acc-123",
                             "connected_obniz_id": "1234-5679",
-                            "connection_models": [
-                              "model-v2"
-                            ],
                             "name": "Motion Detector B",
                             "metadata": {},
                             "is_public": false,
@@ -7594,9 +7588,6 @@
                             "id": "machine-003",
                             "account_id": "acc-123",
                             "connected_obniz_id": "5678-1234",
-                            "connection_models": [
-                              "model-v1"
-                            ],
                             "name": "Sensor Alpha",
                             "metadata": {},
                             "is_public": false,
@@ -12670,7 +12661,6 @@
           "id",
           "account_id",
           "connected_obniz_id",
-          "connection_models",
           "metadata",
           "is_public",
           "created_at",

@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/AccountApi.ts
 apis/AnalyticsApi.ts
 apis/AuditLogsApi.ts

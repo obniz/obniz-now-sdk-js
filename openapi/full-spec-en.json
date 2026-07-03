@@ -5260,9 +5260,9 @@
         }
       }
     },
-    "/api/1/intelligences/add-intelligence": {
-      "post": {
-        "operationId": "addIntelligence",
+    "/api/1/intelligences/get-all": {
+      "get": {
+        "operationId": "getAllIntelligences",
         "security": [
           {
             "ApiToken": []
@@ -5271,38 +5271,18 @@
         "tags": [
           "Intelligences"
         ],
-        "summary": "Add intelligence",
-        "description": "Creates a new intelligence controller.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:write` permission is required\n\n**Validation**\n- Name and version combination must be unique\n- Version must be a positive integer\n- All required fields must be provided\n- `type` must be a valid ControllerType\n- `publishment` must be a valid ControllerPublishment\n- `code_type` must be a valid CodeType\n",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IntelligenceInput"
-              }
-            }
-          }
-        },
+        "summary": "List all intelligences",
+        "description": "Returns a list of all available intelligence controllers.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:read` permission is required\n\n**Visibility Rules**\n- Public intelligences are visible to all users\n- Private intelligences are visible only if user has authority\n- The executable `code` field is not returned by this public API\n",
         "responses": {
-          "201": {
-            "description": "Intelligence created successfully",
+          "200": {
+            "description": "Array of intelligence metadata",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/IntelligenceSuccessResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input or duplicate intelligence. Possible error messages:\n- \"Name is required\"\n- \"Version is required\"\n- \"Version must be a positive integer\"\n- \"Invalid Type\"\n- \"Title is required\"\n- \"Invalid Publishment\"\n- \"Invalid Code type\"\n- \"Code is required\"\n- \"Schema is required\"\n- \"Intelligence with this name and version already exists\"",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "Name is required"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PublicIntelligence"
+                  }
                 }
               }
             }
@@ -5311,98 +5291,12 @@
             "$ref": "#/components/responses/Unauthorized"
           },
           "403": {
-            "$ref": "#/components/responses/ForbiddenPermissionOrOwnerOnly"
-          },
-          "500": {
-            "description": "Server error during creation or authority setup",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "Failed to create intelligence"
-                }
-              }
-            }
+            "$ref": "#/components/responses/ForbiddenPermissions"
           }
         }
       }
     },
     "/api/1/intelligences/{name}/{version}": {
-      "delete": {
-        "operationId": "deleteIntelligence",
-        "security": [
-          {
-            "ApiToken": []
-          }
-        ],
-        "tags": [
-          "Intelligences"
-        ],
-        "summary": "Delete intelligence",
-        "description": "Deletes an intelligence controller and its associated authority.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:delete` permission is required\n",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Intelligence name",
-            "example": "my_intelligence"
-          },
-          {
-            "in": "path",
-            "name": "version",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "description": "Intelligence version",
-            "example": 1
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Intelligence deleted successfully"
-          },
-          "400": {
-            "description": "Invalid version format. Error message:\n- \"Invalid model version\"",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "Invalid model version"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/ForbiddenPermissionOrOwnerOnly"
-          },
-          "500": {
-            "description": "Server error during deletion",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "Failed to delete intelligence"
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "operationId": "getIntelligence",
         "security": [
@@ -5414,7 +5308,7 @@
           "Intelligences"
         ],
         "summary": "Get intelligence",
-        "description": "Retrieves a specific intelligence controller by name and version.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:read` permission is required\n\n**Responce**\n- Returns `allowedToEdit: true` if user's account owns the intelligence\n- Returns `allowedToEdit: false` otherwise\n",
+        "description": "Retrieves visible intelligence metadata by name and version.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:read` permission is required\n\n**Visibility Rules**\n- Public intelligences are visible to all users\n- Private intelligences are visible only if the user's account has authority\n- The executable `code` field is not returned by this public API\n\n**Response**\n- Returns `allowedToEdit: false`; intelligence editing is available only from admin APIs\n",
         "parameters": [
           {
             "in": "path",
@@ -5440,7 +5334,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Intelligence details with edit permission",
+            "description": "Intelligence metadata",
             "content": {
               "application/json": {
                 "schema": {
@@ -5471,134 +5365,6 @@
         }
       }
     },
-    "/api/1/intelligences/{name}/{version}/edit": {
-      "post": {
-        "operationId": "editIntelligence",
-        "security": [
-          {
-            "ApiToken": []
-          }
-        ],
-        "tags": [
-          "Intelligences"
-        ],
-        "summary": "Edit intelligence",
-        "description": "Updates an existing intelligence controller.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:write` permission is required\n\n**Validation**\n- Version must be a positive integer\n- All required fields must be provided\n- `type` must be a valid ControllerType\n- `publishment` must be a valid ControllerPublishment\n- `code_type` must be a valid CodeType\n",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "name",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Intelligence name",
-            "example": "my_intelligence"
-          },
-          {
-            "in": "path",
-            "name": "version",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "minimum": 1
-            },
-            "description": "Intelligence version",
-            "example": 1
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/IntelligenceInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Intelligence updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IntelligenceSuccessResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input. Possible error messages:\n- \"Invalid version\"\n- \"Name is required\"\n- \"Invalid Type\"\n- \"Title is required\"\n- \"Invalid Publishment\"\n- \"Invalid Code type\"\n- \"Code is required\"\n- \"Schema is required\"",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "Invalid version"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/ForbiddenPermissionOrOwnerOnly"
-          },
-          "500": {
-            "description": "Server error during update",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "Failed to update intelligence"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/1/intelligences/get-all": {
-      "get": {
-        "operationId": "getAllIntelligences",
-        "security": [
-          {
-            "ApiToken": []
-          }
-        ],
-        "tags": [
-          "Intelligences"
-        ],
-        "summary": "List all intelligences",
-        "description": "Returns a list of all available intelligence controllers.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:read` permission is required\n\n**Visibility Rules**\n- Public intelligences are visible to all users\n- Private intelligences are visible only if user has authority\n",
-        "responses": {
-          "200": {
-            "description": "Array of intelligence controllers",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Intelligence"
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/ForbiddenPermissions"
-          }
-        }
-      }
-    },
     "/api/1/intelligences": {
       "get": {
         "operationId": "listIntelligences",
@@ -5611,7 +5377,7 @@
           "Intelligences"
         ],
         "summary": "List intelligences with pagination",
-        "description": "Returns a paginated list of intelligence controllers.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:read` permission is required\n\n**Visibility Rules**\n- Public intelligences are visible to all users\n- Private intelligences are visible only if user has authority\n\n**Pagination**\n- Use `offset` and `limit` parameters to paginate results\n- Default limit is 100, maximum is 100\n",
+        "description": "Returns a paginated list of intelligence controllers.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `intelligences:read` permission is required\n\n**Visibility Rules**\n- Public intelligences are visible to all users\n- Private intelligences are visible only if user has authority\n- The executable `code` field is not returned by this public API\n\n**Pagination**\n- Use `offset` and `limit` parameters to paginate results\n- Default limit is 100, maximum is 100\n",
         "parameters": [
           {
             "name": "offset",
@@ -5666,9 +5432,9 @@
                     "items": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Intelligence"
+                        "$ref": "#/components/schemas/PublicIntelligence"
                       },
-                      "description": "Array of intelligence controllers"
+                      "description": "Array of intelligence metadata"
                     },
                     "total": {
                       "type": "integer",
@@ -5739,12 +5505,200 @@
         "parameters": [
           {
             "name": "status",
-            "description": "Filter by invitation status. The following special values are also accepted:\n- `all`: no filter\n- `unsent`: has a destination email but not yet sent (`sent_to` set / `sent_at` null)\n- `unaccepted`: not yet accepted (`unused`, `unused_auto`)\n\nMultiple individual statuses can be specified comma-separated (e.g. `unused,pending`).\n",
+            "description": "Filter by invitation status. The following special values are also accepted:\n- `all`: no filter\n- `unsent`: has a destination email but not yet sent (`sent_to` set / `sent_at` null)\n- `unaccepted`: not yet accepted (`unused`, `unused_auto`)\n- `expired`: expired unused invitation links (`unused` / `unused_auto` with `expires_at` in the past)\n\nMultiple individual statuses can be specified comma-separated (e.g. `unused,pending`). `revoked` is listable.\n",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
               "example": "unaccepted"
+            }
+          },
+          {
+            "name": "q",
+            "description": "Searches invitation ID, destination email, linked user email, and group name (partial match)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "alice"
+            }
+          },
+          {
+            "name": "email",
+            "description": "Filters by destination email or linked user email (partial match)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "alice@example.com"
+            }
+          },
+          {
+            "name": "group_id",
+            "description": "Filters by group ID. Group-restricted members may only request their own group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "group-123"
+            }
+          },
+          {
+            "name": "role",
+            "description": "Filters by invitation role",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "owner",
+                "member",
+                "guest"
+              ],
+              "example": "member"
+            }
+          },
+          {
+            "name": "expired",
+            "description": "Filters expired invitation links. `true` returns expired unused invitations; `false` excludes them",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "example": "false"
+            }
+          },
+          {
+            "name": "has_email",
+            "description": "Filters whether the invitation has a destination or linked user email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "example": "true"
+            }
+          },
+          {
+            "name": "email_sent",
+            "description": "Filters whether the invitation email has been sent (`sent_at` set)",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ],
+              "example": "false"
+            }
+          },
+          {
+            "name": "created_from",
+            "description": "Filters invitations created at or after this ISO 8601 date-time with timezone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-05-01T00:00:00.000Z"
+            }
+          },
+          {
+            "name": "created_to",
+            "description": "Filters invitations created at or before this ISO 8601 date-time with timezone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-05-31T23:59:59.000Z"
+            }
+          },
+          {
+            "name": "expires_from",
+            "description": "Filters invitations expiring at or after this ISO 8601 date-time with timezone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-06-01T00:00:00.000Z"
+            }
+          },
+          {
+            "name": "expires_to",
+            "description": "Filters invitations expiring at or before this ISO 8601 date-time with timezone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-06-30T23:59:59.000Z"
+            }
+          },
+          {
+            "name": "sent_at_from",
+            "description": "Filters invitations whose email was sent at or after this ISO 8601 date-time with timezone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-05-01T00:00:00.000Z"
+            }
+          },
+          {
+            "name": "sent_at_to",
+            "description": "Filters invitations whose email was sent at or before this ISO 8601 date-time with timezone",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2026-05-31T23:59:59.000Z"
+            }
+          },
+          {
+            "name": "sort",
+            "description": "Field to sort by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "expires_at",
+                "sent_at",
+                "status",
+                "role",
+                "email",
+                "group_name"
+              ],
+              "default": "created_at",
+              "example": "email"
+            }
+          },
+          {
+            "name": "order",
+            "description": "Sort direction",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc",
+              "example": "asc"
             }
           },
           {
@@ -5756,7 +5710,8 @@
               "type": "integer",
               "default": 20,
               "example": 20,
-              "minimum": 1
+              "minimum": 1,
+              "maximum": 100
             }
           },
           {
@@ -5798,14 +5753,28 @@
             }
           },
           "400": {
-            "description": "Account is not set",
+            "description": "Bad request. Caused by one of the following:\n- Account is not set\n- Invalid pagination, boolean, role, status, sort, or order query\n- Date-time filters are not valid ISO 8601 values with timezone\n- `status=expired` is combined with `expired=false`\n",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 },
-                "example": {
-                  "error": "Account not found"
+                "examples": {
+                  "accountNotFound": {
+                    "value": {
+                      "error": "Account not found"
+                    }
+                  },
+                  "invalidStatus": {
+                    "value": {
+                      "error": "status must be one of: all, unsent, unaccepted, expired, unused, unused_auto, pending, approved, cancelled, revoked"
+                    }
+                  },
+                  "invalidDate": {
+                    "value": {
+                      "error": "created_from must be an ISO 8601 date-time value with timezone"
+                    }
+                  }
                 }
               }
             }
@@ -8113,14 +8082,14 @@
         }
       },
       "patch": {
-        "operationId": "updateNotificationTemplate",
+        "operationId": "updateNotification",
         "security": [
           {
             "ApiToken": []
           }
         ],
-        "summary": "Update notification template",
-        "description": "Updates the title/body templates for a notification destination.\nTemplates support {:key} placeholders that are dynamically replaced when sending notifications.\nSet to null to clear the template and use the controller-generated values as-is.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `notifications:write` permission is required\n",
+        "summary": "Update notification",
+        "description": "Partially updates the name, group, destination, and templates of a notification.\nOnly the provided fields are updated; omitted fields remain unchanged.\nThe type itself cannot be changed.\nMembers other than owners cannot edit notifications outside their own group.\n\n**Updating the destination**\n- Destinations of slack / slackApp types cannot be edited (recreate the notification instead). name / group_id / templates are editable for all types\n- Provided keys are shallow-merged into the existing destination. Omitted keys keep their existing values (e.g. language for call, method / headers for webhook)\n- Setting a clearable key (cc / bcc for email, method / headers for webhook) to null or an empty string removes the key\n- Required keys (to for email / sms / call, url for webhook) cannot be cleared\n- Keys outside the editable set are ignored\n\n**Updating group_id**\n- Permission is checked only when the value actually changes (sending an unchanged group_id is always allowed)\n- Members other than owners cannot change it to a group outside their own, nor clear it (null)\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `notifications:write` permission is required\n",
         "tags": [
           "Notifications"
         ],
@@ -8144,6 +8113,25 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Human-readable notification name. Cannot be an empty string",
+                    "example": "Admin Email Alerts"
+                  },
+                  "group_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional group ID to restrict the notification to a specific group.\nSet to null or an empty string to clear the group assignment (owners only).\nNo permission check is performed when the value is unchanged.\n",
+                    "example": "group-123"
+                  },
+                  "destination": {
+                    "type": "object",
+                    "description": "Destination settings. A JSON-encoded string is also accepted.\nProvided keys are shallow-merged into the existing destination. The structure varies by type.\nFor email: {\"to\": \"a@example.com\", \"cc\": \"b@example.com\", \"bcc\": null}\n- to: comma-separated string or array. Cannot be cleared\n- cc, bcc: comma-separated string or array. Set to null or an empty string to remove the key\nFor SMS / call: {\"to\": \"+819012345678\"}\nFor webhook: {\"url\": \"https://example.com/hook\", \"method\": \"POST\", \"headers\": {}}\n- method / headers can be removed with null or an empty string\nAll emails are checked for format and duplicates across to/cc/bcc after merging\n",
+                    "example": {
+                      "to": "admin@example.com",
+                      "cc": null
+                    }
+                  },
                   "template_title": {
                     "type": "string",
                     "nullable": true,
@@ -8163,7 +8151,7 @@
         },
         "responses": {
           "204": {
-            "description": "Template updated successfully"
+            "description": "Notification updated successfully"
           },
           "400": {
             "description": "Bad request - validation error or group mismatch",
@@ -8177,6 +8165,24 @@
                     "summary": "Group mismatch",
                     "value": {
                       "error": "同一グループでの指定が必要です"
+                    }
+                  },
+                  "slackDestination": {
+                    "summary": "Editing a slack / slackApp destination",
+                    "value": {
+                      "error": "このタイプの通知先は編集できません"
+                    }
+                  },
+                  "invalidEmail": {
+                    "summary": "Invalid email address format",
+                    "value": {
+                      "error": "不正なメールアドレス形式です (to): invalid-address"
+                    }
+                  },
+                  "emptyName": {
+                    "summary": "Empty name",
+                    "value": {
+                      "error": "nameは1文字以上で指定してください"
                     }
                   },
                   "invalidTitle": {
@@ -8193,7 +8199,28 @@
             "$ref": "#/components/responses/Unauthorized"
           },
           "403": {
-            "$ref": "#/components/responses/ForbiddenPermissions"
+            "description": "Permission denied.\nReturned when the `notifications:write` permission is missing, when a member other than\nan owner tries to edit a notification outside their own group, or when such a member\ntries to change or clear group_id to a value outside their own group.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "examples": {
+                  "accessDenied": {
+                    "summary": "Not allowed to edit a notification outside the member's group or change group_id",
+                    "value": {
+                      "error": "Access denied"
+                    }
+                  },
+                  "insufficientPermissions": {
+                    "summary": "Missing notifications:write permission",
+                    "value": {
+                      "error": "Insufficient permissions. Required: notifications:write"
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Notification not found",
@@ -13698,86 +13725,6 @@
           "schema"
         ]
       },
-      "IntelligenceInput": {
-        "description": "Input schema for creating or updating intelligence",
-        "properties": {
-          "name": {
-            "description": "Unique intelligence name (must be unique with version)",
-            "example": "my_intelligence",
-            "type": "string"
-          },
-          "version": {
-            "description": "Intelligence version (positive integer)",
-            "example": 1,
-            "type": "integer",
-            "minimum": 1
-          },
-          "type": {
-            "description": "Controller type (machine_controller, intelligence_realtime_machine, intelligence_async_machine, intelligence_async_account, intelligence_holder)",
-            "example": "intelligence_async_machine",
-            "$ref": "#/components/schemas/ControllerType"
-          },
-          "title": {
-            "description": "Human-readable intelligence title",
-            "example": "My Intelligence Controller",
-            "type": "string"
-          },
-          "images": {
-            "description": "Image URL or comma-separated URLs",
-            "example": "",
-            "type": "string"
-          },
-          "publishment": {
-            "description": "Visibility status (public or private)",
-            "example": "private",
-            "$ref": "#/components/schemas/ControllerPublishment"
-          },
-          "description": {
-            "description": "Detailed intelligence description",
-            "example": "This intelligence analyzes data",
-            "type": "string"
-          },
-          "code_type": {
-            "description": "Code storage type (repository or code)",
-            "example": "code",
-            "$ref": "#/components/schemas/CodeType"
-          },
-          "code": {
-            "description": "Intelligence code (required when code_type is 'code')",
-            "example": "function analyze(data) { return data; }",
-            "type": "string",
-            "nullable": true
-          },
-          "schema": {
-            "description": "Intelligence schema definition (required)",
-            "example": {},
-            "type": "object",
-            "additionalProperties": true
-          },
-          "conditions": {
-            "description": "Conditions for intelligence execution",
-            "example": {},
-            "type": "object",
-            "additionalProperties": true
-          },
-          "widget": {
-            "description": "Widget configuration for UI display",
-            "example": "",
-            "type": "string"
-          }
-        },
-        "type": "object",
-        "required": [
-          "name",
-          "version",
-          "type",
-          "title",
-          "publishment",
-          "code_type",
-          "code",
-          "schema"
-        ]
-      },
       "InstallConfigStructure": {
         "description": "Configuration structure defining fields required for controller installation",
         "properties": {
@@ -15018,23 +14965,61 @@
         ],
         "properties": {
           "intelligence": {
-            "$ref": "#/components/schemas/Intelligence"
+            "$ref": "#/components/schemas/PublicIntelligence"
           },
           "allowedToEdit": {
             "type": "boolean",
-            "description": "Whether the user can edit this intelligence"
+            "description": "Always false for the public API. Intelligence editing is available only from admin APIs."
           }
         }
       },
-      "IntelligenceSuccessResponse": {
+      "PublicIntelligence": {
         "type": "object",
         "required": [
-          "success"
+          "name",
+          "version",
+          "type",
+          "title",
+          "publishment",
+          "code_type",
+          "schema"
         ],
+        "description": "Public intelligence metadata. The executable code field is intentionally omitted.",
         "properties": {
-          "success": {
-            "type": "boolean",
-            "example": true
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "number"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ControllerType"
+          },
+          "title": {
+            "type": "string"
+          },
+          "images": {
+            "type": "string"
+          },
+          "publishment": {
+            "$ref": "#/components/schemas/ControllerPublishment"
+          },
+          "description": {
+            "type": "string"
+          },
+          "code_type": {
+            "$ref": "#/components/schemas/CodeType"
+          },
+          "schema": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "conditions": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "widget": {
+            "type": "string"
           }
         }
       },
@@ -15158,6 +15143,12 @@
             "description": "Email of the linked user",
             "example": null
           },
+          "recipient_email": {
+            "type": "string",
+            "nullable": true,
+            "description": "Linked user email if available; otherwise the invitation destination email",
+            "example": "invitee@example.com"
+          },
           "role": {
             "type": "string",
             "nullable": true,
@@ -15183,6 +15174,11 @@
           },
           "status": {
             "$ref": "#/components/schemas/InviteStatus"
+          },
+          "is_expired": {
+            "type": "boolean",
+            "description": "Whether this is an unused invitation whose `expires_at` is in the past",
+            "example": false
           },
           "sent_to": {
             "type": "string",

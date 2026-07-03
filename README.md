@@ -123,7 +123,7 @@ For plain custom page HTML, import the browser bundle from a CDN or from a file 
 
 ```html
 <script type="module">
-  import { ObnizNow } from "https://cdn.jsdelivr.net/npm/@obniz/obniz-now-sdk@0.1.11/dist/index.mjs";
+  import { ObnizNow } from "https://cdn.jsdelivr.net/npm/@obniz/obniz-now-sdk@0.1.13/dist/index.mjs";
 
   const client = new ObnizNow({
     baseUrl: window.location.origin,

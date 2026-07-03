@@ -12731,7 +12731,8 @@
           "unique_key": {
             "description": "Unique key for the issue, used to identify similar issues",
             "example": "power",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "detail": {
             "description": "Details of issue",
@@ -13020,34 +13021,19 @@
             "example": {
               "temperature": 25.5,
               "humidity": 60,
-              "timestamp": 1234567890
+              "timestamp": 1234567890,
+              "last_seen": "2024-01-26T10:30:00Z"
             },
             "type": "object",
-            "additionalProperties": true
+            "additionalProperties": true,
+            "nullable": true
           }
         },
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Machine"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "machine_stat": {
-                "type": "object",
-                "additionalProperties": true,
-                "description": "Current machine state as key-value pairs of the latest state data",
-                "nullable": true,
-                "example": {
-                  "temperature": 23.5,
-                  "humidity": 45,
-                  "last_seen": "2024-01-26T10:30:00Z"
-                }
-              }
-            }
-          }
-        ],
-        "type": "object"
+        "type": "object",
+        "required": [
+          "machine",
+          "machine_stat"
+        ]
       },
       "ConnectionModelDetailed": {
         "description": "Detailed connection model with configuration and permissions",
@@ -13087,11 +13073,19 @@
           "install_config_structure": {
             "description": "Schema defining the structure of install_config",
             "example": [],
-            "type": "array",
             "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/InstallConfigStructure"
-            }
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/InstallConfigStructure"
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              }
+            ]
           },
           "can_delete": {
             "description": "Whether the current user has permission to delete this model",
@@ -13101,11 +13095,20 @@
           "conditions": {
             "description": "Conditions that must be met for installation",
             "example": [],
-            "type": "array",
             "nullable": true,
-            "items": {
-              "type": "object"
-            }
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              }
+            ]
           },
           "created_at": {
             "description": "Creation timestamp",
@@ -13172,26 +13175,37 @@
           "install_config_structure": {
             "description": "Schema defining required installation configuration",
             "example": [],
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/InstallConfigStructure"
-            }
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/InstallConfigStructure"
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              }
+            ]
           },
           "conditions": {
             "description": "Conditions that must be met before installation",
             "example": [],
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "type": {
-                  "type": "string"
-                },
-                "message": {
-                  "type": "string"
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
                 }
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
               }
-            }
+            ]
           }
         },
         "type": "object"
@@ -13705,8 +13719,20 @@
           "conditions": {
             "description": "Conditions for intelligence execution",
             "example": {},
-            "type": "object",
-            "additionalProperties": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              }
+            ]
           },
           "widget": {
             "description": "Widget configuration for UI display",
@@ -15015,8 +15041,20 @@
             "additionalProperties": true
           },
           "conditions": {
-            "type": "object",
-            "additionalProperties": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              }
+            ]
           },
           "widget": {
             "type": "string"

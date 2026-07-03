@@ -51,12 +51,12 @@ response.items.forEach((item) => {
 ### Get Machine Details
 ```typescript
 // Get specific machine
-const machine = await client.machine.getMachine({ 
+const machineWithState = await client.machine.getMachine({
   machineId: 'machine-id' 
 });
 
-console.log(`Name: ${machine.name}`);
-console.log(`Created: ${machine.created_at}`);
+console.log(`Name: ${machineWithState.machine.name}`);
+console.log(`Created: ${machineWithState.machine.created_at}`);
 ```
 
 ### Get Events
@@ -123,7 +123,7 @@ For plain custom page HTML, import the browser bundle from a CDN or from a file 
 
 ```html
 <script type="module">
-  import { ObnizNow } from "https://cdn.jsdelivr.net/npm/@obniz/obniz-now-sdk@0.1.13/dist/index.mjs";
+  import { ObnizNow } from "https://cdn.jsdelivr.net/npm/@obniz/obniz-now-sdk@0.1.14/dist/index.mjs";
 
   const client = new ObnizNow({
     baseUrl: window.location.origin,

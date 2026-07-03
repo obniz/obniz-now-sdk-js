@@ -242,6 +242,27 @@ describe("ObnizNow SDK", () => {
       expect(client).toBeDefined();
     });
 
+    it("should normalize trailing slashes in custom baseUrl", async () => {
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({ items: [], count: 0, limit: 1, offset: 0 }),
+        headers: new Headers(),
+      });
+
+      const client = new ObnizNow({
+        token: "test-token",
+        baseUrl: "https://example.com/",
+        fetch: mockFetch,
+      });
+
+      await client.machines.listMachines({ limit: 1, offset: 0 });
+
+      expect(mockFetch.mock.calls[0][0]).toBe(
+        "https://example.com/api/1/machines?limit=1&offset=0",
+      );
+    });
+
     it("should use custom baseUrl with cookie mode", () => {
       const client = new ObnizNow({
         cookies: {

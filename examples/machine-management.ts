@@ -45,9 +45,9 @@ async function main() {
     });
 
     console.log('Machine details:');
-    console.log(`  Name: ${machineDetails.name}`);
-    console.log(`  ID: ${machineDetails.id}`);
-    console.log(`  Created: ${machineDetails.created_at}`);
+    console.log(`  Name: ${machineDetails.machine.name}`);
+    console.log(`  ID: ${machineDetails.machine.id}`);
+    console.log(`  Created: ${machineDetails.machine.created_at}`);
 
     console.log('\nExample completed successfully!');
 

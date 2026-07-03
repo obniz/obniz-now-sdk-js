@@ -187,7 +187,7 @@ export class ObnizNow {
   constructor(options: ObnizNowOptions) {
     const token = (options as ObnizNowTokenOptions).token;
     const cookies = (options as ObnizNowCookiesOptions).cookies;
-    const baseUrl = options.baseUrl ?? "https://api.obniz.com";
+    const baseUrl = (options.baseUrl ?? "https://api.obniz.com").replace(/\/+$/, "");
     const fetchApi =
       options.fetch || (typeof fetch !== "undefined" ? fetch : undefined);
 

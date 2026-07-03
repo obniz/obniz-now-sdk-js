@@ -791,17 +791,17 @@ export interface AvailableController {
      */
     installRole?: number;
     /**
-     * Schema defining required installation configuration
-     * @type {Array<InstallConfigStructure>}
+     *
+     * @type {AvailableControllerInstallConfigStructure}
      * @memberof AvailableController
      */
-    install_config_structure?: Array<InstallConfigStructure>;
+    install_config_structure?: AvailableControllerInstallConfigStructure | null;
     /**
-     * Conditions that must be met before installation
-     * @type {Array<AvailableControllerConditionsInner>}
+     *
+     * @type {AvailableControllerConditions}
      * @memberof AvailableController
      */
-    conditions?: Array<AvailableControllerConditionsInner>;
+    conditions?: AvailableControllerConditions | null;
 }
 
 
@@ -818,24 +818,17 @@ export const AvailableControllerControllerTypeEnum = {
 export type AvailableControllerControllerTypeEnum = typeof AvailableControllerControllerTypeEnum[keyof typeof AvailableControllerControllerTypeEnum];
 
 /**
- *
+ * @type AvailableControllerConditions
+ * Conditions that must be met before installation
  * @export
- * @interface AvailableControllerConditionsInner
  */
-export interface AvailableControllerConditionsInner {
-    /**
-     *
-     * @type {string}
-     * @memberof AvailableControllerConditionsInner
-     */
-    type?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof AvailableControllerConditionsInner
-     */
-    message?: string;
-}
+export type AvailableControllerConditions = Array<{ [key: string]: any; }> | { [key: string]: any; };
+/**
+ * @type AvailableControllerInstallConfigStructure
+ * Schema defining required installation configuration
+ * @export
+ */
+export type AvailableControllerInstallConfigStructure = Array<InstallConfigStructure> | { [key: string]: any; };
 /**
  *
  * @export
@@ -1433,11 +1426,11 @@ export interface ConnectionModelDetailed {
      */
     install_config?: { [key: string]: any; } | null;
     /**
-     * Schema defining the structure of install_config
-     * @type {Array<InstallConfigStructure>}
+     *
+     * @type {ConnectionModelDetailedInstallConfigStructure}
      * @memberof ConnectionModelDetailed
      */
-    install_config_structure?: Array<InstallConfigStructure> | null;
+    install_config_structure?: ConnectionModelDetailedInstallConfigStructure | null;
     /**
      * Whether the current user has permission to delete this model
      * @type {boolean}
@@ -1445,11 +1438,11 @@ export interface ConnectionModelDetailed {
      */
     can_delete?: boolean;
     /**
-     * Conditions that must be met for installation
-     * @type {Array<object>}
+     *
+     * @type {ConnectionModelDetailedConditions}
      * @memberof ConnectionModelDetailed
      */
-    conditions?: Array<object> | null;
+    conditions?: ConnectionModelDetailedConditions | null;
     /**
      * Creation timestamp
      * @type {string}
@@ -1463,6 +1456,18 @@ export interface ConnectionModelDetailed {
      */
     updated_at?: string;
 }
+/**
+ * @type ConnectionModelDetailedConditions
+ * Conditions that must be met for installation
+ * @export
+ */
+export type ConnectionModelDetailedConditions = Array<{ [key: string]: any; }> | { [key: string]: any; };
+/**
+ * @type ConnectionModelDetailedInstallConfigStructure
+ * Schema defining the structure of install_config
+ * @export
+ */
+export type ConnectionModelDetailedInstallConfigStructure = Array<InstallConfigStructure> | { [key: string]: any; };
 /**
  * Result of a single connection model operation
  * @export
@@ -4475,11 +4480,11 @@ export interface Intelligence {
      */
     schema: { [key: string]: any; };
     /**
-     * Conditions for intelligence execution
-     * @type {{ [key: string]: any; }}
+     *
+     * @type {IntelligenceConditions}
      * @memberof Intelligence
      */
-    conditions?: { [key: string]: any; };
+    conditions?: IntelligenceConditions | null;
     /**
      * Widget configuration for UI display
      * @type {string}
@@ -4489,6 +4494,12 @@ export interface Intelligence {
 }
 
 
+/**
+ * @type IntelligenceConditions
+ * Conditions for intelligence execution
+ * @export
+ */
+export type IntelligenceConditions = Array<{ [key: string]: any; }> | { [key: string]: any; };
 /**
  * Invitation record (the raw invitation included in approve / cancel / revoke responses)
  * @export
@@ -4815,7 +4826,7 @@ export interface Issue {
      * @type {string}
      * @memberof Issue
      */
-    unique_key?: string;
+    unique_key?: string | null;
     /**
      * Details of issue
      * @type {string}
@@ -5894,67 +5905,13 @@ export interface MachineWithState {
      * @type {Machine}
      * @memberof MachineWithState
      */
-    machine?: Machine;
+    machine: Machine;
     /**
      * Current state of the machine (key-value pairs)
      * @type {{ [key: string]: any; }}
      * @memberof MachineWithState
      */
-    machine_stat?: { [key: string]: any; };
-    /**
-     * Unique machine identifier (UUID)
-     * @type {string}
-     * @memberof MachineWithState
-     */
-    id: string;
-    /**
-     * Account ID that owns this machine
-     * @type {string}
-     * @memberof MachineWithState
-     */
-    account_id: string;
-    /**
-     * Human-readable machine name
-     * @type {string}
-     * @memberof MachineWithState
-     */
-    name?: string | null;
-    /**
-     * ID of connected obniz device (if any)
-     * @type {string}
-     * @memberof MachineWithState
-     */
-    connected_obniz_id: string | null;
-    /**
-     * List of connection model names
-     * @type {Array<string>}
-     * @memberof MachineWithState
-     */
-    connection_models?: Array<string>;
-    /**
-     * Custom metadata for the machine
-     * @type {{ [key: string]: any; }}
-     * @memberof MachineWithState
-     */
-    metadata: { [key: string]: any; };
-    /**
-     * Timestamp when the machine was created
-     * @type {string}
-     * @memberof MachineWithState
-     */
-    created_at: string;
-    /**
-     * Timestamp when the machine was last updated
-     * @type {string}
-     * @memberof MachineWithState
-     */
-    updated_at: string;
-    /**
-     * Whether the machine is publicly accessible
-     * @type {boolean}
-     * @memberof MachineWithState
-     */
-    is_public: boolean;
+    machine_stat: { [key: string]: any; } | null;
 }
 /**
  *
@@ -6660,10 +6617,10 @@ export interface PublicIntelligence {
     schema: { [key: string]: any; };
     /**
      *
-     * @type {{ [key: string]: any; }}
+     * @type {PublicIntelligenceConditions}
      * @memberof PublicIntelligence
      */
-    conditions?: { [key: string]: any; };
+    conditions?: PublicIntelligenceConditions | null;
     /**
      *
      * @type {string}
@@ -6673,6 +6630,12 @@ export interface PublicIntelligence {
 }
 
 
+/**
+ * @type PublicIntelligenceConditions
+ *
+ * @export
+ */
+export type PublicIntelligenceConditions = Array<{ [key: string]: any; }> | { [key: string]: any; };
 /**
  *
  * @export

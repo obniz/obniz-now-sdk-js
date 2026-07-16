@@ -107,6 +107,47 @@ describe("ObnizNow SDK", () => {
       expect((machine as any).accountId).toBeUndefined();
       expect((machine as any).connectedObnizId).toBeUndefined();
     });
+
+    it("should send group hierarchy filters", async () => {
+      const mockFetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: async () => ({
+          count: 0,
+          offset: 0,
+          limit: 100,
+          items: [],
+        }),
+        headers: new Headers(),
+      });
+
+      const client = new ObnizNow({
+        token: "test-token",
+        fetch: mockFetch,
+      });
+
+      await client.groups.listGroups({
+        noParent: true,
+        offset: 0,
+        limit: 100,
+      });
+
+      let requestUrl = new URL(String(mockFetch.mock.calls[0][0]));
+      expect(requestUrl.searchParams.get("no_parent")).toBe("true");
+
+      mockFetch.mockClear();
+
+      await client.groups.listGroups({
+        parentGroupId: "parent-group-1",
+        offset: 0,
+        limit: 100,
+      });
+
+      requestUrl = new URL(String(mockFetch.mock.calls[0][0]));
+      expect(requestUrl.searchParams.get("parent_group_id")).toBe(
+        "parent-group-1",
+      );
+    });
   });
 
   describe("Cookie-based Mode", () => {

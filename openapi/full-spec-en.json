@@ -3231,6 +3231,27 @@
               "default": 100
             },
             "example": 20
+          },
+          {
+            "name": "parent_group_id",
+            "in": "query",
+            "description": "Return only groups that are direct children of the specified parent group. Takes precedence over no_parent when both are specified.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "7328d7ed-8c22-40ac-9309-8c70df8686df"
+          },
+          {
+            "name": "no_parent",
+            "in": "query",
+            "description": "Return only groups without a parent. Ignored when parent_group_id is specified.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "example": true
           }
         ],
         "responses": {

@@ -57,6 +57,8 @@ export interface GroupsApiListGroupsRequest {
     searchWord?: string;
     offset?: number;
     limit?: number;
+    parentGroupId?: string;
+    noParent?: boolean;
 }
 
 export interface GroupsApiRemoveMachinesFromGroupRequest {
@@ -283,6 +285,14 @@ export class GroupsApi extends runtime.BaseAPI {
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['parentGroupId'] != null) {
+            queryParameters['parent_group_id'] = requestParameters['parentGroupId'];
+        }
+
+        if (requestParameters['noParent'] != null) {
+            queryParameters['no_parent'] = requestParameters['noParent'];
         }
 
         const headerParameters: runtime.HTTPHeaders = {};

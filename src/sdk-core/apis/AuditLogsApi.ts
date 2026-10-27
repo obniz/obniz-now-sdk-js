@@ -18,6 +18,7 @@ import type {
   ErrorResponse,
   ForbiddenPermissionOrOwnerOnly,
   ListAuditLogsResponse,
+  ListColdAuditLogsResponse,
   UnauthorizedError,
 } from '../models/index';
 
@@ -28,6 +29,13 @@ export interface AuditLogsApiListAuditLogsRequest {
     userId?: string;
     start?: string;
     end?: string;
+}
+
+export interface AuditLogsApiListColdAuditLogsRequest {
+    start: string;
+    end: string;
+    limit?: number;
+    cursor?: string;
 }
 
 /**
@@ -88,6 +96,68 @@ export class AuditLogsApi extends runtime.BaseAPI {
      */
     async listAuditLogs(requestParameters: AuditLogsApiListAuditLogsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListAuditLogsResponse> {
         const response = await this.listAuditLogsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Retrieves archived (cold) audit logs from long-term storage in reverse chronological order with cursor-based pagination.  **Date range** - `start` and `end` are UTC dates (`YYYY-MM-DD`) and both are required - `start` must be on or before `end`, and the inclusive range may span at most 31 days  **Pagination** - When more records exist, the response includes `next_cursor` - Pass it as the `cursor` parameter to fetch the next page; `next_cursor` is `null` on the last page  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `audit_logs:read` permission is required - Owner only access - The account plan must include audit log access 
+     * Get cold audit logs
+     */
+    async listColdAuditLogsRaw(requestParameters: AuditLogsApiListColdAuditLogsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListColdAuditLogsResponse>> {
+        if (requestParameters['start'] == null) {
+            throw new runtime.RequiredError(
+                'start',
+                'Required parameter "start" was null or undefined when calling listColdAuditLogs().'
+            );
+        }
+
+        if (requestParameters['end'] == null) {
+            throw new runtime.RequiredError(
+                'end',
+                'Required parameter "end" was null or undefined when calling listColdAuditLogs().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['start'] != null) {
+            queryParameters['start'] = requestParameters['start'];
+        }
+
+        if (requestParameters['end'] != null) {
+            queryParameters['end'] = requestParameters['end'];
+        }
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['cursor'] != null) {
+            queryParameters['cursor'] = requestParameters['cursor'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/cold_audit_logs`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Retrieves archived (cold) audit logs from long-term storage in reverse chronological order with cursor-based pagination.  **Date range** - `start` and `end` are UTC dates (`YYYY-MM-DD`) and both are required - `start` must be on or before `end`, and the inclusive range may span at most 31 days  **Pagination** - When more records exist, the response includes `next_cursor` - Pass it as the `cursor` parameter to fetch the next page; `next_cursor` is `null` on the last page  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `audit_logs:read` permission is required - Owner only access - The account plan must include audit log access 
+     * Get cold audit logs
+     */
+    async listColdAuditLogs(requestParameters: AuditLogsApiListColdAuditLogsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListColdAuditLogsResponse> {
+        const response = await this.listColdAuditLogsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

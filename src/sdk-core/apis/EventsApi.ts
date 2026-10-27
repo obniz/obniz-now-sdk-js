@@ -15,11 +15,18 @@
 
 import * as runtime from '../runtime';
 import type {
+  CreateEventRequest,
+  CreateEventResponse,
   ErrorResponse,
   ForbiddenPermissionsError,
   ListEventsResponse,
   UnauthorizedError,
 } from '../models/index';
+
+export interface EventsApiCreateEventOperationRequest {
+    idempotencyKey: string;
+    createEventRequest: CreateEventRequest;
+}
 
 export interface EventsApiListEventsRequest {
     limit?: number;
@@ -36,6 +43,59 @@ export interface EventsApiListEventsRequest {
  * 
  */
 export class EventsApi extends runtime.BaseAPI {
+
+    /**
+     * Creates one account Event. The server assigns `id`, `type` (`api`), `ts`, and `serial`. The `value` is durable account-visible Event data, so it must not contain credentials or other secrets.  The operation is idempotent within the authenticated output actor. The first successful request returns `201`; replaying the same normalized request with the same `Idempotency-Key` returns `200` and the original Event. Reusing the key for a different normalized request returns `409`.  **Authorization** - Authenticate with an API key or an active external Account Intelligence run credential in the `Authorization` header - A run credential must have completed external delivery verification before the effect transaction - Cookie authentication is forbidden for this operation, including for account owners  **Permissions** - `events:write` permission is required  **Validation** - Only `name`, `level`, `machine_id`, and `value` may be supplied - `name` is 1-256 Unicode code points and at most 1024 UTF-8 bytes - `machine_id`, when supplied, must identify a machine in the authenticated account - `machine_id` is 1-255 Unicode code points when supplied - `value` must be a JSON object containing valid Unicode and finite numbers, without NUL, at most 16 levels deep and 4096 JSON nodes; when omitted it defaults to `{}` - The canonical normalized request must not exceed 64 KiB 
+     * Create an API event
+     */
+    async createEventRaw(requestParameters: EventsApiCreateEventOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateEventResponse>> {
+        if (requestParameters['idempotencyKey'] == null) {
+            throw new runtime.RequiredError(
+                'idempotencyKey',
+                'Required parameter "idempotencyKey" was null or undefined when calling createEvent().'
+            );
+        }
+
+        if (requestParameters['createEventRequest'] == null) {
+            throw new runtime.RequiredError(
+                'createEventRequest',
+                'Required parameter "createEventRequest" was null or undefined when calling createEvent().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['idempotencyKey'] != null) {
+            headerParameters['Idempotency-Key'] = String(requestParameters['idempotencyKey']);
+        }
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/events`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['createEventRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Creates one account Event. The server assigns `id`, `type` (`api`), `ts`, and `serial`. The `value` is durable account-visible Event data, so it must not contain credentials or other secrets.  The operation is idempotent within the authenticated output actor. The first successful request returns `201`; replaying the same normalized request with the same `Idempotency-Key` returns `200` and the original Event. Reusing the key for a different normalized request returns `409`.  **Authorization** - Authenticate with an API key or an active external Account Intelligence run credential in the `Authorization` header - A run credential must have completed external delivery verification before the effect transaction - Cookie authentication is forbidden for this operation, including for account owners  **Permissions** - `events:write` permission is required  **Validation** - Only `name`, `level`, `machine_id`, and `value` may be supplied - `name` is 1-256 Unicode code points and at most 1024 UTF-8 bytes - `machine_id`, when supplied, must identify a machine in the authenticated account - `machine_id` is 1-255 Unicode code points when supplied - `value` must be a JSON object containing valid Unicode and finite numbers, without NUL, at most 16 levels deep and 4096 JSON nodes; when omitted it defaults to `{}` - The canonical normalized request must not exceed 64 KiB 
+     * Create an API event
+     */
+    async createEvent(requestParameters: EventsApiCreateEventOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateEventResponse> {
+        const response = await this.createEventRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
 
     /**
      * Retrieves events in reverse chronological order with optional filtering and pagination  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `events:read` permission is required 

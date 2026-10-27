@@ -16,6 +16,7 @@
 import * as runtime from '../runtime';
 import type {
   CSVExportStatusResponse,
+  CreateCSVExport401Response,
   CreateCSVExportRequest,
   CreateCSVExportResponse,
   ErrorResponse,

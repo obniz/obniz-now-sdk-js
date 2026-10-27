@@ -2,7 +2,7 @@ import { ResponseError } from "./sdk-core/runtime";
 
 /**
  * All API methods automatically convert ResponseError to ObnizApiError
- * 
+ *
  * @example
  * ```typescript
  * try {
@@ -18,36 +18,36 @@ import { ResponseError } from "./sdk-core/runtime";
 export class ObnizNowApiError extends Error {
   /** HTTP status code (e.g., 404, 500) */
   public readonly status: number;
-  
+
   /** HTTP status text (e.g., "Not Found", "Internal Server Error") */
   public readonly statusText: string;
-  
+
   /** Parsed response body data */
   public readonly data: any;
-  
+
   /** Original ResponseError for advanced use cases */
   public readonly originalError!: ResponseError;
 
   constructor(responseError: ResponseError, status: number, statusText: string, data: any) {
     const message = data?.error || data?.message || statusText || `HTTP ${status}`;
     super(message);
-    
+
     this.name = "ObnizNowApiError";
     this.status = status;
     this.statusText = statusText;
     this.data = data;
-    
+
     // Store originalError as non-enumerable property to keep it out of console.log
     // but still accessible for advanced use cases
-    Object.defineProperty(this, 'originalError', {
+    Object.defineProperty(this, "originalError", {
       value: responseError,
       writable: false,
       enumerable: false,
-      configurable: false
+      configurable: false,
     });
-    
+
     // Maintain proper stack trace (Node.js only)
-    if ('captureStackTrace' in Error) {
+    if ("captureStackTrace" in Error) {
       (Error as any).captureStackTrace(this, ObnizNowApiError);
     }
   }
@@ -58,7 +58,7 @@ export class ObnizNowApiError extends Error {
   static async fromResponseError(error: ResponseError): Promise<ObnizNowApiError> {
     const status = error.response.status;
     const statusText = error.response.statusText;
-    
+
     let data: any;
     try {
       // Try to parse as JSON
@@ -72,13 +72,13 @@ export class ObnizNowApiError extends Error {
         data = { error: statusText };
       }
     }
-    
+
     return new ObnizNowApiError(error, status, statusText, data);
   }
-  
+
   /**
    * Get response headers (useful for rate limiting, caching, etc.)
-   * 
+   *
    * @example
    * ```typescript
    * const rateLimit = error.getResponseHeaders().get('x-ratelimit-remaining');
@@ -87,14 +87,14 @@ export class ObnizNowApiError extends Error {
   getResponseHeaders(): Headers {
     return this.originalError.response.headers;
   }
-  
+
   /**
    * Get full request URL
    */
   getRequestUrl(): string {
     return this.originalError.response.url;
   }
-  
+
   /**
    * Control JSON serialization - don't include originalError
    */
@@ -114,25 +114,26 @@ export class ObnizNowApiError extends Error {
  * Wraps an API object to automatically convert ResponseError to ObnizNowApiError
  */
 export function wrapApiWithErrorHandling<T extends object>(api: T): T {
-  const passthroughMethods = new Set([
-    "withMiddleware",
-    "withPreMiddleware",
-    "withPostMiddleware",
-  ]);
-
+  const middlewareMethods = new Set(["withMiddleware", "withPreMiddleware", "withPostMiddleware"]);
   return new Proxy(api, {
     get(target, prop) {
       const original = target[prop as keyof T];
-      
+
       // Only wrap functions
-      if (typeof original !== 'function' || passthroughMethods.has(String(prop))) {
+      if (typeof original !== "function" || prop === "constructor") {
         return original;
       }
-      
+
+      // Generated middleware builders are synchronous and return a cloned API.
+      // Bind to the real instance so its private clone/helpers are not proxied.
+      if (middlewareMethods.has(String(prop))) {
+        return (...args: unknown[]) => wrapApiWithErrorHandling(original.apply(target, args));
+      }
+
       // Return wrapped function that auto-converts errors
-      return async function(this: any, ...args: any[]) {
+      return async function (this: any, ...args: any[]) {
         try {
-          return await original.apply(this, args);
+          return await original.apply(target, args);
         } catch (error) {
           // Convert ResponseError to ObnizNowApiError
           if (error instanceof ResponseError) {
@@ -142,6 +143,6 @@ export function wrapApiWithErrorHandling<T extends object>(api: T): T {
           throw error;
         }
       };
-    }
+    },
   });
 }

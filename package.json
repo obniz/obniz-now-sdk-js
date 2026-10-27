@@ -1,6 +1,6 @@
 {
   "name": "@obniz/obniz-now-sdk",
-  "version": "0.1.15",
+  "version": "0.2.0",
   "description": "TypeScript/JavaScript SDK for obniz Now API",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -10,11 +10,18 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./browser": {
+      "types": "./dist/browser.d.ts",
+      "import": "./dist/browser.mjs",
+      "require": "./dist/browser.js"
     }
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "BROWSER.md",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"

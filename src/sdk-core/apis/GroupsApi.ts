@@ -184,7 +184,7 @@ export class GroupsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Deletes the specified group. Rejected with 409 if any user (member/guest) still belongs to the group; remove their membership first. Referencing threads have their `group_id` cleared, and related `machine_group` and `group_parents` records (in both directions) are cleaned up consistently.  **Permissions** - `groups:delete` permission and OWNER role are required 
+     * Deletes the specified group. Rejected with 409 if any user (member/guest) still belongs to the group or if active invitations remain; remove their membership or revoke the invitations first. Referencing threads have their `group_id` cleared, and related `machine_group` and `group_parents` records (in both directions) are cleaned up consistently.  **Permissions** - `groups:delete` permission and OWNER role are required 
      * Delete a group
      */
     async deleteGroupRaw(requestParameters: GroupsApiDeleteGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
@@ -214,7 +214,7 @@ export class GroupsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Deletes the specified group. Rejected with 409 if any user (member/guest) still belongs to the group; remove their membership first. Referencing threads have their `group_id` cleared, and related `machine_group` and `group_parents` records (in both directions) are cleaned up consistently.  **Permissions** - `groups:delete` permission and OWNER role are required 
+     * Deletes the specified group. Rejected with 409 if any user (member/guest) still belongs to the group or if active invitations remain; remove their membership or revoke the invitations first. Referencing threads have their `group_id` cleared, and related `machine_group` and `group_parents` records (in both directions) are cleaned up consistently.  **Permissions** - `groups:delete` permission and OWNER role are required 
      * Delete a group
      */
     async deleteGroup(requestParameters: GroupsApiDeleteGroupRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
@@ -513,7 +513,7 @@ export class GroupsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Adds the user to the group or updates the existing membership/role. Only `member` and `guest` roles can be assigned; `owner` is rejected with 400. The target user must already exist, otherwise 404 is returned.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `account_members:write` 
+     * Adds the user to the group or updates the existing membership/role. Only `member` and `guest` roles can be assigned; `owner` is rejected with 400. The target user must already exist, otherwise 404 is returned.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `account_members:write` - Group-scoped API tokens cannot move a user from another group 
      * Create or update user authority for a group
      */
     async upsertUserAuthorityRaw(requestParameters: GroupsApiUpsertUserAuthorityOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpsertUserAuthority200Response>> {
@@ -560,7 +560,7 @@ export class GroupsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Adds the user to the group or updates the existing membership/role. Only `member` and `guest` roles can be assigned; `owner` is rejected with 400. The target user must already exist, otherwise 404 is returned.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `account_members:write` 
+     * Adds the user to the group or updates the existing membership/role. Only `member` and `guest` roles can be assigned; `owner` is rejected with 400. The target user must already exist, otherwise 404 is returned.  **Permissions** - Cookie authentication requires OWNER role - API token authentication requires `account_members:write` - Group-scoped API tokens cannot move a user from another group 
      * Create or update user authority for a group
      */
     async upsertUserAuthority(requestParameters: GroupsApiUpsertUserAuthorityOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpsertUserAuthority200Response> {

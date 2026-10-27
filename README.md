@@ -1,211 +1,148 @@
-# Obniz SDK
+# obniz Now SDK
 
-TypeScript/JavaScript SDK for Obniz Now API
+TypeScript and JavaScript clients for the obniz Now API.
 
 ## Installation
-```bash
-npm install @obniz/obniz-now-sdk
+
+```sh
+npm install @obniz/obniz-now-sdk@0.2.0
 ```
 
-## Authentication
+Node.js 18 or later is required. The package includes TypeScript declarations,
+CommonJS and ES modules. See [CHANGELOG.md](./CHANGELOG.md) before upgrading from 0.1.x.
 
-The SDK supports authentication using an API token (Bearer token). You can obtain your API token from your [Obniz account settings](https://obniz.com/).
+## Server-side usage
 
-### Using API Token
-```typescript
-import { ObnizNow } from '@obniz/obniz-now-sdk';
+Use a **Now API token** for the target account, not an obniz Cloud API token.
+Keep this token on the server.
 
-const client = new ObnizNow({ 
-  token: 'your-api-token-here'
+```ts
+import { ObnizNow } from "@obniz/obniz-now-sdk";
+
+const client = new ObnizNow({
+  token: process.env.NOW_API_TOKEN!,
+  baseUrl: "https://now.obniz.com",
+});
+
+const response = await client.machines.listMachines({ limit: 10, offset: 0 });
+for (const item of response.items) {
+  console.log(item.machine.id, item.machine.name);
+}
+
+const { machine, machine_stat } = await client.machine.getMachine({
+  machineId: "your-machine-id",
 });
 ```
 
-### Using Environment Variables (Recommended)
-```typescript
-const client = new ObnizNow({ 
-  token: process.env.OBNIZ_NOW_TOKEN
+For CommonJS, use `const { ObnizNow } = require("@obniz/obniz-now-sdk")`.
+Set `baseUrl` explicitly to choose production, staging or a local environment.
+It is the service origin; do not append `/api/1`.
+
+### Environment configuration
+
+When authentication is omitted, the SDK reads **both** `NOW_API_TOKEN` and
+`NOW_API_URL`. Missing configuration causes construction to fail before a request
+is sent. Hosted Account Intelligence processes supply these values, including a
+run-scoped token.
+
+```sh
+export NOW_API_TOKEN="your-now-api-token"
+export NOW_API_URL="https://now.obniz.com"
+```
+
+```ts
+import { ObnizNow } from "@obniz/obniz-now-sdk";
+
+const client = new ObnizNow();
+const response = await client.machines.listMachines({ limit: 10 });
+```
+
+Explicit `token` or `cookies` options select that authentication mode instead of
+environment authentication. A `fetch` option can supply a custom transport.
+
+## Browser applications
+
+For a separate SPA, use `BrowserSessionClient` from
+`@obniz/obniz-now-sdk/browser`. It manages user login, refresh, logout and
+authenticated requests without putting an account API token in the application.
+The browser entry does not import Node.js built-in modules.
+
+Follow the [browser integration guide](./BROWSER.md) for required origin
+registration, callback handling, browser capabilities and complete examples.
+
+Existing custom pages hosted on the Now service can continue to use same-origin
+cookie authentication through the root entry:
+
+```ts
+import { ObnizNow } from "@obniz/obniz-now-sdk";
+
+const client = new ObnizNow({
+  baseUrl: window.location.origin,
+  cookies: { token: "", accountId: "" },
 });
 ```
 
-## Basic Usage
+In a browser, this uses existing cookies through `credentials: "include"`.
+Do not copy login-cookie values or account API tokens into frontend code.
 
-### List Machines
+## Unit state subscriptions
 
-```typescript
-import { ObnizNow } from '@obniz/obniz-now-sdk';
+The Node client and `BrowserSessionClient` expose `subscribeUnitStates` for
+snapshot and change events. Close subscriptions when the view or process no
+longer needs them.
 
-const client = new ObnizNow({ token: process.env.OBNIZ_TOKEN });
+```ts
+const subscription = client.subscribeUnitStates(
+  { unitId: "machine-your-machine-id", keys: ["temp"], includeCurrent: true },
+  (event) => console.log(event),
+  { onError: (error) => console.error(error.kind, error.message) },
+);
 
-// Get list of machines
-const response = await client.machines.listMachines({ 
-  limit: 10,
-  offset: 0 
-});
-
-console.log(`Found ${response.count} machines`);
-response.items.forEach((item) => {
-  console.log(`- ${item.machine.name} (${item.machine.id})`);
-});
+// Later:
+subscription.close();
 ```
 
-### Get Machine Details
-```typescript
-// Get specific machine
-const machineWithState = await client.machine.getMachine({
-  machineId: 'machine-id' 
-});
+The server must support the Unit State stream endpoints. Transient transport
+failures may reconnect; a successfully constructed subscription alone does not
+confirm server availability. Handle errors and snapshot replacement semantics.
 
-console.log(`Name: ${machineWithState.machine.name}`);
-console.log(`Created: ${machineWithState.machine.created_at}`);
-```
+## Error handling
 
-### Get Events
-```typescript
-// Get recent events
-const events = await client.events.listEvents({
-  from: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-  to: new Date().toISOString(),
-  limit: 20
-});
-
-console.log(`Found ${events.count} events`);
-```
-
-## Error Handling
-
-All API errors are automatically converted to `ObnizNowApiError` with parsed response data.
-
-```typescript
-import { ObnizNow, ObnizNowApiError } from '@obniz/obniz-now-sdk';
+```ts
+import { ObnizNowApiError } from "@obniz/obniz-now-sdk";
 
 try {
-  const machine = await client.machine.getMachine({ machineId: 'invalid-id' });
+  await client.machine.getMachine({ machineId: "your-machine-id" });
 } catch (error) {
   if (error instanceof ObnizNowApiError) {
-    console.error(`Error ${error.status}: ${error.message}`);
-    console.error('Details:', error.data);
-    
-    // Access response headers
-    const headers = error.getResponseHeaders();
-    const rateLimit = headers.get('x-ratelimit-remaining');
-    
-    // Get request URL for debugging
-    console.error('Failed request:', error.getRequestUrl());
+    console.error(error.status, error.message);
+    console.error(error.data);
+  } else {
+    throw error;
   }
 }
 ```
 
-## Browser Usage (Svelte)
+Network failures can occur before an HTTP response and are not necessarily
+`ObnizNowApiError`. Browser sessions have their own error types, described in
+[BROWSER.md](./BROWSER.md). Avoid logging tokens, complete request headers or
+authorization callback URLs.
 
-### ⚠️ Security Warning
-**Never expose your API token in client-side code!** Use one of these safe approaches:
+## Development
 
-### Option 1: Cookie-based Authentication (Recommended for custom pages)
-```typescript
-import { ObnizNow } from '@obniz/obniz-now-sdk';
-
-const client = new ObnizNow({
-  baseUrl: window.location.origin,
-  cookies: {
-    // In browsers, existing same-origin cookies are sent by fetch(credentials: "include").
-    // These values are used only by non-browser runtimes where Cookie headers can be set.
-    token: '',
-    accountId: '',
-  },
-});
-
-const machines = await client.machines.listMachines({ limit: 20 });
+```sh
+npm ci
+npm run test:run
+npm run typecheck
+npm run build
+npm pack --dry-run
 ```
 
-Your backend should set httpOnly cookies after user authentication.
+API definitions and generated sources are maintained in `obniz/obniz-machines`.
+Regenerate there with `npm run sdk:generate`, copy the generated SDK and OpenAPI
+specification, then run `openapi/configure-public-sdk.mjs` against this checkout.
+See [RELEASING.md](./RELEASING.md) for the release process.
 
-For plain custom page HTML, import the browser bundle from a CDN or from a file hosted with the page:
+## License
 
-```html
-<script type="module">
-  import { ObnizNow } from "https://cdn.jsdelivr.net/npm/@obniz/obniz-now-sdk@0.1.14/dist/index.mjs";
-
-  const client = new ObnizNow({
-    baseUrl: window.location.origin,
-    cookies: { token: "", accountId: "" },
-  });
-
-  const response = await client.machines.listMachines({ limit: 10, offset: 0 });
-  console.log(response.items);
-</script>
-```
-
-### Option 2: Backend Proxy
-```typescript
-// Frontend - call your backend API
-const machines = await fetch('/api/obniz/machines').then(r => r.json());
-
-// Backend (Node.js) - proxy to Obniz API
-app.get('/api/obniz/machines', async (req, res) => {
-  const client = new ObnizNow({ token: process.env.OBNIZ_TOKEN });
-  const data = await client.machines.listMachines({ limit: 20 });
-  res.json(data);
-});
-```
-
-### SvelteKit Server-Side Example
-```typescript
-// src/routes/+page.server.ts
-import { ObnizNow } from '@obniz/obniz-now-sdk';
-
-export async function load() {
-  const client = new ObnizNow({ token: process.env.OBNIZ_TOKEN });
-  const machines = await client.machines.listMachines({ limit: 20 });
-  
-  return { machines: machines.items };
-}
-```
-
-```svelte
-<!-- src/routes/+page.svelte -->
-<script lang="ts">
-  export let data;
-</script>
-
-<h1>Machines</h1>
-<ul>
-  {#each data.machines as item}
-    <li>{item.machine.name}</li>
-  {/each}
-</ul>
-```
-
-## Examples
-See the examples/ directory for more detailed examples:
-
-`basic-usage.ts` - SDK initialization and basic operations
-
-`analytics.ts` - Working with analytics
-
-`events.ts` - Retrieving and filtering events
-
-`machine-management.ts` - CRUD operations
-
-`custom-config.ts` - Advanced configuration (retry, logging)
-
-`advanced-error-handling.ts` - Error inspection and debugging
-
-## API Categories
-
-The `ObnizNow` client exposes generated API groups including:
-
-`account`, `analytics`, `auditLogs`, `connectionModels`, `connections`, `converters`, `customizes`, `events`, `firmware`, `groups`, `inboundConnections`, `inboundSources`, `integrations`, `intelligences`, `invitations`, `issues`, `machine`, `machines`, `notificationHistory`, `notifications`, `obniz`, `reports`, `session`, `threads`, `units`, and `users`.
-
-### Run any example:
-```bash
-npx tsx examples/basic-usage.ts
-```
-
-# Requirements
-Node.js >= 18.0.0
-
-# Links
-Website: 
-https://iot.obniz.com
-
-API documentation: https://now.obniz.com/api/1/docs/
+ISC

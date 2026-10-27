@@ -1,31 +1,31 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
- *
+ * 
  * @export
  * @interface AccountEntitlementsResponse
  */
 export interface AccountEntitlementsResponse {
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountEntitlementsResponse
      */
     account_id: string;
     /**
-     *
+     * 
      * @type {PlanName}
      * @memberof AccountEntitlementsResponse
      */
     plan: PlanName;
     /**
-     *
+     * 
      * @type {UsagePeriod}
      * @memberof AccountEntitlementsResponse
      */
     period: UsagePeriod;
     /**
-     *
+     * 
      * @type {Array<EntitlementSummary>}
      * @memberof AccountEntitlementsResponse
      */
@@ -34,55 +34,55 @@ export interface AccountEntitlementsResponse {
 
 
 /**
- *
+ * 
  * @export
  * @interface AccountMember
  */
 export interface AccountMember {
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMember
      */
     account_id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMember
      */
     user_id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMember
      */
     name?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMember
      */
     email?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMember
      */
     profile_picture_url?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMember
      */
     group_id: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMember
      */
     group_name?: string | null;
     /**
-     *
+     * 
      * @type {AccountMemberRole}
      * @memberof AccountMember
      */
@@ -91,31 +91,31 @@ export interface AccountMember {
 
 
 /**
- *
+ * 
  * @export
  * @interface AccountMemberAuthority
  */
 export interface AccountMemberAuthority {
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMemberAuthority
      */
     account_id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMemberAuthority
      */
     user_id: string;
     /**
-     *
+     * 
      * @type {AccountMemberRole}
      * @memberof AccountMemberAuthority
      */
     role: AccountMemberRole;
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountMemberAuthority
      */
@@ -124,13 +124,13 @@ export interface AccountMemberAuthority {
 
 
 /**
- *
+ * 
  * @export
  * @interface AccountMemberResponse
  */
 export interface AccountMemberResponse {
     /**
-     *
+     * 
      * @type {AccountMemberAuthority}
      * @memberof AccountMemberResponse
      */
@@ -138,7 +138,7 @@ export interface AccountMemberResponse {
 }
 
 /**
- *
+ * 
  * @export
  */
 export const AccountMemberRole = {
@@ -149,37 +149,37 @@ export const AccountMemberRole = {
 export type AccountMemberRole = typeof AccountMemberRole[keyof typeof AccountMemberRole];
 
 /**
- *
+ * 
  * @export
  * @interface AccountPlanResponse
  */
 export interface AccountPlanResponse {
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountPlanResponse
      */
     account_id: string;
     /**
-     *
+     * 
      * @type {PlanName}
      * @memberof AccountPlanResponse
      */
     plan: PlanName;
     /**
-     *
+     * 
      * @type {{ [key: string]: PlanLimitation; }}
      * @memberof AccountPlanResponse
      */
     base_plan: { [key: string]: PlanLimitation; };
     /**
-     *
+     * 
      * @type {{ [key: string]: PlanLimitation; }}
      * @memberof AccountPlanResponse
      */
     effective_plan: { [key: string]: PlanLimitation; };
     /**
-     *
+     * 
      * @type {{ [key: string]: object; }}
      * @memberof AccountPlanResponse
      */
@@ -188,31 +188,31 @@ export interface AccountPlanResponse {
 
 
 /**
- *
+ * 
  * @export
  * @interface AccountUsagesResponse
  */
 export interface AccountUsagesResponse {
     /**
-     *
+     * 
      * @type {string}
      * @memberof AccountUsagesResponse
      */
     account_id: string;
     /**
-     *
+     * 
      * @type {PlanName}
      * @memberof AccountUsagesResponse
      */
     plan: PlanName;
     /**
-     *
+     * 
      * @type {UsagePeriod}
      * @memberof AccountUsagesResponse
      */
     period: UsagePeriod;
     /**
-     *
+     * 
      * @type {Array<UsageSummary>}
      * @memberof AccountUsagesResponse
      */
@@ -221,17 +221,60 @@ export interface AccountUsagesResponse {
 
 
 /**
+ * Actor who performed the operation. type is user (web user), apikey (API token), or system.
+ * @export
+ * @interface Actor
+ */
+export interface Actor {
+    /**
+     * 
+     * @type {string}
+     * @memberof Actor
+     */
+    type: ActorTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof Actor
+     */
+    id: string;
+}
+
+
+/**
+ * @export
+ */
+export const ActorTypeEnum = {
+    User: 'user',
+    Apikey: 'apikey',
+    System: 'system'
+} as const;
+export type ActorTypeEnum = typeof ActorTypeEnum[keyof typeof ActorTypeEnum];
+
+/**
  * Error response for BLE machine creation failures
  * @export
  * @interface AddBleMachineError
  */
 export interface AddBleMachineError {
     /**
+     * Error kind
+     * @type {string}
+     * @memberof AddBleMachineError
+     */
+    error: string;
+    /**
+     * Machine-readable error code
+     * @type {string}
+     * @memberof AddBleMachineError
+     */
+    code: string;
+    /**
      * Error message describing the failure
      * @type {string}
      * @memberof AddBleMachineError
      */
-    message: string;
+    details?: string;
 }
 /**
  * Request body for adding a BLE device as a machine
@@ -296,7 +339,7 @@ export type AddBleMachineRequestPartsEnum = typeof AddBleMachineRequestPartsEnum
 /**
  * Response containing created BLE converter information.
  * Converter object linking the BLE device to the created machine.
- *
+ * 
  * @export
  * @interface AddBleMachineResponse
  */
@@ -321,7 +364,7 @@ export interface AddBleMachineResponse {
     dest_unit_id: string;
 }
 /**
- *
+ * 
  * @export
  * @interface AddConnectionsRequest
  */
@@ -339,7 +382,7 @@ export interface AddConnectionsRequest {
      */
     modelVersion: number;
     /**
-     *
+     * 
      * @type {AddConnectionsRequestMachineIds}
      * @memberof AddConnectionsRequest
      */
@@ -353,12 +396,12 @@ export interface AddConnectionsRequest {
 }
 /**
  * @type AddConnectionsRequestMachineIds
- *
+ * 
  * @export
  */
 export type AddConnectionsRequestMachineIds = Array<string> | string;
 /**
- *
+ * 
  * @export
  * @interface AddConnectionsResponse
  */
@@ -371,7 +414,7 @@ export interface AddConnectionsResponse {
     connections: Array<ConnectionModel>;
 }
 /**
- *
+ * 
  * @export
  * @interface AddInboundSourceRequest
  */
@@ -413,20 +456,20 @@ export const AddInboundSourceRequestFormatEnum = {
 export type AddInboundSourceRequestFormatEnum = typeof AddInboundSourceRequestFormatEnum[keyof typeof AddInboundSourceRequestFormatEnum];
 
 /**
- *
+ * 
  * @export
  * @interface AddInboundSourceResponse
  */
 export interface AddInboundSourceResponse {
     /**
-     *
+     * 
      * @type {InboundSource}
      * @memberof AddInboundSourceResponse
      */
     inboundSource?: InboundSource;
 }
 /**
- *
+ * 
  * @export
  * @interface AddIntegrationsRequest
  */
@@ -462,7 +505,7 @@ export interface AddIntegrationsRequest {
      */
     schemaJson?: { [key: string]: any; };
     /**
-     *
+     * 
      * @type {AddIntegrationsRequestService}
      * @memberof AddIntegrationsRequest
      */
@@ -476,12 +519,13 @@ export interface AddIntegrationsRequest {
 export const AddIntegrationsRequestIntegrationTypeEnum = {
     PubSub: 'PubSub',
     ApiPull: 'APIPull',
+    Apipullquery: 'apipullquery',
     ApiPush: 'APIPush'
 } as const;
 export type AddIntegrationsRequestIntegrationTypeEnum = typeof AddIntegrationsRequestIntegrationTypeEnum[keyof typeof AddIntegrationsRequestIntegrationTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface AddIntegrationsRequestMachinesInner
  */
@@ -514,7 +558,7 @@ export interface AddIntegrationsRequestService {
     topic_name?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface AddIntegrationsResponse
  */
@@ -552,71 +596,71 @@ export interface AddMachineRequest {
  */
 export interface AddMachineResponse {
     /**
-     *
+     * 
      * @type {CreatedMachine}
      * @memberof AddMachineResponse
      */
     machine: CreatedMachine;
     /**
-     *
+     * 
      * @type {RegisteredObniz}
      * @memberof AddMachineResponse
      */
     obniz: RegisteredObniz;
 }
 /**
- *
+ * 
  * @export
  * @interface AddMachinesToGroup200Response
  */
 export interface AddMachinesToGroup200Response {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof AddMachinesToGroup200Response
      */
     success?: boolean;
     /**
-     *
+     * 
      * @type {AddMachinesToGroup200ResponseData}
      * @memberof AddMachinesToGroup200Response
      */
     data?: AddMachinesToGroup200ResponseData;
 }
 /**
- *
+ * 
  * @export
  * @interface AddMachinesToGroup200ResponseData
  */
 export interface AddMachinesToGroup200ResponseData {
     /**
-     *
+     * 
      * @type {Array<string>}
      * @memberof AddMachinesToGroup200ResponseData
      */
     added?: Array<string>;
     /**
-     *
+     * 
      * @type {Array<string>}
      * @memberof AddMachinesToGroup200ResponseData
      */
     skipped?: Array<string>;
 }
 /**
- *
+ * 
  * @export
  * @interface AddMachinesToGroupRequest
  */
 export interface AddMachinesToGroupRequest {
     /**
-     *
+     * 
      * @type {Array<string>}
      * @memberof AddMachinesToGroupRequest
      */
     machine_ids: Array<string>;
 }
 /**
- *
+ * 
  * @export
  * @interface AnalyticsResult
  */
@@ -645,7 +689,7 @@ export const AnalyticsResultStatusEnum = {
 export type AnalyticsResultStatusEnum = typeof AnalyticsResultStatusEnum[keyof typeof AnalyticsResultStatusEnum];
 
 /**
- *
+ * 
  * @export
  * @interface AnalyticsResultItem
  */
@@ -791,13 +835,13 @@ export interface AvailableController {
      */
     installRole?: number;
     /**
-     *
+     * 
      * @type {AvailableControllerInstallConfigStructure}
      * @memberof AvailableController
      */
     install_config_structure?: AvailableControllerInstallConfigStructure | null;
     /**
-     *
+     * 
      * @type {AvailableControllerConditions}
      * @memberof AvailableController
      */
@@ -830,7 +874,7 @@ export type AvailableControllerConditions = Array<{ [key: string]: any; }> | { [
  */
 export type AvailableControllerInstallConfigStructure = Array<InstallConfigStructure> | { [key: string]: any; };
 /**
- *
+ * 
  * @export
  * @interface BatchCreateConnectionsRequest
  */
@@ -843,7 +887,7 @@ export interface BatchCreateConnectionsRequest {
     units: Array<BatchCreateConnectionsRequestUnitsInner>;
 }
 /**
- *
+ * 
  * @export
  * @interface BatchCreateConnectionsRequestUnitsInner
  */
@@ -874,7 +918,7 @@ export interface BatchCreateConnectionsRequestUnitsInner {
     controllerVersion?: number;
 }
 /**
- *
+ * 
  * @export
  * @interface BatchCreateConnectionsResponse
  */
@@ -888,18 +932,18 @@ export interface BatchCreateConnectionsResponse {
 }
 /**
  * @type BatchCreateConnectionsResponseResultsInner
- *
+ * 
  * @export
  */
 export type BatchCreateConnectionsResponseResultsInner = BatchCreateError | BatchCreateSuccess;
 /**
- *
+ * 
  * @export
  * @interface BatchCreateError
  */
 export interface BatchCreateError {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof BatchCreateError
      */
@@ -918,13 +962,13 @@ export interface BatchCreateError {
     error: string;
 }
 /**
- *
+ * 
  * @export
  * @interface BatchCreateSuccess
  */
 export interface BatchCreateSuccess {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof BatchCreateSuccess
      */
@@ -1240,55 +1284,55 @@ export interface CheckNewVersionResponse {
     latestFirmwareVersion: Array<FirmwareVersionInfo>;
 }
 /**
- *
+ * 
  * @export
  * @interface CheckboxField
  */
 export interface CheckboxField {
     /**
-     *
+     * 
      * @type {string}
      * @memberof CheckboxField
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CheckboxField
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CheckboxField
      */
     type: CheckboxFieldTypeEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof CheckboxField
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CheckboxField
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof CheckboxField
      */
     defaultValue?: boolean;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof CheckboxField
      */
     validation?: ValidationRule;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof CheckboxField
      */
@@ -1305,13 +1349,13 @@ export const CheckboxFieldTypeEnum = {
 export type CheckboxFieldTypeEnum = typeof CheckboxFieldTypeEnum[keyof typeof CheckboxFieldTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface CloseIssueResponse
  */
 export interface CloseIssueResponse {
     /**
-     *
+     * 
      * @type {Issue}
      * @memberof CloseIssueResponse
      */
@@ -1328,6 +1372,74 @@ export const CodeType = {
 } as const;
 export type CodeType = typeof CodeType[keyof typeof CodeType];
 
+/**
+ * Archived audit log record. Event-specific fields (e.g. target IDs) are included in addition to the properties below
+ * @export
+ * @interface ColdAuditLog
+ */
+export interface ColdAuditLog {
+    [key: string]: any | any;
+    /**
+     * Audit log record ID
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    id: string;
+    /**
+     * Account ID
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    account_id: string;
+    /**
+     * Timestamp when the operation occurred (UTC)
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    occurred_at: string;
+    /**
+     * Audit event type
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    type: string;
+    /**
+     * Audit event category
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    category: string;
+    /**
+     * Operation kind (create / read / update / delete / revoke / close / reopen / send / test)
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    action: string;
+    /**
+     * Request path of the operation
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    path?: string;
+    /**
+     * HTTP method of the operation
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    method?: string;
+    /**
+     * Who performed the operation (user, API key, etc.)
+     * @type {object}
+     * @memberof ColdAuditLog
+     */
+    actor?: object;
+    /**
+     * Correlation ID linking events from the same request
+     * @type {string}
+     * @memberof ColdAuditLog
+     */
+    correlation_id?: string;
+}
 /**
  * Connection model object linking a controller to a machine
  * @export
@@ -1426,7 +1538,7 @@ export interface ConnectionModelDetailed {
      */
     install_config?: { [key: string]: any; } | null;
     /**
-     *
+     * 
      * @type {ConnectionModelDetailedInstallConfigStructure}
      * @memberof ConnectionModelDetailed
      */
@@ -1438,7 +1550,7 @@ export interface ConnectionModelDetailed {
      */
     can_delete?: boolean;
     /**
-     *
+     * 
      * @type {ConnectionModelDetailedConditions}
      * @memberof ConnectionModelDetailed
      */
@@ -1475,13 +1587,13 @@ export type ConnectionModelDetailedInstallConfigStructure = Array<InstallConfigS
  */
 export interface ConnectionModelOperationResult {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ConnectionModelOperationResult
      */
     model_name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ConnectionModelOperationResult
      */
@@ -1663,6 +1775,19 @@ export interface Converter {
     dest_unit_id: string;
 }
 /**
+ * 
+ * @export
+ * @interface CreateCSVExport401Response
+ */
+export interface CreateCSVExport401Response {
+    /**
+     * Error message
+     * @type {string}
+     * @memberof CreateCSVExport401Response
+     */
+    error?: string;
+}
+/**
  * Request to create a new CSV export job
  * @export
  * @interface CreateCSVExportRequest
@@ -1699,7 +1824,7 @@ export interface CreateCSVExportRequest {
      */
     export_type?: string;
     /**
-     *
+     * 
      * @type {CreateCSVExportRequestOptions}
      * @memberof CreateCSVExportRequest
      */
@@ -1723,6 +1848,12 @@ export interface CreateCSVExportRequest {
  * @interface CreateCSVExportRequestOptions
  */
 export interface CreateCSVExportRequestOptions {
+    /**
+     * 
+     * @type {CreateCSVExportRequestOptionsReceptionFilter}
+     * @memberof CreateCSVExportRequestOptions
+     */
+    reception_filter?: CreateCSVExportRequestOptionsReceptionFilter;
     /**
      * File format
      * @type {string}
@@ -1757,7 +1888,48 @@ export const CreateCSVExportRequestOptionsEncodingEnum = {
 export type CreateCSVExportRequestOptionsEncodingEnum = typeof CreateCSVExportRequestOptionsEncodingEnum[keyof typeof CreateCSVExportRequestOptionsEncodingEnum];
 
 /**
- *
+ * Filter GW receptions across the entire period. With this option, property key $data exports the full reception as JSON text. Omit to retain all rows as before.
+ * @export
+ * @interface CreateCSVExportRequestOptionsReceptionFilter
+ */
+export interface CreateCSVExportRequestOptionsReceptionFilter {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateCSVExportRequestOptionsReceptionFilter
+     */
+    log_type: CreateCSVExportRequestOptionsReceptionFilterLogTypeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateCSVExportRequestOptionsReceptionFilter
+     */
+    sensor_id?: string;
+    /**
+     * Allowed sensor IDs. An empty array matches no rows. Combined with sensor_id and device_type using AND.
+     * @type {Array<string>}
+     * @memberof CreateCSVExportRequestOptionsReceptionFilter
+     */
+    sensor_ids?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateCSVExportRequestOptionsReceptionFilter
+     */
+    device_type?: string;
+}
+
+
+/**
+ * @export
+ */
+export const CreateCSVExportRequestOptionsReceptionFilterLogTypeEnum = {
+    BleReception: 'ble_reception'
+} as const;
+export type CreateCSVExportRequestOptionsReceptionFilterLogTypeEnum = typeof CreateCSVExportRequestOptionsReceptionFilterLogTypeEnum[keyof typeof CreateCSVExportRequestOptionsReceptionFilterLogTypeEnum];
+
+/**
+ * 
  * @export
  * @interface CreateCSVExportRequestPropertiesInner
  */
@@ -1776,7 +1948,7 @@ export interface CreateCSVExportRequestPropertiesInner {
     label?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface CreateCSVExportRequestUnitsInner
  */
@@ -1826,13 +1998,13 @@ export interface CreateCSVExportResponse {
     created_at: string;
 }
 /**
- *
+ * 
  * @export
  * @interface CreateCurrentAccountApiKeyRequest
  */
 export interface CreateCurrentAccountApiKeyRequest {
     /**
-     *
+     * 
      * @type {string}
      * @memberof CreateCurrentAccountApiKeyRequest
      */
@@ -1845,13 +2017,13 @@ export interface CreateCurrentAccountApiKeyRequest {
     authority?: { [key: string]: { [key: string]: boolean; }; };
 }
 /**
- *
+ * 
  * @export
  * @interface CreateCurrentAccountApiKeyResponse
  */
 export interface CreateCurrentAccountApiKeyResponse {
     /**
-     *
+     * 
      * @type {CurrentAccountApiKeySummary}
      * @memberof CreateCurrentAccountApiKeyResponse
      */
@@ -1864,38 +2036,38 @@ export interface CreateCurrentAccountApiKeyResponse {
     token: string;
 }
 /**
- *
+ * 
  * @export
  * @interface CreateCurrentAccountMember404Response
  */
 export interface CreateCurrentAccountMember404Response {
     /**
-     *
+     * 
      * @type {any}
      * @memberof CreateCurrentAccountMember404Response
      */
     error?: any | null;
 }
 /**
- *
+ * 
  * @export
  * @interface CreateCurrentAccountMemberRequest
  */
 export interface CreateCurrentAccountMemberRequest {
     /**
-     *
+     * 
      * @type {string}
      * @memberof CreateCurrentAccountMemberRequest
      */
     user_id: string;
     /**
-     *
+     * 
      * @type {AccountMemberRole}
      * @memberof CreateCurrentAccountMemberRequest
      */
     role: AccountMemberRole;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CreateCurrentAccountMemberRequest
      */
@@ -1904,45 +2076,133 @@ export interface CreateCurrentAccountMemberRequest {
 
 
 /**
- *
+ * Exactly these three fields are accepted; any other field is rejected.
+ * @export
+ * @interface CreateCurrentAccountSecretAllowedKeyRequest
+ */
+export interface CreateCurrentAccountSecretAllowedKeyRequest {
+    /**
+     * Dynamic allowed-key name. Lowercase letters, digits, and underscores only; the reserved `now_` prefix is rejected.
+     * @type {string}
+     * @memberof CreateCurrentAccountSecretAllowedKeyRequest
+     */
+    key: string;
+    /**
+     * Owner-facing description. 1 to 2000 UTF-8 bytes.
+     * @type {string}
+     * @memberof CreateCurrentAccountSecretAllowedKeyRequest
+     */
+    description: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateCurrentAccountSecretAllowedKeyRequest
+     */
+    required: boolean;
+}
+/**
+ * Event data accepted from an API key. The server creates `id`, `type`,
+ * `ts`, and `serial`; those fields and account ownership cannot be supplied by the client.
+ * `name` is limited to 256 Unicode code points and 1024 UTF-8 bytes. `value` is limited to
+ * 16 levels and 4096 JSON nodes, and accepts valid Unicode and finite JSON numbers without NUL.
+ * 
+ * @export
+ * @interface CreateEventRequest
+ */
+export interface CreateEventRequest {
+    /**
+     * Human-readable Event name
+     * @type {string}
+     * @memberof CreateEventRequest
+     */
+    name: string;
+    /**
+     * Severity level of the Event
+     * @type {string}
+     * @memberof CreateEventRequest
+     */
+    level: CreateEventRequestLevelEnum;
+    /**
+     * Optional ID of a machine owned by the authenticated account
+     * @type {string}
+     * @memberof CreateEventRequest
+     */
+    machine_id?: string;
+    /**
+     * Durable account-visible Event data. Defaults to an empty object when omitted and must not contain secrets.
+     * 
+     * @type {{ [key: string]: any; }}
+     * @memberof CreateEventRequest
+     */
+    value?: { [key: string]: any; };
+}
+
+
+/**
+ * @export
+ */
+export const CreateEventRequestLevelEnum = {
+    None: 'none',
+    Debug: 'debug',
+    Info: 'info',
+    Warning: 'warning',
+    Emergency: 'emergency'
+} as const;
+export type CreateEventRequestLevelEnum = typeof CreateEventRequestLevelEnum[keyof typeof CreateEventRequestLevelEnum];
+
+/**
+ * 
+ * @export
+ * @interface CreateEventResponse
+ */
+export interface CreateEventResponse {
+    /**
+     * 
+     * @type {Event}
+     * @memberof CreateEventResponse
+     */
+    event: Event;
+}
+/**
+ * 
  * @export
  * @interface CreateGroup201Response
  */
 export interface CreateGroup201Response {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof CreateGroup201Response
      */
     success?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CreateGroup201Response
      */
     message?: string;
     /**
-     *
+     * 
      * @type {CreateGroup201ResponseData}
      * @memberof CreateGroup201Response
      */
     data?: CreateGroup201ResponseData;
 }
 /**
- *
+ * 
  * @export
  * @interface CreateGroup201ResponseData
  */
 export interface CreateGroup201ResponseData {
     /**
-     *
+     * 
      * @type {Group}
      * @memberof CreateGroup201ResponseData
      */
     group?: Group;
 }
 /**
- *
+ * 
  * @export
  * @interface CreateGroupRequest
  */
@@ -2053,7 +2313,11 @@ export interface CreateNotificationRequest {
      */
     type: CreateNotificationRequestTypeEnum;
     /**
-     * Optional group ID to restrict notification to a specific group
+     * Optional group ID to restrict the notification destination to a specific group.
+     * The group must belong to the authenticated account. Leading and trailing whitespace is removed.
+     * For owners and API tokens, an omitted, null, empty, or whitespace-only value creates an account-wide destination.
+     * For group-scoped members, the value must exactly match their assigned group ID.
+     * 
      * @type {string}
      * @memberof CreateNotificationRequest
      */
@@ -2064,7 +2328,9 @@ export interface CreateNotificationRequest {
      * - to: required, can be comma-separated string or array
      * - cc, bcc: optional, can be comma-separated string or array
      * All emails are validated for format and duplicates across to/cc/bcc
-     *
+     * For SMS / call: {"to": "+819012345678"}
+     * - to: required, international format with country code (E.164) only. Hyphens and spaces are stripped on save
+     * 
      * @type {string}
      * @memberof CreateNotificationRequest
      */
@@ -2072,7 +2338,7 @@ export interface CreateNotificationRequest {
     /**
      * Subject template. Supports {:key} placeholders for dynamic values.
      * When not set (null), the subject generated by the controller is used as-is.
-     *
+     * 
      * @type {string}
      * @memberof CreateNotificationRequest
      */
@@ -2080,7 +2346,7 @@ export interface CreateNotificationRequest {
     /**
      * Body template. Supports {:key} placeholders for dynamic values.
      * When not set (null), the message generated by the controller is used as-is.
-     *
+     * 
      * @type {string}
      * @memberof CreateNotificationRequest
      */
@@ -2105,7 +2371,7 @@ export type CreateNotificationRequestTypeEnum = typeof CreateNotificationRequest
  */
 export interface CreateNotificationResponse {
     /**
-     *
+     * 
      * @type {Notification}
      * @memberof CreateNotificationResponse
      */
@@ -2113,25 +2379,25 @@ export interface CreateNotificationResponse {
 }
 /**
  * @type CreateThread400Response
- *
+ * 
  * @export
  */
 export type CreateThread400Response = FileUploadError | ValidationError;
 /**
- *
+ * 
  * @export
  * @interface CreateThreadPostResponse
  */
 export interface CreateThreadPostResponse {
     /**
-     *
+     * 
      * @type {ThreadPost}
      * @memberof CreateThreadPostResponse
      */
     post: ThreadPost;
 }
 /**
- *
+ * 
  * @export
  * @interface CreateThreadRequest
  */
@@ -2149,20 +2415,20 @@ export interface CreateThreadRequest {
      */
     group_id?: string;
     /**
-     *
+     * 
      * @type {InitialPost}
      * @memberof CreateThreadRequest
      */
     initial_post: InitialPost;
 }
 /**
- *
+ * 
  * @export
  * @interface CreateThreadResponse
  */
 export interface CreateThreadResponse {
     /**
-     *
+     * 
      * @type {Thread}
      * @memberof CreateThreadResponse
      */
@@ -2206,19 +2472,19 @@ export interface CreatedMachine {
     connected_obniz_id?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface CurrentAccountApiKeyDetail
  */
 export interface CurrentAccountApiKeyDetail {
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
     id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
@@ -2230,82 +2496,82 @@ export interface CurrentAccountApiKeyDetail {
      */
     authority: { [key: string]: { [key: string]: boolean; }; };
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
     created_at: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
     updated_at: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
     last_used_at: string | null;
     /**
-     *
-     * @type {string}
+     * 
+     * @type {Actor}
      * @memberof CurrentAccountApiKeyDetail
      */
-    created_by_user_id: string;
+    created_by: Actor | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeyDetail
      */
     last_used_ip: string;
 }
 /**
- *
+ * 
  * @export
  * @interface CurrentAccountApiKeyPermissionsResponse
  */
 export interface CurrentAccountApiKeyPermissionsResponse {
     /**
-     *
+     * 
      * @type {Array<CurrentAccountApiKeyPermissionsResponseResourcesInner>}
      * @memberof CurrentAccountApiKeyPermissionsResponse
      */
     resources: Array<CurrentAccountApiKeyPermissionsResponseResourcesInner>;
 }
 /**
- *
+ * 
  * @export
  * @interface CurrentAccountApiKeyPermissionsResponseResourcesInner
  */
 export interface CurrentAccountApiKeyPermissionsResponseResourcesInner {
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeyPermissionsResponseResourcesInner
      */
     key: string;
     /**
-     *
+     * 
      * @type {Array<string>}
      * @memberof CurrentAccountApiKeyPermissionsResponseResourcesInner
      */
     actions: Array<string>;
 }
 /**
- *
+ * 
  * @export
  * @interface CurrentAccountApiKeySummary
  */
 export interface CurrentAccountApiKeySummary {
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeySummary
      */
     id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeySummary
      */
@@ -2317,142 +2583,345 @@ export interface CurrentAccountApiKeySummary {
      */
     authority: { [key: string]: { [key: string]: boolean; }; };
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeySummary
      */
     created_at: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeySummary
      */
     updated_at: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountApiKeySummary
      */
     last_used_at: string | null;
 }
 /**
- *
+ * 
+ * @export
+ * @interface CurrentAccountBadRequestResponse
+ */
+export interface CurrentAccountBadRequestResponse {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CurrentAccountBadRequestResponse
+     */
+    success: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof CurrentAccountBadRequestResponse
+     */
+    error: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CurrentAccountBadRequestResponse
+     */
+    message: string;
+}
+/**
+ * Effective allowed-key listing item. Stored values are represented only by existence booleans; a secret value is never included.
+ * @export
+ * @interface CurrentAccountEffectiveSecretAllowedKey
+ */
+export interface CurrentAccountEffectiveSecretAllowedKey {
+    /**
+     * Dynamic allowed-key name. Lowercase letters, digits, and underscores only; the reserved `now_` prefix is rejected.
+     * @type {string}
+     * @memberof CurrentAccountEffectiveSecretAllowedKey
+     */
+    key: string;
+    /**
+     * Owner-facing description. 1 to 2000 UTF-8 bytes.
+     * @type {string}
+     * @memberof CurrentAccountEffectiveSecretAllowedKey
+     */
+    description: string;
+    /**
+     * Whether a stored secret value is required for this key.
+     * @type {boolean}
+     * @memberof CurrentAccountEffectiveSecretAllowedKey
+     */
+    required: boolean;
+    /**
+     * Strong revision as a decimal int64 string. Send it back quoted in `If-Match`.
+     * @type {string}
+     * @memberof CurrentAccountEffectiveSecretAllowedKey
+     */
+    revision: string;
+    /**
+     * Origin of the allowlist entry.
+     * @type {string}
+     * @memberof CurrentAccountEffectiveSecretAllowedKey
+     */
+    source: CurrentAccountEffectiveSecretAllowedKeySourceEnum;
+    /**
+     * True while an account template manages this key; managed metadata cannot be changed or deleted.
+     * @type {boolean}
+     * @memberof CurrentAccountEffectiveSecretAllowedKey
+     */
+    templateManaged: boolean;
+    /**
+     * True when a secret value is stored for this key. The value itself is never returned.
+     * @type {boolean}
+     * @memberof CurrentAccountEffectiveSecretAllowedKey
+     */
+    valueConfigured: boolean;
+}
+
+
+/**
+ * @export
+ */
+export const CurrentAccountEffectiveSecretAllowedKeySourceEnum = {
+    Dynamic: 'dynamic'
+} as const;
+export type CurrentAccountEffectiveSecretAllowedKeySourceEnum = typeof CurrentAccountEffectiveSecretAllowedKeySourceEnum[keyof typeof CurrentAccountEffectiveSecretAllowedKeySourceEnum];
+
+/**
+ * 
  * @export
  * @interface CurrentAccountForbiddenResponse
  */
 export interface CurrentAccountForbiddenResponse {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof CurrentAccountForbiddenResponse
      */
     success?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountForbiddenResponse
      */
     error: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentAccountForbiddenResponse
      */
     message?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface CurrentAccountOkResponse
  */
 export interface CurrentAccountOkResponse {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof CurrentAccountOkResponse
      */
     ok: boolean;
 }
 /**
- *
+ * 
+ * @export
+ * @interface CurrentAccountResponse
+ */
+export interface CurrentAccountResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof CurrentAccountResponse
+     */
+    id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CurrentAccountResponse
+     */
+    name: string;
+    /**
+     * IANA timezone name configured as the account default. Null when not set.
+     * @type {string}
+     * @memberof CurrentAccountResponse
+     */
+    timezone: string | null;
+    /**
+     * 
+     * @type {UsageWarningsResponse}
+     * @memberof CurrentAccountResponse
+     */
+    usageWarnings: UsageWarningsResponse;
+}
+/**
+ * Allowed-key metadata. Stored values are represented only by existence booleans; a secret value is never included.
+ * @export
+ * @interface CurrentAccountSecretAllowedKey
+ */
+export interface CurrentAccountSecretAllowedKey {
+    /**
+     * Dynamic allowed-key name. Lowercase letters, digits, and underscores only; the reserved `now_` prefix is rejected.
+     * @type {string}
+     * @memberof CurrentAccountSecretAllowedKey
+     */
+    key: string;
+    /**
+     * Owner-facing description. 1 to 2000 UTF-8 bytes.
+     * @type {string}
+     * @memberof CurrentAccountSecretAllowedKey
+     */
+    description: string;
+    /**
+     * Whether a stored secret value is required for this key.
+     * @type {boolean}
+     * @memberof CurrentAccountSecretAllowedKey
+     */
+    required: boolean;
+    /**
+     * Strong revision as a decimal int64 string. Send it back quoted in `If-Match`.
+     * @type {string}
+     * @memberof CurrentAccountSecretAllowedKey
+     */
+    revision: string;
+    /**
+     * True while an account template manages this key; managed metadata cannot be changed or deleted.
+     * @type {boolean}
+     * @memberof CurrentAccountSecretAllowedKey
+     */
+    templateManaged: boolean;
+    /**
+     * True when a secret value is stored for this key. The value itself is never returned.
+     * @type {boolean}
+     * @memberof CurrentAccountSecretAllowedKey
+     */
+    valueConfigured: boolean;
+}
+/**
+ * Machine-readable allowed-key error. Unexpected errors are redacted to `{"error":"InternalServerError"}` without a code.
+ * @export
+ * @interface CurrentAccountSecretAllowedKeyErrorResponse
+ */
+export interface CurrentAccountSecretAllowedKeyErrorResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof CurrentAccountSecretAllowedKeyErrorResponse
+     */
+    error: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CurrentAccountSecretAllowedKeyErrorResponse
+     */
+    code: CurrentAccountSecretAllowedKeyErrorResponseCodeEnum;
+    /**
+     * 
+     * @type {string}
+     * @memberof CurrentAccountSecretAllowedKeyErrorResponse
+     */
+    details: string;
+}
+
+
+/**
+ * @export
+ */
+export const CurrentAccountSecretAllowedKeyErrorResponseCodeEnum = {
+    ValidationError: 'validation_error',
+    SecretKeyNotAllowed: 'secret_key_not_allowed',
+    AllowedKeyExists: 'allowed_key_exists',
+    AllowedKeyNotFound: 'allowed_key_not_found',
+    AllowedKeyRevisionRequired: 'allowed_key_revision_required',
+    RevisionConflict: 'revision_conflict',
+    TemplateManaged: 'template_managed',
+    SecretValuePresent: 'secret_value_present',
+    OwnerRequired: 'owner_required',
+    SameOriginRequired: 'same_origin_required'
+} as const;
+export type CurrentAccountSecretAllowedKeyErrorResponseCodeEnum = typeof CurrentAccountSecretAllowedKeyErrorResponseCodeEnum[keyof typeof CurrentAccountSecretAllowedKeyErrorResponseCodeEnum];
+
+/**
+ * 
  * @export
  * @interface CurrentAccountSecretExistsResponse
  */
 export interface CurrentAccountSecretExistsResponse {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof CurrentAccountSecretExistsResponse
      */
     _exists: boolean;
 }
-
 /**
- *
- * @export
- */
-export const CurrentAccountSecretKey = {
-    ApiKey: 'itoki_ra_api_key',
-    EncryptionKey: 'itoki_ra_encryption_key'
-} as const;
-export type CurrentAccountSecretKey = typeof CurrentAccountSecretKey[keyof typeof CurrentAccountSecretKey];
-
-/**
- *
+ * 
  * @export
  * @interface CurrentUser
  */
 export interface CurrentUser {
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
     id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
     name: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
     email: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
     language: CurrentUserLanguageEnum;
     /**
-     *
+     * IANA timezone name configured for this user. Null when not set.
+     * @type {string}
+     * @memberof CurrentUser
+     */
+    timezone: string | null;
+    /**
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
     profile_picture_url: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
     role: CurrentUserRoleEnum | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
     account_id: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
     account_name: string | null;
     /**
-     *
+     * IANA timezone name configured for the currently selected account. Null when not set.
+     * @type {string}
+     * @memberof CurrentUser
+     */
+    account_timezone: string | null;
+    /**
+     * 
      * @type {string}
      * @memberof CurrentUser
      */
@@ -2481,7 +2950,7 @@ export type CurrentUserRoleEnum = typeof CurrentUserRoleEnum[keyof typeof Curren
 
 
 /**
- *
+ * 
  * @export
  */
 export const CustomizeCategory = {
@@ -2502,43 +2971,43 @@ export const CustomizeCategory = {
 export type CustomizeCategory = typeof CustomizeCategory[keyof typeof CustomizeCategory];
 
 /**
- *
+ * 
  * @export
  * @interface CustomizeComponent
  */
 export interface CustomizeComponent {
     /**
-     *
+     * 
      * @type {CustomizeCategory}
      * @memberof CustomizeComponent
      */
     category: CustomizeCategory;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CustomizeComponent
      */
     model: string;
     /**
-     *
+     * 
      * @type {number}
      * @memberof CustomizeComponent
      */
     version: number;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CustomizeComponent
      */
     key: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CustomizeComponent
      */
     type: CustomizeComponentTypeEnum;
     /**
-     *
+     * 
      * @type {string}
      * @memberof CustomizeComponent
      */
@@ -2556,13 +3025,13 @@ export const CustomizeComponentTypeEnum = {
 export type CustomizeComponentTypeEnum = typeof CustomizeComponentTypeEnum[keyof typeof CustomizeComponentTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface CustomizeResolveResponse
  */
 export interface CustomizeResolveResponse {
     /**
-     *
+     * 
      * @type {Array<CustomizeComponent>}
      * @memberof CustomizeResolveResponse
      */
@@ -2575,13 +3044,13 @@ export interface CustomizeResolveResponse {
  */
 export interface DeleteMachineResponse {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof DeleteMachineResponse
      */
     success: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof DeleteMachineResponse
      */
@@ -2636,7 +3105,7 @@ export interface DeviceInfo {
      */
     isOnline?: boolean;
     /**
-     *
+     * 
      * @type {DeviceInfoBatchItemConnectedNetwork}
      * @memberof DeviceInfo
      */
@@ -2691,7 +3160,7 @@ export interface DeviceInfoBatchItem {
      */
     isOnline?: boolean;
     /**
-     *
+     * 
      * @type {DeviceInfoBatchItemConnectedNetwork}
      * @memberof DeviceInfoBatchItem
      */
@@ -2768,7 +3237,7 @@ export interface DeviceInfoBatchResponse {
  */
 export interface DeviceInfoResponse {
     /**
-     *
+     * 
      * @type {DeviceInfo}
      * @memberof DeviceInfoResponse
      */
@@ -2781,7 +3250,7 @@ export interface DeviceInfoResponse {
  */
 export interface DeviceItem {
     /**
-     *
+     * 
      * @type {Machine}
      * @memberof DeviceItem
      */
@@ -2800,7 +3269,7 @@ export interface DeviceItem {
     groups?: Array<DeviceItemGroupsInner>;
 }
 /**
- *
+ * 
  * @export
  * @interface DeviceItemGroupsInner
  */
@@ -2819,13 +3288,13 @@ export interface DeviceItemGroupsInner {
     name?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface DeviceItemStatesValue
  */
 export interface DeviceItemStatesValue {
     /**
-     *
+     * 
      * @type {DeviceItemStatesValueValue}
      * @memberof DeviceItemStatesValue
      */
@@ -2894,79 +3363,79 @@ export interface DevicesListResponse {
     items: Array<DeviceItem>;
 }
 /**
- *
+ * 
  * @export
  * @interface EntitlementSummary
  */
 export interface EntitlementSummary {
     /**
-     *
+     * 
      * @type {PlanKey}
      * @memberof EntitlementSummary
      */
     key: PlanKey;
     /**
-     *
+     * 
      * @type {string}
      * @memberof EntitlementSummary
      */
     kind: EntitlementSummaryKindEnum;
     /**
-     *
+     * 
      * @type {string}
      * @memberof EntitlementSummary
      */
     unit?: string | null;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof EntitlementSummary
      */
     enabled: boolean;
     /**
-     *
+     * 
      * @type {number}
      * @memberof EntitlementSummary
      */
     limit: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof EntitlementSummary
      */
     current?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof EntitlementSummary
      */
     remaining?: number | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof EntitlementSummary
      */
     description: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof EntitlementSummary
      */
     source: EntitlementSummarySourceEnum;
     /**
-     *
+     * 
      * @type {string}
      * @memberof EntitlementSummary
      */
     usage_source: EntitlementSummaryUsageSourceEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof EntitlementSummary
      */
     _public: boolean;
     /**
-     *
+     * 
      * @type {PlanLimitation}
      * @memberof EntitlementSummary
      */
@@ -3043,7 +3512,7 @@ export interface ErrorResponseWithSuccess {
     error: string;
 }
 /**
- *
+ * 
  * @export
  * @interface Event
  */
@@ -3188,54 +3657,54 @@ export interface EventLink {
 }
 /**
  * @type Field
- *
+ * 
  * @export
  */
 export type Field = { type: 'checkbox' } & CheckboxField | { type: 'number' } & NumberField | { type: 'object-list' } & ObjectListField | { type: 'select' } & SelectField | { type: 'simple-list' } & SimpleListField | { type: 'text' } & TextField | { type: 'textarea' } & TextareaField;
 /**
- *
+ * 
  * @export
  * @interface FieldBase
  */
 export interface FieldBase {
     /**
-     *
+     * 
      * @type {string}
      * @memberof FieldBase
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof FieldBase
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof FieldBase
      */
     type: string;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof FieldBase
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof FieldBase
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {FieldBaseDefaultValue}
      * @memberof FieldBase
      */
     defaultValue?: FieldBaseDefaultValue;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof FieldBase
      */
@@ -3243,18 +3712,18 @@ export interface FieldBase {
 }
 /**
  * @type FieldBaseDefaultValue
- *
+ * 
  * @export
  */
 export type FieldBaseDefaultValue = Array<FieldBaseDefaultValueOneOfInner> | ObjectItemTemplate | boolean | number | string;
 /**
  * @type FieldBaseDefaultValueOneOfInner
- *
+ * 
  * @export
  */
 export type FieldBaseDefaultValueOneOfInner = ObjectItemTemplate | boolean | number | string;
 /**
- *
+ * 
  * @export
  * @interface FileUploadError
  */
@@ -3279,7 +3748,7 @@ export interface FileUploadError {
     details?: Array<FileUploadErrorDetailsInner>;
 }
 /**
- *
+ * 
  * @export
  * @interface FileUploadErrorDetailsInner
  */
@@ -3491,13 +3960,13 @@ export interface FirmwareVersionInfo {
     partition_url?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ForbiddenOwnerOnlyError
  */
 export interface ForbiddenOwnerOnlyError {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ForbiddenOwnerOnlyError
      */
@@ -3505,25 +3974,25 @@ export interface ForbiddenOwnerOnlyError {
 }
 /**
  * @type ForbiddenPermissionOrOwnerOnly
- *
+ * 
  * @export
  */
 export type ForbiddenPermissionOrOwnerOnly = ForbiddenOwnerOnlyError | ForbiddenPermissionsError;
 /**
- *
+ * 
  * @export
  * @interface ForbiddenPermissionsError
  */
 export interface ForbiddenPermissionsError {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ForbiddenPermissionsError
      */
     error?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface GetDeviceInfoBatchRequest
  */
@@ -3536,26 +4005,26 @@ export interface GetDeviceInfoBatchRequest {
     devices: Array<DeviceInfoBatchRequest>;
 }
 /**
- *
+ * 
  * @export
  * @interface GetGroupResponse
  */
 export interface GetGroupResponse {
     /**
-     *
+     * 
      * @type {GroupWithMachines}
      * @memberof GetGroupResponse
      */
     group: GroupWithMachines;
 }
 /**
- *
+ * 
  * @export
  * @interface GetIntelligenceResponse
  */
 export interface GetIntelligenceResponse {
     /**
-     *
+     * 
      * @type {PublicIntelligence}
      * @memberof GetIntelligenceResponse
      */
@@ -3568,20 +4037,20 @@ export interface GetIntelligenceResponse {
     allowedToEdit: boolean;
 }
 /**
- *
+ * 
  * @export
  * @interface GetIssueResponse
  */
 export interface GetIssueResponse {
     /**
-     *
+     * 
      * @type {Issue}
      * @memberof GetIssueResponse
      */
     issue: Issue;
 }
 /**
- *
+ * 
  * @export
  * @interface GetLatestFirmwareUpdateBatchRequest
  */
@@ -3594,7 +4063,7 @@ export interface GetLatestFirmwareUpdateBatchRequest {
     devices: Array<GetLatestFirmwareUpdateBatchRequestDevicesInner>;
 }
 /**
- *
+ * 
  * @export
  * @interface GetLatestFirmwareUpdateBatchRequestDevicesInner
  */
@@ -3607,13 +4076,13 @@ export interface GetLatestFirmwareUpdateBatchRequestDevicesInner {
     deviceId: string;
 }
 /**
- *
+ * 
  * @export
  * @interface GetObnizCloudDeviceResponse
  */
 export interface GetObnizCloudDeviceResponse {
     /**
-     *
+     * 
      * @type {ObnizCloudDevice}
      * @memberof GetObnizCloudDeviceResponse
      */
@@ -3627,12 +4096,12 @@ export interface GetObnizCloudDeviceResponse {
 }
 /**
  * @type GetObnizCloudDeviceResponseObnizStatValue
- *
+ * 
  * @export
  */
 export type GetObnizCloudDeviceResponseObnizStatValue = number | string;
 /**
- *
+ * 
  * @export
  * @interface GetThreadEntitiesResponse
  */
@@ -3663,13 +4132,13 @@ export interface GetThreadEntitiesResponse {
     events: Array<EventEntity>;
 }
 /**
- *
+ * 
  * @export
  * @interface GetThreadResponse
  */
 export interface GetThreadResponse {
     /**
-     *
+     * 
      * @type {Thread}
      * @memberof GetThreadResponse
      */
@@ -3737,11 +4206,42 @@ export interface GroupWithMachines {
      */
     custom_fields?: { [key: string]: any; };
     /**
-     * Array of machines belonging to this group
-     * @type {Array<Machine>}
+     * 
+     * @type {GroupWithMachinesMachines}
      * @memberof GroupWithMachines
      */
-    machines?: Array<Machine>;
+    machines?: GroupWithMachinesMachines;
+}
+/**
+ * Paginated machines belonging to this group
+ * @export
+ * @interface GroupWithMachinesMachines
+ */
+export interface GroupWithMachinesMachines {
+    /**
+     * 
+     * @type {number}
+     * @memberof GroupWithMachinesMachines
+     */
+    count: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof GroupWithMachinesMachines
+     */
+    offset: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof GroupWithMachinesMachines
+     */
+    limit: number;
+    /**
+     * 
+     * @type {Array<Machine>}
+     * @memberof GroupWithMachinesMachines
+     */
+    items: Array<Machine>;
 }
 /**
  * Connection between an inbound device and a machine
@@ -3889,7 +4389,7 @@ export const InboundSourceFormatEnum = {
 export type InboundSourceFormatEnum = typeof InboundSourceFormatEnum[keyof typeof InboundSourceFormatEnum];
 
 /**
- *
+ * 
  * @export
  * @interface InitialPost
  */
@@ -3986,7 +4486,7 @@ export interface IntegrationAPIPull {
      */
     machine_id?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof IntegrationAPIPull
      */
@@ -4034,7 +4534,7 @@ export interface IntegrationAPIPull {
      */
     last_used_at?: string | null;
     /**
-     *
+     * 
      * @type {IntegrationAPIPullSettings}
      * @memberof IntegrationAPIPull
      */
@@ -4088,7 +4588,7 @@ export interface IntegrationAPIPush {
      */
     machine_id?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof IntegrationAPIPush
      */
@@ -4136,7 +4636,7 @@ export interface IntegrationAPIPush {
      */
     last_used_at?: string | null;
     /**
-     *
+     * 
      * @type {IntegrationAPIPushSettings}
      * @memberof IntegrationAPIPush
      */
@@ -4243,7 +4743,7 @@ export interface IntegrationBase {
      */
     machine_id?: string | null;
     /**
-     *
+     * 
      * @type {IntegrationType}
      * @memberof IntegrationBase
      */
@@ -4318,7 +4818,7 @@ export interface IntegrationPubSub {
      */
     machine_id?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof IntegrationPubSub
      */
@@ -4366,7 +4866,7 @@ export interface IntegrationPubSub {
      */
     last_used_at?: string | null;
     /**
-     *
+     * 
      * @type {IntegrationPubSubSettings}
      * @memberof IntegrationPubSub
      */
@@ -4432,7 +4932,7 @@ export interface Intelligence {
      */
     version: number;
     /**
-     *
+     * 
      * @type {ControllerType}
      * @memberof Intelligence
      */
@@ -4450,7 +4950,7 @@ export interface Intelligence {
      */
     images?: string;
     /**
-     *
+     * 
      * @type {ControllerPublishment}
      * @memberof Intelligence
      */
@@ -4462,7 +4962,7 @@ export interface Intelligence {
      */
     description?: string;
     /**
-     *
+     * 
      * @type {CodeType}
      * @memberof Intelligence
      */
@@ -4480,7 +4980,7 @@ export interface Intelligence {
      */
     schema: { [key: string]: any; };
     /**
-     *
+     * 
      * @type {IntelligenceConditions}
      * @memberof Intelligence
      */
@@ -4531,11 +5031,11 @@ export interface Invite {
      */
     group_id?: string | null;
     /**
-     * User ID who created the invitation
-     * @type {string}
+     * 
+     * @type {Actor}
      * @memberof Invite
      */
-    created_by?: string;
+    created_by?: Actor;
     /**
      * User ID linked while awaiting approval
      * @type {string}
@@ -4555,7 +5055,7 @@ export interface Invite {
      */
     sent_at?: string | null;
     /**
-     *
+     * 
      * @type {InviteStatus}
      * @memberof Invite
      */
@@ -4604,7 +5104,7 @@ export interface InviteActionResponse {
      */
     message: string;
     /**
-     *
+     * 
      * @type {Invite}
      * @memberof InviteActionResponse
      */
@@ -4657,7 +5157,7 @@ export interface InviteResendResponse {
  * - `approved`: approved (account member)
  * - `cancelled`: cancelled by admin
  * - `revoked`: revoked by admin
- *
+ * 
  * @export
  */
 export const InviteStatus = {
@@ -4731,7 +5231,7 @@ export interface InviteWithDetails {
      */
     group_name?: string | null;
     /**
-     *
+     * 
      * @type {InviteStatus}
      * @memberof InviteWithDetails
      */
@@ -4922,7 +5422,7 @@ export interface LatestFirmwareUpdateBatchResponse {
  */
 export interface LatestFirmwareUpdateResponse {
     /**
-     *
+     * 
      * @type {FirmwareUpdateRecord}
      * @memberof LatestFirmwareUpdateResponse
      */
@@ -5022,7 +5522,32 @@ export interface ListCSVExportsResponse {
     offset: number;
 }
 /**
- *
+ * Cursor-paginated list of cold audit logs
+ * @export
+ * @interface ListColdAuditLogsResponse
+ */
+export interface ListColdAuditLogsResponse {
+    /**
+     * Array of cold audit log records, newest first
+     * @type {Array<ColdAuditLog>}
+     * @memberof ListColdAuditLogsResponse
+     */
+    items: Array<ColdAuditLog>;
+    /**
+     * Maximum number of records returned
+     * @type {number}
+     * @memberof ListColdAuditLogsResponse
+     */
+    limit: number;
+    /**
+     * Cursor for the next page, or `null` when no more records exist
+     * @type {string}
+     * @memberof ListColdAuditLogsResponse
+     */
+    next_cursor: string | null;
+}
+/**
+ * 
  * @export
  * @interface ListConnectionsResponse
  */
@@ -5053,100 +5578,119 @@ export interface ListConnectionsResponse {
     items: Array<ConnectionWithController>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListCurrentAccountApiKeysResponse
  */
 export interface ListCurrentAccountApiKeysResponse {
     /**
-     *
+     * 
      * @type {Array<CurrentAccountApiKeySummary>}
      * @memberof ListCurrentAccountApiKeysResponse
      */
     items: Array<CurrentAccountApiKeySummary>;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListCurrentAccountApiKeysResponse
      */
     count: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListCurrentAccountApiKeysResponse
      */
     offset: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListCurrentAccountApiKeysResponse
      */
     limit: number;
 }
 /**
- *
+ * 
  * @export
  * @interface ListCurrentAccountMembersResponse
  */
 export interface ListCurrentAccountMembersResponse {
     /**
-     *
+     * Matching members for the requested page; empty when `count_only=true`
      * @type {Array<AccountMember>}
      * @memberof ListCurrentAccountMembersResponse
      */
     members: Array<AccountMember>;
     /**
-     *
+     * Total number of members matching the filters
      * @type {number}
      * @memberof ListCurrentAccountMembersResponse
      */
     count: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListCurrentAccountMembersResponse
      */
     offset: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListCurrentAccountMembersResponse
      */
     limit: number;
 }
 /**
- *
+ * 
+ * @export
+ * @interface ListCurrentAccountSecretAllowedKeysResponse
+ */
+export interface ListCurrentAccountSecretAllowedKeysResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof ListCurrentAccountSecretAllowedKeysResponse
+     */
+    count: number;
+    /**
+     * Allowed-key metadata sorted by key. Secret values are never returned.
+     * @type {Array<CurrentAccountEffectiveSecretAllowedKey>}
+     * @memberof ListCurrentAccountSecretAllowedKeysResponse
+     */
+    items: Array<CurrentAccountEffectiveSecretAllowedKey>;
+}
+/**
+ * 
  * @export
  * @interface ListCurrentAccountSecretsResponse
  */
 export interface ListCurrentAccountSecretsResponse {
     /**
      * Secret key names. Secret values are never returned.
-     * @type {Array<CurrentAccountSecretKey>}
+     * @type {Array<string>}
      * @memberof ListCurrentAccountSecretsResponse
      */
-    items: Array<CurrentAccountSecretKey>;
+    items: Array<string>;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListCurrentAccountSecretsResponse
      */
     count: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListCurrentAccountSecretsResponse
      */
     offset: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListCurrentAccountSecretsResponse
      */
     limit: number;
 }
 /**
- *
+ * 
  * @export
  * @interface ListEventsResponse
  */
@@ -5177,73 +5721,73 @@ export interface ListEventsResponse {
     items: Array<Event>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListFieldBase
  */
 export interface ListFieldBase {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ListFieldBase
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ListFieldBase
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ListFieldBase
      */
     type: ListFieldBaseTypeEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof ListFieldBase
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ListFieldBase
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {FieldBaseDefaultValue}
      * @memberof ListFieldBase
      */
     defaultValue?: FieldBaseDefaultValue;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof ListFieldBase
      */
     validation?: ValidationRule;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListFieldBase
      */
     minItems?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListFieldBase
      */
     maxItems?: number;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ListFieldBase
      */
     addButtonText?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ListFieldBase
      */
@@ -5260,7 +5804,7 @@ export const ListFieldBaseTypeEnum = {
 export type ListFieldBaseTypeEnum = typeof ListFieldBaseTypeEnum[keyof typeof ListFieldBaseTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface ListGroupsResponse
  */
@@ -5291,7 +5835,7 @@ export interface ListGroupsResponse {
     items: Array<Group>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListInboundConnectionsResponse
  */
@@ -5322,7 +5866,7 @@ export interface ListInboundConnectionsResponse {
     items: Array<InboundConnection>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListInboundSourcesResponse
  */
@@ -5353,7 +5897,7 @@ export interface ListInboundSourcesResponse {
     items: Array<InboundSource>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListIntegrationsResponse
  */
@@ -5384,7 +5928,7 @@ export interface ListIntegrationsResponse {
     items: Array<Integration>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListIntelligences200Response
  */
@@ -5446,7 +5990,7 @@ export interface ListInvitationsResponse {
     offset: number;
 }
 /**
- *
+ * 
  * @export
  * @interface ListIssuesResponse
  */
@@ -5576,13 +6120,13 @@ export interface ListNotificationsResponse {
  */
 export interface ListObnizCloudDevicesResponse {
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListObnizCloudDevicesResponse
      */
     limit: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ListObnizCloudDevicesResponse
      */
@@ -5594,7 +6138,7 @@ export interface ListObnizCloudDevicesResponse {
      */
     count: number;
     /**
-     *
+     * 
      * @type {Array<ObnizCloudDeviceWithMachine>}
      * @memberof ListObnizCloudDevicesResponse
      */
@@ -5632,7 +6176,7 @@ export interface ListReportsResponse {
     items: Array<Report>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListThreadPostsResponse
  */
@@ -5651,7 +6195,7 @@ export interface ListThreadPostsResponse {
     entities: Array<ThreadEntity>;
 }
 /**
- *
+ * 
  * @export
  * @interface ListThreadsResponse
  */
@@ -5682,19 +6226,19 @@ export interface ListThreadsResponse {
     items: Array<Thread>;
 }
 /**
- *
+ * 
  * @export
  * @interface LocalizedLabels
  */
 export interface LocalizedLabels {
     /**
-     *
+     * 
      * @type {string}
      * @memberof LocalizedLabels
      */
     en: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof LocalizedLabels
      */
@@ -5780,7 +6324,7 @@ export interface MachineEntity {
      */
     name?: string;
     /**
-     *
+     * 
      * @type {MachineEntityMetadata}
      * @memberof MachineEntity
      */
@@ -5825,7 +6369,7 @@ export interface MachineGroupsResponse {
     groups: Array<MachineGroupsResponseGroupsInner>;
 }
 /**
- *
+ * 
  * @export
  * @interface MachineGroupsResponseGroupsInner
  */
@@ -5863,7 +6407,7 @@ export interface MachineLink {
  */
 export interface MachineListItem {
     /**
-     *
+     * 
      * @type {Machine}
      * @memberof MachineListItem
      */
@@ -5876,7 +6420,7 @@ export interface MachineListItem {
     states?: { [key: string]: MachineListItemStatesValue; };
 }
 /**
- *
+ * 
  * @export
  * @interface MachineListItemStatesValue
  */
@@ -5901,7 +6445,7 @@ export interface MachineListItemStatesValue {
  */
 export interface MachineWithState {
     /**
-     *
+     * 
      * @type {Machine}
      * @memberof MachineWithState
      */
@@ -5914,13 +6458,13 @@ export interface MachineWithState {
     machine_stat: { [key: string]: any; } | null;
 }
 /**
- *
+ * 
  * @export
  * @interface NotFound
  */
 export interface NotFound {
     /**
-     *
+     * 
      * @type {string}
      * @memberof NotFound
      */
@@ -6154,49 +6698,49 @@ export const NotificationHistoryWithNameTypeEnum = {
 export type NotificationHistoryWithNameTypeEnum = typeof NotificationHistoryWithNameTypeEnum[keyof typeof NotificationHistoryWithNameTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface NumberField
  */
 export interface NumberField {
     /**
-     *
+     * 
      * @type {string}
      * @memberof NumberField
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof NumberField
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof NumberField
      */
     type: NumberFieldTypeEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof NumberField
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof NumberField
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {number}
      * @memberof NumberField
      */
     defaultValue?: number;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof NumberField
      */
@@ -6213,19 +6757,19 @@ export const NumberFieldTypeEnum = {
 export type NumberFieldTypeEnum = typeof NumberFieldTypeEnum[keyof typeof NumberFieldTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface ObjectItemTemplate
  */
 export interface ObjectItemTemplate {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObjectItemTemplate
      */
     type: ObjectItemTemplateTypeEnum;
     /**
-     *
+     * 
      * @type {Array<Field>}
      * @memberof ObjectItemTemplate
      */
@@ -6242,79 +6786,79 @@ export const ObjectItemTemplateTypeEnum = {
 export type ObjectItemTemplateTypeEnum = typeof ObjectItemTemplateTypeEnum[keyof typeof ObjectItemTemplateTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface ObjectListField
  */
 export interface ObjectListField {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObjectListField
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObjectListField
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObjectListField
      */
     type: ObjectListFieldTypeEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof ObjectListField
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObjectListField
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {FieldBaseDefaultValue}
      * @memberof ObjectListField
      */
     defaultValue?: FieldBaseDefaultValue;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof ObjectListField
      */
     validation?: ValidationRule;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ObjectListField
      */
     minItems?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ObjectListField
      */
     maxItems?: number;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObjectListField
      */
     addButtonText?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObjectListField
      */
     removeButtonText?: string;
     /**
-     *
+     * 
      * @type {ObjectItemTemplate}
      * @memberof ObjectListField
      */
@@ -6331,98 +6875,98 @@ export const ObjectListFieldTypeEnum = {
 export type ObjectListFieldTypeEnum = typeof ObjectListFieldTypeEnum[keyof typeof ObjectListFieldTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface ObnizCloudDevice
  */
 export interface ObnizCloudDevice {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     description?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     hardware?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     os?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     osVersion?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     region?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     status?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     createdAt?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     access_token?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ObnizCloudDevice
      */
     devicekey?: string | null;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ObnizCloudDevice
      */
     pingInterval?: number | null;
     /**
-     *
+     * 
      * @type {object}
      * @memberof ObnizCloudDevice
      */
     serialCode?: object | null;
     /**
-     *
+     * 
      * @type {object}
      * @memberof ObnizCloudDevice
      */
     deviceLiveInfo?: object | null;
 }
 /**
- *
+ * 
  * @export
  * @interface ObnizCloudDeviceWithMachine
  */
 export interface ObnizCloudDeviceWithMachine {
     /**
-     *
+     * 
      * @type {ObnizCloudDevice}
      * @memberof ObnizCloudDeviceWithMachine
      */
@@ -6435,25 +6979,25 @@ export interface ObnizCloudDeviceWithMachine {
     machine: Machine | null;
 }
 /**
- *
+ * 
  * @export
  * @interface Option
  */
 export interface Option {
     /**
-     *
+     * 
      * @type {OptionValue}
      * @memberof Option
      */
     value: OptionValue;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Option
      */
     label: string;
     /**
-     *
+     * 
      * @type {Array<Option>}
      * @memberof Option
      */
@@ -6461,13 +7005,13 @@ export interface Option {
 }
 /**
  * @type OptionValue
- *
+ * 
  * @export
  */
 export type OptionValue = number | string;
 
 /**
- *
+ * 
  * @export
  */
 export const PlanKey = {
@@ -6495,49 +7039,49 @@ export const PlanKey = {
 export type PlanKey = typeof PlanKey[keyof typeof PlanKey];
 
 /**
- *
+ * 
  * @export
  * @interface PlanLimitation
  */
 export interface PlanLimitation {
     /**
-     *
+     * 
      * @type {number}
      * @memberof PlanLimitation
      */
     limit_to: number;
     /**
-     *
+     * 
      * @type {string}
      * @memberof PlanLimitation
      */
     description: string;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof PlanLimitation
      */
     auto_increment: boolean;
     /**
-     *
+     * 
      * @type {number}
      * @memberof PlanLimitation
      */
     base_price_jpy: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof PlanLimitation
      */
     base_step_count: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof PlanLimitation
      */
     unit_price_jpy: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof PlanLimitation
      */
@@ -6545,7 +7089,7 @@ export interface PlanLimitation {
 }
 
 /**
- *
+ * 
  * @export
  */
 export const PlanName = {
@@ -6562,67 +7106,67 @@ export type PlanName = typeof PlanName[keyof typeof PlanName];
  */
 export interface PublicIntelligence {
     /**
-     *
+     * 
      * @type {string}
      * @memberof PublicIntelligence
      */
     name: string;
     /**
-     *
+     * 
      * @type {number}
      * @memberof PublicIntelligence
      */
     version: number;
     /**
-     *
+     * 
      * @type {ControllerType}
      * @memberof PublicIntelligence
      */
     type: ControllerType;
     /**
-     *
+     * 
      * @type {string}
      * @memberof PublicIntelligence
      */
     title: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof PublicIntelligence
      */
     images?: string;
     /**
-     *
+     * 
      * @type {ControllerPublishment}
      * @memberof PublicIntelligence
      */
     publishment: ControllerPublishment;
     /**
-     *
+     * 
      * @type {string}
      * @memberof PublicIntelligence
      */
     description?: string;
     /**
-     *
+     * 
      * @type {CodeType}
      * @memberof PublicIntelligence
      */
     code_type: CodeType;
     /**
-     *
+     * 
      * @type {{ [key: string]: any; }}
      * @memberof PublicIntelligence
      */
     schema: { [key: string]: any; };
     /**
-     *
+     * 
      * @type {PublicIntelligenceConditions}
      * @memberof PublicIntelligence
      */
     conditions?: PublicIntelligenceConditions | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof PublicIntelligence
      */
@@ -6632,31 +7176,31 @@ export interface PublicIntelligence {
 
 /**
  * @type PublicIntelligenceConditions
- *
+ * 
  * @export
  */
 export type PublicIntelligenceConditions = Array<{ [key: string]: any; }> | { [key: string]: any; };
 /**
- *
+ * 
  * @export
  * @interface RateLimitError
  */
 export interface RateLimitError {
     /**
-     *
+     * 
      * @type {string}
      * @memberof RateLimitError
      */
     result: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof RateLimitError
      */
     message: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ReceiveDataResponse
  */
@@ -6681,19 +7225,19 @@ export interface ReceiveDataResponse {
     message?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ReceiveInboundData402Response
  */
 export interface ReceiveInboundData402Response {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ReceiveInboundData402Response
      */
     result?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ReceiveInboundData402Response
      */
@@ -6713,7 +7257,7 @@ export interface RegisteredObniz {
     id?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface RemoveDetectionRequest
  */
@@ -6726,45 +7270,45 @@ export interface RemoveDetectionRequest {
     sensor_id: string;
 }
 /**
- *
+ * 
  * @export
  * @interface RemoveMachinesFromGroup200Response
  */
 export interface RemoveMachinesFromGroup200Response {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof RemoveMachinesFromGroup200Response
      */
     success?: boolean;
     /**
-     *
+     * 
      * @type {RemoveMachinesFromGroup200ResponseData}
      * @memberof RemoveMachinesFromGroup200Response
      */
     data?: RemoveMachinesFromGroup200ResponseData;
 }
 /**
- *
+ * 
  * @export
  * @interface RemoveMachinesFromGroup200ResponseData
  */
 export interface RemoveMachinesFromGroup200ResponseData {
     /**
-     *
+     * 
      * @type {Array<string>}
      * @memberof RemoveMachinesFromGroup200ResponseData
      */
     removed?: Array<string>;
 }
 /**
- *
+ * 
  * @export
  * @interface ReopenIssueResponse
  */
 export interface ReopenIssueResponse {
     /**
-     *
+     * 
      * @type {Issue}
      * @memberof ReopenIssueResponse
      */
@@ -6911,7 +7455,7 @@ export interface ReportDetail {
      */
     download_url: string | null;
     /**
-     *
+     * 
      * @type {ReportDetailMetadata}
      * @memberof ReportDetail
      */
@@ -6976,7 +7520,7 @@ export interface ReportDetailMetadata {
      */
     export_type?: string;
     /**
-     *
+     * 
      * @type {ReportDetailMetadataOptions}
      * @memberof ReportDetailMetadata
      */
@@ -6995,19 +7539,19 @@ export interface ReportDetailMetadata {
     error_message?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ReportDetailMetadataOptions
  */
 export interface ReportDetailMetadataOptions {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ReportDetailMetadataOptions
      */
     format?: ReportDetailMetadataOptionsFormatEnum;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ReportDetailMetadataOptions
      */
@@ -7034,38 +7578,38 @@ export const ReportDetailMetadataOptionsEncodingEnum = {
 export type ReportDetailMetadataOptionsEncodingEnum = typeof ReportDetailMetadataOptionsEncodingEnum[keyof typeof ReportDetailMetadataOptionsEncodingEnum];
 
 /**
- *
+ * 
  * @export
  * @interface ReportDetailMetadataPropertiesInner
  */
 export interface ReportDetailMetadataPropertiesInner {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ReportDetailMetadataPropertiesInner
      */
     key?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ReportDetailMetadataPropertiesInner
      */
     label?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ReportDetailMetadataUnitsInner
  */
 export interface ReportDetailMetadataUnitsInner {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ReportDetailMetadataUnitsInner
      */
     unit_id?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ReportDetailMetadataUnitsInner
      */
@@ -7091,61 +7635,61 @@ export interface ResendCooldownResponse {
     retry_after_ms?: number;
 }
 /**
- *
+ * 
  * @export
  * @interface SelectField
  */
 export interface SelectField {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SelectField
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SelectField
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SelectField
      */
     type: SelectFieldTypeEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof SelectField
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SelectField
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {FieldBaseDefaultValue}
      * @memberof SelectField
      */
     defaultValue?: FieldBaseDefaultValue;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof SelectField
      */
     validation?: ValidationRule;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof SelectField
      */
     multiple?: boolean;
     /**
-     *
+     * 
      * @type {Array<Option>}
      * @memberof SelectField
      */
@@ -7162,69 +7706,360 @@ export const SelectFieldTypeEnum = {
 export type SelectFieldTypeEnum = typeof SelectFieldTypeEnum[keyof typeof SelectFieldTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface SelectSessionAccountRequest
  */
 export interface SelectSessionAccountRequest {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SelectSessionAccountRequest
      */
     account_id: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SelectSessionAccountResponse
  */
 export interface SelectSessionAccountResponse {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SelectSessionAccountResponse
      */
     account_id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SelectSessionAccountResponse
      */
     redirect_to: string;
 }
 /**
- *
+ * 
+ * @export
+ * @interface SendNotificationAcceptedResponse
+ */
+export interface SendNotificationAcceptedResponse {
+    /**
+     * Opaque durable output request ID
+     * @type {string}
+     * @memberof SendNotificationAcceptedResponse
+     */
+    request_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SendNotificationAcceptedResponse
+     */
+    status: SendNotificationAcceptedResponseStatusEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SendNotificationAcceptedResponse
+     */
+    replayed: false;
+}
+
+
+/**
+ * @export
+ */
+export const SendNotificationAcceptedResponseStatusEnum = {
+    Pending: 'pending'
+} as const;
+export type SendNotificationAcceptedResponseStatusEnum = typeof SendNotificationAcceptedResponseStatusEnum[keyof typeof SendNotificationAcceptedResponseStatusEnum];
+
+/**
+ * A provider attempt may have delivered the message. Do not retry automatically or send the same intended
+ * delivery with another Idempotency-Key, because either action may create a duplicate notification.
+ * 
+ * @export
+ * @interface SendNotificationDeliveryUnknownResponse
+ */
+export interface SendNotificationDeliveryUnknownResponse {
+    /**
+     * Opaque durable output request ID
+     * @type {string}
+     * @memberof SendNotificationDeliveryUnknownResponse
+     */
+    request_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SendNotificationDeliveryUnknownResponse
+     */
+    status: SendNotificationDeliveryUnknownResponseStatusEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SendNotificationDeliveryUnknownResponse
+     */
+    replayed: true;
+    /**
+     * Finite evidence describing why delivery cannot be confirmed safely
+     * @type {string}
+     * @memberof SendNotificationDeliveryUnknownResponse
+     */
+    error_code: SendNotificationDeliveryUnknownResponseErrorCodeEnum;
+}
+
+
+/**
+ * @export
+ */
+export const SendNotificationDeliveryUnknownResponseStatusEnum = {
+    DeliveryUnknown: 'delivery_unknown'
+} as const;
+export type SendNotificationDeliveryUnknownResponseStatusEnum = typeof SendNotificationDeliveryUnknownResponseStatusEnum[keyof typeof SendNotificationDeliveryUnknownResponseStatusEnum];
+
+/**
+ * @export
+ */
+export const SendNotificationDeliveryUnknownResponseErrorCodeEnum = {
+    ProviderError: 'notification_provider_error',
+    ProviderTimeout: 'notification_provider_timeout',
+    DispatchExpired: 'notification_dispatch_expired',
+    WorkerInterrupted: 'notification_worker_interrupted',
+    DeliveryUnknown: 'notification_delivery_unknown'
+} as const;
+export type SendNotificationDeliveryUnknownResponseErrorCodeEnum = typeof SendNotificationDeliveryUnknownResponseErrorCodeEnum[keyof typeof SendNotificationDeliveryUnknownResponseErrorCodeEnum];
+
+/**
+ * 
+ * @export
+ * @interface SendNotificationFailedResponse
+ */
+export interface SendNotificationFailedResponse {
+    /**
+     * Opaque durable output request ID
+     * @type {string}
+     * @memberof SendNotificationFailedResponse
+     */
+    request_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SendNotificationFailedResponse
+     */
+    status: SendNotificationFailedResponseStatusEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SendNotificationFailedResponse
+     */
+    replayed: true;
+    /**
+     * Finite reason proving that provider delivery was not attempted
+     * @type {string}
+     * @memberof SendNotificationFailedResponse
+     */
+    error_code: SendNotificationFailedResponseErrorCodeEnum;
+}
+
+
+/**
+ * @export
+ */
+export const SendNotificationFailedResponseStatusEnum = {
+    Failed: 'failed'
+} as const;
+export type SendNotificationFailedResponseStatusEnum = typeof SendNotificationFailedResponseStatusEnum[keyof typeof SendNotificationFailedResponseStatusEnum];
+
+/**
+ * @export
+ */
+export const SendNotificationFailedResponseErrorCodeEnum = {
+    ConfigChanged: 'notification_config_changed',
+    Deleted: 'notification_deleted',
+    PayloadInvalid: 'notification_payload_invalid',
+    QuotaExceeded: 'notification_quota_exceeded',
+    PreDispatchInternal: 'notification_pre_dispatch_internal'
+} as const;
+export type SendNotificationFailedResponseErrorCodeEnum = typeof SendNotificationFailedResponseErrorCodeEnum[keyof typeof SendNotificationFailedResponseErrorCodeEnum];
+
+/**
+ * 
+ * @export
+ * @interface SendNotificationProgressResponse
+ */
+export interface SendNotificationProgressResponse {
+    /**
+     * Opaque durable output request ID
+     * @type {string}
+     * @memberof SendNotificationProgressResponse
+     */
+    request_id: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SendNotificationProgressResponse
+     */
+    status: SendNotificationProgressResponseStatusEnum;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SendNotificationProgressResponse
+     */
+    replayed: true;
+}
+
+
+/**
+ * @export
+ */
+export const SendNotificationProgressResponseStatusEnum = {
+    Pending: 'pending',
+    Dispatching: 'dispatching',
+    Succeeded: 'succeeded'
+} as const;
+export type SendNotificationProgressResponseStatusEnum = typeof SendNotificationProgressResponseStatusEnum[keyof typeof SendNotificationProgressResponseStatusEnum];
+
+/**
+ * 
+ * @export
+ * @interface SendNotificationRequest
+ */
+export interface SendNotificationRequest {
+    /**
+     * Exact notification destination name. The value is not trimmed or case-folded and cannot contain NUL.
+     * It is limited to 1024 Unicode code points and 4096 UTF-8 bytes.
+     * 
+     * @type {string}
+     * @memberof SendNotificationRequest
+     */
+    name: string;
+    /**
+     * Optional single-line email title. With this field, message is plain text; other channels receive the title followed by the message.
+     * @type {string}
+     * @memberof SendNotificationRequest
+     */
+    subject?: string;
+    /**
+     * Provider message body. It must contain valid Unicode, cannot contain NUL, and is limited to 102400 UTF-8 bytes.
+     * 
+     * @type {string}
+     * @memberof SendNotificationRequest
+     */
+    message: string;
+}
+/**
+ * @type SendNotificationResult
+ * 
+ * @export
+ */
+export type SendNotificationResult = SendNotificationDeliveryUnknownResponse | SendNotificationFailedResponse | SendNotificationProgressResponse | SendNotificationSkippedResponse;
+/**
+ * 
+ * @export
+ * @interface SendNotificationSkippedResponse
+ */
+export interface SendNotificationSkippedResponse {
+    /**
+     * Opaque durable output request ID
+     * @type {string}
+     * @memberof SendNotificationSkippedResponse
+     */
+    request_id: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof SendNotificationSkippedResponse
+     */
+    sent: false;
+    /**
+     * 
+     * @type {string}
+     * @memberof SendNotificationSkippedResponse
+     */
+    status: SendNotificationSkippedResponseStatusEnum;
+    /**
+     * Whether this warning-only result was stored by an earlier request
+     * @type {boolean}
+     * @memberof SendNotificationSkippedResponse
+     */
+    replayed: boolean;
+    /**
+     * 
+     * @type {Array<SendNotificationWarning>}
+     * @memberof SendNotificationSkippedResponse
+     */
+    warnings: Array<SendNotificationWarning>;
+}
+
+
+/**
+ * @export
+ */
+export const SendNotificationSkippedResponseStatusEnum = {
+    Skipped: 'skipped'
+} as const;
+export type SendNotificationSkippedResponseStatusEnum = typeof SendNotificationSkippedResponseStatusEnum[keyof typeof SendNotificationSkippedResponseStatusEnum];
+
+/**
+ * 
+ * @export
+ * @interface SendNotificationWarning
+ */
+export interface SendNotificationWarning {
+    /**
+     * 
+     * @type {string}
+     * @memberof SendNotificationWarning
+     */
+    type: SendNotificationWarningTypeEnum;
+    /**
+     * Exact destination name from the request
+     * @type {string}
+     * @memberof SendNotificationWarning
+     */
+    name: string;
+}
+
+
+/**
+ * @export
+ */
+export const SendNotificationWarningTypeEnum = {
+    MissingNotification: 'missing_notification',
+    AmbiguousNotification: 'ambiguous_notification'
+} as const;
+export type SendNotificationWarningTypeEnum = typeof SendNotificationWarningTypeEnum[keyof typeof SendNotificationWarningTypeEnum];
+
+/**
+ * 
  * @export
  * @interface SessionAccountOption
  */
 export interface SessionAccountOption {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionAccountOption
      */
     id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionAccountOption
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionAccountOption
      */
     role: SessionAccountOptionRoleEnum;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionAccountOption
      */
     group_id: string | null;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof SessionAccountOption
      */
@@ -7243,100 +8078,106 @@ export const SessionAccountOptionRoleEnum = {
 export type SessionAccountOptionRoleEnum = typeof SessionAccountOptionRoleEnum[keyof typeof SessionAccountOptionRoleEnum];
 
 /**
- *
+ * 
  * @export
  * @interface SessionAccountPage
  */
 export interface SessionAccountPage {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionAccountPage
      */
     slug: string;
     /**
-     *
+     * 
      * @type {LocalizedLabels}
      * @memberof SessionAccountPage
      */
     labels: LocalizedLabels;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionAccountPage
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionAccountPage
      */
     href: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SessionAccountsResponse
  */
 export interface SessionAccountsResponse {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionAccountsResponse
      */
     current_account_id: string | null;
     /**
-     *
+     * 
      * @type {Array<SessionAccountOption>}
      * @memberof SessionAccountsResponse
      */
     accounts: Array<SessionAccountOption>;
     /**
-     *
+     * 
      * @type {Array<SessionPendingAccount>}
      * @memberof SessionAccountsResponse
      */
     pending_accounts: Array<SessionPendingAccount>;
 }
 /**
- *
+ * 
  * @export
  * @interface SessionCurrentAccount
  */
 export interface SessionCurrentAccount {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionCurrentAccount
      */
     id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionCurrentAccount
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionCurrentAccount
      */
     plan: string;
+    /**
+     * IANA timezone name configured as the account default. Null when not set.
+     * @type {string}
+     * @memberof SessionCurrentAccount
+     */
+    timezone: string | null;
 }
 /**
- *
+ * 
  * @export
  * @interface SessionCurrentAuthority
  */
 export interface SessionCurrentAuthority {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionCurrentAuthority
      */
     role: SessionCurrentAuthorityRoleEnum;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionCurrentAuthority
      */
@@ -7355,25 +8196,25 @@ export const SessionCurrentAuthorityRoleEnum = {
 export type SessionCurrentAuthorityRoleEnum = typeof SessionCurrentAuthorityRoleEnum[keyof typeof SessionCurrentAuthorityRoleEnum];
 
 /**
- *
+ * 
  * @export
  * @interface SessionPendingAccount
  */
 export interface SessionPendingAccount {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionPendingAccount
      */
     invite_id: string;
     /**
-     *
+     * 
      * @type {SessionPendingAccountAccount}
      * @memberof SessionPendingAccount
      */
     account: SessionPendingAccountAccount;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionPendingAccount
      */
@@ -7392,167 +8233,173 @@ export const SessionPendingAccountRoleEnum = {
 export type SessionPendingAccountRoleEnum = typeof SessionPendingAccountRoleEnum[keyof typeof SessionPendingAccountRoleEnum];
 
 /**
- *
+ * 
  * @export
  * @interface SessionPendingAccountAccount
  */
 export interface SessionPendingAccountAccount {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionPendingAccountAccount
      */
     id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionPendingAccountAccount
      */
     name: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SessionSidebarItem
  */
 export interface SessionSidebarItem {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionSidebarItem
      */
     key: string;
     /**
-     *
+     * 
      * @type {LocalizedLabels}
      * @memberof SessionSidebarItem
      */
     labels: LocalizedLabels;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionSidebarItem
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionSidebarItem
      */
     href: string;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof SessionSidebarItem
      */
     external: boolean;
     /**
-     *
+     * 
      * @type {SessionSidebarItemHeader}
      * @memberof SessionSidebarItem
      */
     header?: SessionSidebarItemHeader | null;
 }
 /**
- *
+ * 
  * @export
  * @interface SessionSidebarItemHeader
  */
 export interface SessionSidebarItemHeader {
     /**
-     *
+     * 
      * @type {LocalizedLabels}
      * @memberof SessionSidebarItemHeader
      */
     labels?: LocalizedLabels;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionSidebarItemHeader
      */
     label?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SessionSidebarSection
  */
 export interface SessionSidebarSection {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionSidebarSection
      */
     key: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionSidebarSection
      */
     icon: string;
     /**
-     *
+     * 
      * @type {LocalizedLabels}
      * @memberof SessionSidebarSection
      */
     labels: LocalizedLabels;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionSidebarSection
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionSidebarSection
      */
     href?: string | null;
     /**
-     *
+     * 
      * @type {Array<SessionSidebarItem>}
      * @memberof SessionSidebarSection
      */
     items?: Array<SessionSidebarItem> | null;
 }
 /**
- *
+ * 
  * @export
  * @interface SessionUiConfigResponse
  */
 export interface SessionUiConfigResponse {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionUiConfigResponse
      */
     lang: SessionUiConfigResponseLangEnum;
     /**
-     *
+     * Display timezone resolved in order of user setting, account setting, then the default (Asia/Tokyo).
+     * @type {string}
+     * @memberof SessionUiConfigResponse
+     */
+    timezone: string;
+    /**
+     * 
      * @type {SessionUser}
      * @memberof SessionUiConfigResponse
      */
     user: SessionUser;
     /**
-     *
+     * 
      * @type {SessionCurrentAccount}
      * @memberof SessionUiConfigResponse
      */
     account: SessionCurrentAccount;
     /**
-     *
+     * 
      * @type {SessionCurrentAuthority}
      * @memberof SessionUiConfigResponse
      */
     authority: SessionCurrentAuthority;
     /**
-     *
+     * 
      * @type {Array<SessionSidebarSection>}
      * @memberof SessionUiConfigResponse
      */
     sidebar: Array<SessionSidebarSection>;
     /**
-     *
+     * 
      * @type {Array<SessionAccountPage>}
      * @memberof SessionUiConfigResponse
      */
@@ -7570,37 +8417,43 @@ export const SessionUiConfigResponseLangEnum = {
 export type SessionUiConfigResponseLangEnum = typeof SessionUiConfigResponseLangEnum[keyof typeof SessionUiConfigResponseLangEnum];
 
 /**
- *
+ * 
  * @export
  * @interface SessionUser
  */
 export interface SessionUser {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionUser
      */
     id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionUser
      */
     name: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionUser
      */
     email: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SessionUser
      */
     language: SessionUserLanguageEnum;
     /**
-     *
+     * IANA timezone name configured for this user. Null when not set.
+     * @type {string}
+     * @memberof SessionUser
+     */
+    timezone: string | null;
+    /**
+     * 
      * @type {string}
      * @memberof SessionUser
      */
@@ -7618,7 +8471,7 @@ export const SessionUserLanguageEnum = {
 export type SessionUserLanguageEnum = typeof SessionUserLanguageEnum[keyof typeof SessionUserLanguageEnum];
 
 /**
- *
+ * 
  * @export
  * @interface SetCurrentAccountSecretRequest
  */
@@ -7631,110 +8484,110 @@ export interface SetCurrentAccountSecretRequest {
     value: string;
 }
 /**
- *
+ * 
  * @export
  * @interface SimpleItemTemplate
  */
 export interface SimpleItemTemplate {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SimpleItemTemplate
      */
     type: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SimpleItemTemplate
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {OptionValue}
      * @memberof SimpleItemTemplate
      */
     defaultValue?: OptionValue;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof SimpleItemTemplate
      */
     validation?: ValidationRule;
 }
 /**
- *
+ * 
  * @export
  * @interface SimpleListField
  */
 export interface SimpleListField {
     /**
-     *
+     * 
      * @type {string}
      * @memberof SimpleListField
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SimpleListField
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SimpleListField
      */
     type: SimpleListFieldTypeEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof SimpleListField
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SimpleListField
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {FieldBaseDefaultValue}
      * @memberof SimpleListField
      */
     defaultValue?: FieldBaseDefaultValue;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof SimpleListField
      */
     validation?: ValidationRule;
     /**
-     *
+     * 
      * @type {number}
      * @memberof SimpleListField
      */
     minItems?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof SimpleListField
      */
     maxItems?: number;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SimpleListField
      */
     addButtonText?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof SimpleListField
      */
     removeButtonText?: string;
     /**
-     *
+     * 
      * @type {SimpleItemTemplate}
      * @memberof SimpleListField
      */
@@ -7782,63 +8635,63 @@ export interface SimpleMachine {
     created_at?: string;
 }
 /**
- * Historical state data point
+ * Historical state data point.
  * @export
  * @interface StateHistoryItem
  */
 export interface StateHistoryItem {
     /**
-     * Timestamp of the state change
+     * 
      * @type {string}
      * @memberof StateHistoryItem
      */
     ts: string;
     /**
-     * State key
+     * 
      * @type {string}
      * @memberof StateHistoryItem
      */
     key: string;
     /**
-     * State value
-     * @type {string}
+     * 
+     * @type {UnitStateValue}
      * @memberof StateHistoryItem
      */
-    value: string;
+    value: UnitStateValue;
 }
 /**
- * Paginated state history
+ * 
  * @export
  * @interface StateHistoryResponse
  */
 export interface StateHistoryResponse {
     /**
-     * Total number of items in result
+     * 
      * @type {number}
      * @memberof StateHistoryResponse
      */
     count: number;
     /**
-     * Pagination offset
+     * 
      * @type {number}
      * @memberof StateHistoryResponse
      */
     offset: number;
     /**
-     * Maximum number of items returned
+     * 
      * @type {number}
      * @memberof StateHistoryResponse
      */
     limit: number;
     /**
-     * Array of state history items
+     * 
      * @type {Array<StateHistoryItem>}
      * @memberof StateHistoryResponse
      */
     items: Array<StateHistoryItem>;
 }
 /**
- *
+ * 
  * @export
  * @interface TestNotificationRequest
  */
@@ -7857,56 +8710,56 @@ export interface TestNotificationRequest {
  */
 export interface TestNotificationResponse {
     /**
-     *
+     * 
      * @type {Notification}
      * @memberof TestNotificationResponse
      */
     notification: Notification;
 }
 /**
- *
+ * 
  * @export
  * @interface TextField
  */
 export interface TextField {
     /**
-     *
+     * 
      * @type {string}
      * @memberof TextField
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TextField
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TextField
      */
     type: TextFieldTypeEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof TextField
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TextField
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {FieldBaseDefaultValue}
      * @memberof TextField
      */
     defaultValue?: FieldBaseDefaultValue;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof TextField
      */
@@ -7923,55 +8776,55 @@ export const TextFieldTypeEnum = {
 export type TextFieldTypeEnum = typeof TextFieldTypeEnum[keyof typeof TextFieldTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface TextareaField
  */
 export interface TextareaField {
     /**
-     *
+     * 
      * @type {string}
      * @memberof TextareaField
      */
     name: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TextareaField
      */
     label: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TextareaField
      */
     type: TextareaFieldTypeEnum;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof TextareaField
      */
     required?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TextareaField
      */
     placeholder?: string;
     /**
-     *
+     * 
      * @type {FieldBaseDefaultValue}
      * @memberof TextareaField
      */
     defaultValue?: FieldBaseDefaultValue;
     /**
-     *
+     * 
      * @type {ValidationRule}
      * @memberof TextareaField
      */
     validation?: ValidationRule;
     /**
-     *
+     * 
      * @type {number}
      * @memberof TextareaField
      */
@@ -7988,190 +8841,190 @@ export const TextareaFieldTypeEnum = {
 export type TextareaFieldTypeEnum = typeof TextareaFieldTypeEnum[keyof typeof TextareaFieldTypeEnum];
 
 /**
- *
+ * 
  * @export
  * @interface Thread
  */
 export interface Thread {
     /**
-     *
+     * 
      * @type {string}
      * @memberof Thread
      */
     id?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Thread
      */
     title?: string;
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof Thread
      */
     is_open?: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Thread
      */
     account_id?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Thread
      */
     group_id?: string | null;
     /**
-     *
-     * @type {string}
+     * 
+     * @type {Actor}
      * @memberof Thread
      */
-    created_by?: string;
+    created_by?: Actor;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Thread
      */
     created_at?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Thread
      */
     updated_at?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof Thread
      */
     closed_at?: string | null;
     /**
-     *
-     * @type {string}
+     * 
+     * @type {Actor}
      * @memberof Thread
      */
-    closed_by?: string | null;
+    closed_by?: Actor | null;
     /**
-     *
+     * Display name resolved from created_by against the current master data. When unresolvable (e.g. a deleted user), returns an explicit label (in Japanese, e.g. "削除されたユーザー") instead of falling back to the raw id.
      * @type {string}
      * @memberof Thread
      */
     creator_name?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ThreadEntity
  */
 export interface ThreadEntity {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadEntity
      */
     thread_id?: string;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ThreadEntity
      */
     post_number?: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ThreadEntity
      */
     entity_number?: number;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadEntity
      */
     machine_id?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadEntity
      */
     issue_id?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadEntity
      */
     event_id?: string | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadEntity
      */
     created_at?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ThreadPost
  */
 export interface ThreadPost {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadPost
      */
     thread_id?: string;
     /**
-     *
+     * 
      * @type {number}
      * @memberof ThreadPost
      */
     post_number?: number;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadPost
      */
     content?: string;
     /**
-     *
+     * 
      * @type {Array<string>}
      * @memberof ThreadPost
      */
     file_paths?: Array<string>;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadPost
      */
     account_id?: string;
     /**
-     *
-     * @type {string}
+     * 
+     * @type {Actor}
      * @memberof ThreadPost
      */
-    created_by?: string;
+    created_by?: Actor;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadPost
      */
     created_at?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ThreadPost
      */
     updated_at?: string;
     /**
-     *
+     * Display name resolved from created_by against the current master data. When unresolvable (e.g. a deleted user), returns an explicit label (in Japanese, e.g. "削除されたユーザー") instead of falling back to the raw id.
      * @type {string}
      * @memberof ThreadPost
      */
     author_name?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface TransformIntegrationRequest
  */
@@ -8189,25 +9042,25 @@ export interface TransformIntegrationRequest {
      */
     schema: { [key: string]: any; };
     /**
-     *
+     * 
      * @type {TransformIntegrationRequestConfiguration}
      * @memberof TransformIntegrationRequest
      */
     _configuration?: TransformIntegrationRequestConfiguration;
     /**
-     *
+     * 
      * @type {AddIntegrationsRequestService}
      * @memberof TransformIntegrationRequest
      */
     service?: AddIntegrationsRequestService;
     /**
-     *
+     * 
      * @type {TransformIntegrationRequestCredentials}
      * @memberof TransformIntegrationRequest
      */
     credentials?: TransformIntegrationRequestCredentials;
     /**
-     *
+     * 
      * @type {TransformIntegrationRequestData}
      * @memberof TransformIntegrationRequest
      */
@@ -8227,6 +9080,7 @@ export interface TransformIntegrationRequest {
 export const TransformIntegrationRequestIntegrationTypeEnum = {
     PubSub: 'PubSub',
     ApiPull: 'APIPull',
+    Apipullquery: 'apipullquery',
     ApiPush: 'APIPush'
 } as const;
 export type TransformIntegrationRequestIntegrationTypeEnum = typeof TransformIntegrationRequestIntegrationTypeEnum[keyof typeof TransformIntegrationRequestIntegrationTypeEnum];
@@ -8269,31 +9123,31 @@ export const TransformIntegrationRequestConfigurationIdSourceEnum = {
 export type TransformIntegrationRequestConfigurationIdSourceEnum = typeof TransformIntegrationRequestConfigurationIdSourceEnum[keyof typeof TransformIntegrationRequestConfigurationIdSourceEnum];
 
 /**
- *
+ * 
  * @export
  * @interface TransformIntegrationRequestConnectedControllersInner
  */
 export interface TransformIntegrationRequestConnectedControllersInner {
     /**
-     *
+     * 
      * @type {string}
      * @memberof TransformIntegrationRequestConnectedControllersInner
      */
     id?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TransformIntegrationRequestConnectedControllersInner
      */
     model_name?: string;
     /**
-     *
+     * 
      * @type {number}
      * @memberof TransformIntegrationRequestConnectedControllersInner
      */
     model_version?: number;
     /**
-     *
+     * 
      * @type {Array<object>}
      * @memberof TransformIntegrationRequestConnectedControllersInner
      */
@@ -8307,19 +9161,19 @@ export interface TransformIntegrationRequestConnectedControllersInner {
 export interface TransformIntegrationRequestCredentials {
     [key: string]: any | any;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TransformIntegrationRequestCredentials
      */
     project_id?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TransformIntegrationRequestCredentials
      */
     client_email?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof TransformIntegrationRequestCredentials
      */
@@ -8332,13 +9186,13 @@ export interface TransformIntegrationRequestCredentials {
  */
 export type TransformIntegrationRequestData = Array<object> | { [key: string]: any; };
 /**
- *
+ * 
  * @export
  * @interface UnauthorizedError
  */
 export interface UnauthorizedError {
     /**
-     *
+     * 
      * @type {string}
      * @memberof UnauthorizedError
      */
@@ -8382,6 +9236,12 @@ export interface UnitHistoryItem {
  */
 export interface UnitLoadResponse {
     /**
+     * Present only for cursor requests; null at the end. Count is the response row count, not the total for the period.
+     * @type {string}
+     * @memberof UnitLoadResponse
+     */
+    next_cursor?: string | null;
+    /**
      * Total number of data points retrieved
      * @type {number}
      * @memberof UnitLoadResponse
@@ -8401,11 +9261,17 @@ export interface UnitLoadResponse {
     rows: Array<UnitLoadResponseRowsInner>;
 }
 /**
- *
+ * 
  * @export
  * @interface UnitLoadResponseRowsInner
  */
 export interface UnitLoadResponseRowsInner {
+    /**
+     * TimeUUID for cursor requests; distinguishes records with identical timestamps.
+     * @type {string}
+     * @memberof UnitLoadResponseRowsInner
+     */
+    record_id?: string;
     /**
      * Double-parsed JSON data object
      * @type {{ [key: string]: any; }}
@@ -8419,6 +9285,56 @@ export interface UnitLoadResponseRowsInner {
      */
     ts: string;
 }
+/**
+ * 
+ * @export
+ * @interface UnitStateCasRequest
+ */
+export interface UnitStateCasRequest {
+    /**
+     * 
+     * @type {UnitStateValue}
+     * @memberof UnitStateCasRequest
+     */
+    value: UnitStateValue;
+    /**
+     * Current revision, or null for create-only.
+     * @type {string}
+     * @memberof UnitStateCasRequest
+     */
+    expectedRevision: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface UnitStateEntry
+ */
+export interface UnitStateEntry {
+    /**
+     * 
+     * @type {UnitStateValue}
+     * @memberof UnitStateEntry
+     */
+    value: UnitStateValue;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnitStateEntry
+     */
+    ts: string;
+    /**
+     * Precision-safe decimal CAS revision.
+     * @type {string}
+     * @memberof UnitStateEntry
+     */
+    revision: string;
+}
+/**
+ * @type UnitStateValue
+ * A finite number or a string of at most 65,535 Unicode code points.
+ * @export
+ */
+export type UnitStateValue = number | string;
 /**
  * Request body for unregistering an obniz device
  * @export
@@ -8459,13 +9375,13 @@ export interface UpdateConnectionModelsResponse {
     results: Array<ConnectionModelOperationResult>;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateCurrentAccountApiKeyRequest
  */
 export interface UpdateCurrentAccountApiKeyRequest {
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateCurrentAccountApiKeyRequest
      */
@@ -8478,19 +9394,19 @@ export interface UpdateCurrentAccountApiKeyRequest {
     authority?: { [key: string]: { [key: string]: boolean; }; };
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateCurrentAccountMemberRequest
  */
 export interface UpdateCurrentAccountMemberRequest {
     /**
-     *
+     * 
      * @type {AccountMemberRole}
      * @memberof UpdateCurrentAccountMemberRequest
      */
     role: AccountMemberRole;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateCurrentAccountMemberRequest
      */
@@ -8499,29 +9415,85 @@ export interface UpdateCurrentAccountMemberRequest {
 
 
 /**
+ * 
+ * @export
+ * @interface UpdateCurrentAccountRequest
+ */
+export interface UpdateCurrentAccountRequest {
+    /**
+     * IANA timezone name (e.g. Asia/Tokyo). Send null to clear it.
+     * @type {string}
+     * @memberof UpdateCurrentAccountRequest
+     */
+    timezone?: string | null;
+    /**
+     * 
+     * @type {UsageWarningsUpdate}
+     * @memberof UpdateCurrentAccountRequest
+     */
+    usageWarnings?: UsageWarningsUpdate;
+    /**
+     * 
+     * @type {UsageWarningsResponse}
+     * @memberof UpdateCurrentAccountRequest
+     */
+    expectedUsageWarnings?: UsageWarningsResponse;
+    /**
+     * Expected selected account ID; returns 409 if the account changed.
+     * @type {string}
+     * @memberof UpdateCurrentAccountRequest
+     */
+    expectedAccountId?: string;
+}
+/**
+ * Exactly these two fields are accepted; any other field is rejected.
+ * @export
+ * @interface UpdateCurrentAccountSecretAllowedKeyRequest
+ */
+export interface UpdateCurrentAccountSecretAllowedKeyRequest {
+    /**
+     * Owner-facing description. 1 to 2000 UTF-8 bytes.
+     * @type {string}
+     * @memberof UpdateCurrentAccountSecretAllowedKeyRequest
+     */
+    description: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateCurrentAccountSecretAllowedKeyRequest
+     */
+    required: boolean;
+}
+/**
  * @type UpdateCurrentUser400Response
- *
+ * 
  * @export
  */
 export type UpdateCurrentUser400Response = ErrorResponse | UserProfileValidationError;
 /**
- *
+ * 
  * @export
  * @interface UpdateCurrentUserRequest
  */
 export interface UpdateCurrentUserRequest {
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateCurrentUserRequest
      */
     name?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateCurrentUserRequest
      */
     language?: UpdateCurrentUserRequestLanguageEnum;
+    /**
+     * IANA timezone name (e.g. Asia/Tokyo). Send null to clear it and fall back to the account timezone.
+     * @type {string}
+     * @memberof UpdateCurrentUserRequest
+     */
+    timezone?: string | null;
     /**
      * URL to set as the profile picture. Send an empty string or null to clear it.
      * @type {string}
@@ -8541,7 +9513,7 @@ export const UpdateCurrentUserRequestLanguageEnum = {
 export type UpdateCurrentUserRequestLanguageEnum = typeof UpdateCurrentUserRequestLanguageEnum[keyof typeof UpdateCurrentUserRequestLanguageEnum];
 
 /**
- *
+ * 
  * @export
  * @interface UpdateDeviceFirmwareRequest
  */
@@ -8566,26 +9538,26 @@ export interface UpdateDeviceFirmwareRequest {
     skipOffline?: boolean;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateGroup200Response
  */
 export interface UpdateGroup200Response {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof UpdateGroup200Response
      */
     success?: boolean;
     /**
-     *
+     * 
      * @type {CreateGroup201ResponseData}
      * @memberof UpdateGroup200Response
      */
     data?: CreateGroup201ResponseData;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateGroupCustomFieldsRequest
  */
@@ -8598,38 +9570,38 @@ export interface UpdateGroupCustomFieldsRequest {
     custom_fields: { [key: string]: any; };
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateGroupCustomFieldsResponse
  */
 export interface UpdateGroupCustomFieldsResponse {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof UpdateGroupCustomFieldsResponse
      */
     success: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateGroupCustomFieldsResponse
      */
     message: string;
     /**
-     *
+     * 
      * @type {CreateGroup201ResponseData}
      * @memberof UpdateGroupCustomFieldsResponse
      */
     data: CreateGroup201ResponseData;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateGroupRequest
  */
 export interface UpdateGroupRequest {
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateGroupRequest
      */
@@ -8681,25 +9653,25 @@ export interface UpdateInstallConfigResponse {
      */
     id: number;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateInstallConfigResponse
      */
     machine_id: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateInstallConfigResponse
      */
     model_name: string;
     /**
-     *
+     * 
      * @type {number}
      * @memberof UpdateInstallConfigResponse
      */
     model_version: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof UpdateInstallConfigResponse
      */
@@ -8711,13 +9683,13 @@ export interface UpdateInstallConfigResponse {
      */
     install_config: { [key: string]: any; };
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateInstallConfigResponse
      */
     created_at?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpdateInstallConfigResponse
      */
@@ -8787,7 +9759,7 @@ export interface UpdateMachinePublicRequest {
  */
 export interface UpdateMachinePublicResponse {
     /**
-     *
+     * 
      * @type {Machine}
      * @memberof UpdateMachinePublicResponse
      */
@@ -8819,14 +9791,14 @@ export interface UpdateMachineRequest {
  */
 export interface UpdateMachineResponse {
     /**
-     *
+     * 
      * @type {Machine}
      * @memberof UpdateMachineResponse
      */
     machine: Machine;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateNotificationRequest
  */
@@ -8841,7 +9813,7 @@ export interface UpdateNotificationRequest {
      * Optional group ID to restrict the notification to a specific group.
      * Set to null or an empty string to clear the group assignment (owners only).
      * No permission check is performed when the value is unchanged.
-     *
+     * 
      * @type {string}
      * @memberof UpdateNotificationRequest
      */
@@ -8853,10 +9825,11 @@ export interface UpdateNotificationRequest {
      * - to: comma-separated string or array. Cannot be cleared
      * - cc, bcc: comma-separated string or array. Set to null or an empty string to remove the key
      * For SMS / call: {"to": "+819012345678"}
+     * - to: international format with country code (E.164) only. Hyphens and spaces are stripped on save
      * For webhook: {"url": "https://example.com/hook", "method": "POST", "headers": {}}
      * - method / headers can be removed with null or an empty string
      * All emails are checked for format and duplicates across to/cc/bcc after merging
-     *
+     * 
      * @type {object}
      * @memberof UpdateNotificationRequest
      */
@@ -8864,7 +9837,7 @@ export interface UpdateNotificationRequest {
     /**
      * Subject template. Supports {:key} placeholders for dynamic values.
      * Set to null to clear the template.
-     *
+     * 
      * @type {string}
      * @memberof UpdateNotificationRequest
      */
@@ -8872,14 +9845,14 @@ export interface UpdateNotificationRequest {
     /**
      * Body template. Supports {:key} placeholders for dynamic values.
      * Set to null to clear the template.
-     *
+     * 
      * @type {string}
      * @memberof UpdateNotificationRequest
      */
     template_body?: string | null;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateThreadPostRequest
  */
@@ -8892,20 +9865,20 @@ export interface UpdateThreadPostRequest {
     content: string;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateThreadPostResponse
  */
 export interface UpdateThreadPostResponse {
     /**
-     *
+     * 
      * @type {ThreadPost}
      * @memberof UpdateThreadPostResponse
      */
     post: ThreadPost;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateThreadRequest
  */
@@ -8918,17 +9891,48 @@ export interface UpdateThreadRequest {
     is_open: boolean;
 }
 /**
- *
+ * 
  * @export
  * @interface UpdateThreadResponse
  */
 export interface UpdateThreadResponse {
     /**
-     *
+     * 
      * @type {Thread}
      * @memberof UpdateThreadResponse
      */
     thread: Thread;
+}
+/**
+ * 
+ * @export
+ * @interface UploadAsset201Response
+ */
+export interface UploadAsset201Response {
+    /**
+     * Unique asset identifier
+     * @type {string}
+     * @memberof UploadAsset201Response
+     */
+    id: string;
+    /**
+     * URL to download the asset
+     * @type {string}
+     * @memberof UploadAsset201Response
+     */
+    url: string;
+    /**
+     * S3 ETag after a JSON write, for the next conditional update.
+     * @type {string}
+     * @memberof UploadAsset201Response
+     */
+    etag?: string;
+    /**
+     * 
+     * @type {Array<UploadAssetResponse>}
+     * @memberof UploadAsset201Response
+     */
+    items: Array<UploadAssetResponse>;
 }
 /**
  * JSON upload request
@@ -8943,18 +9947,37 @@ export interface UploadAssetJsonRequest {
      */
     filename: string;
     /**
-     *
+     * 
      * @type {UploadAssetJsonRequestContent}
      * @memberof UploadAssetJsonRequest
      */
     content: UploadAssetJsonRequestContent;
+    /**
+     * Quoted ETag from the preceding GET. Null means create only. Omission preserves unconditional writes (not allowed for Run credentials).
+     * @type {string}
+     * @memberof UploadAssetJsonRequest
+     */
+    expectedETag?: string | null;
 }
 /**
  * @type UploadAssetJsonRequestContent
- *
+ * 
  * @export
  */
 export type UploadAssetJsonRequestContent = object | string;
+/**
+ * Multipart upload response
+ * @export
+ * @interface UploadAssetMultipartResponse
+ */
+export interface UploadAssetMultipartResponse {
+    /**
+     * 
+     * @type {Array<UploadAssetResponse>}
+     * @memberof UploadAssetMultipartResponse
+     */
+    items: Array<UploadAssetResponse>;
+}
 /**
  * Asset upload response
  * @export
@@ -8973,47 +9996,53 @@ export interface UploadAssetResponse {
      * @memberof UploadAssetResponse
      */
     url: string;
+    /**
+     * S3 ETag after a JSON write, for the next conditional update.
+     * @type {string}
+     * @memberof UploadAssetResponse
+     */
+    etag?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface UpsertUserAuthority200Response
  */
 export interface UpsertUserAuthority200Response {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof UpsertUserAuthority200Response
      */
     success?: boolean;
     /**
-     *
+     * 
      * @type {UpsertUserAuthority200ResponseData}
      * @memberof UpsertUserAuthority200Response
      */
     data?: UpsertUserAuthority200ResponseData;
 }
 /**
- *
+ * 
  * @export
  * @interface UpsertUserAuthority200ResponseData
  */
 export interface UpsertUserAuthority200ResponseData {
     /**
-     *
+     * 
      * @type {object}
      * @memberof UpsertUserAuthority200ResponseData
      */
     authority?: object;
 }
 /**
- *
+ * 
  * @export
  * @interface UpsertUserAuthorityRequest
  */
 export interface UpsertUserAuthorityRequest {
     /**
-     *
+     * 
      * @type {string}
      * @memberof UpsertUserAuthorityRequest
      */
@@ -9031,80 +10060,80 @@ export const UpsertUserAuthorityRequestRoleEnum = {
 export type UpsertUserAuthorityRequestRoleEnum = typeof UpsertUserAuthorityRequestRoleEnum[keyof typeof UpsertUserAuthorityRequestRoleEnum];
 
 /**
- *
+ * 
  * @export
  * @interface UsagePeriod
  */
 export interface UsagePeriod {
     /**
-     *
+     * 
      * @type {string}
      * @memberof UsagePeriod
      */
     start: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UsagePeriod
      */
     end: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UsagePeriod
      */
     reset_at: string;
 }
 /**
- *
+ * 
  * @export
  * @interface UsageSummary
  */
 export interface UsageSummary {
     /**
-     *
+     * 
      * @type {PlanKey}
      * @memberof UsageSummary
      */
     key: PlanKey;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UsageSummary
      */
     kind: UsageSummaryKindEnum;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UsageSummary
      */
     unit?: string | null;
     /**
-     *
+     * 
      * @type {number}
      * @memberof UsageSummary
      */
     count: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof UsageSummary
      */
     limit: number;
     /**
-     *
+     * 
      * @type {number}
      * @memberof UsageSummary
      */
     remaining: number | null;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UsageSummary
      */
     reset_at: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UsageSummary
      */
@@ -9131,51 +10160,115 @@ export const UsageSummarySourceEnum = {
 export type UsageSummarySourceEnum = typeof UsageSummarySourceEnum[keyof typeof UsageSummarySourceEnum];
 
 /**
- *
+ * 
+ * @export
+ * @interface UsageWarningsResponse
+ */
+export interface UsageWarningsResponse {
+    /**
+     * 
+     * @type {UsageWarningsResponseIntegration}
+     * @memberof UsageWarningsResponse
+     */
+    integration: UsageWarningsResponseIntegration;
+}
+/**
+ * 
+ * @export
+ * @interface UsageWarningsResponseIntegration
+ */
+export interface UsageWarningsResponseIntegration {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UsageWarningsResponseIntegration
+     */
+    enabled: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof UsageWarningsResponseIntegration
+     */
+    thresholdPercent: number;
+}
+/**
+ * 
+ * @export
+ * @interface UsageWarningsUpdate
+ */
+export interface UsageWarningsUpdate {
+    /**
+     * 
+     * @type {UsageWarningsUpdateIntegration}
+     * @memberof UsageWarningsUpdate
+     */
+    integration?: UsageWarningsUpdateIntegration;
+}
+/**
+ * 
+ * @export
+ * @interface UsageWarningsUpdateIntegration
+ */
+export interface UsageWarningsUpdateIntegration {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UsageWarningsUpdateIntegration
+     */
+    enabled?: boolean;
+    /**
+     * 
+     * @type {number}
+     * @memberof UsageWarningsUpdateIntegration
+     */
+    thresholdPercent?: number;
+}
+/**
+ * 
  * @export
  * @interface UserProfileValidationError
  */
 export interface UserProfileValidationError {
     /**
-     *
+     * 
      * @type {boolean}
      * @memberof UserProfileValidationError
      */
     status: boolean;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UserProfileValidationError
      */
     errorMessage: string;
     /**
-     *
+     * 
      * @type {Array<UserProfileValidationErrorErrorsInner>}
      * @memberof UserProfileValidationError
      */
     errors?: Array<UserProfileValidationErrorErrorsInner>;
 }
 /**
- *
+ * 
  * @export
  * @interface UserProfileValidationErrorErrorsInner
  */
 export interface UserProfileValidationErrorErrorsInner {
     /**
-     *
+     * 
      * @type {string}
      * @memberof UserProfileValidationErrorErrorsInner
      */
     field?: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof UserProfileValidationErrorErrorsInner
      */
     message?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ValidationError
  */
@@ -9194,7 +10287,7 @@ export interface ValidationError {
     details?: Array<ValidationErrorDetail>;
 }
 /**
- *
+ * 
  * @export
  * @interface ValidationErrorDetail
  */
@@ -9213,21 +10306,83 @@ export interface ValidationErrorDetail {
     message?: string;
 }
 /**
- *
+ * 
  * @export
  * @interface ValidationRule
  */
 export interface ValidationRule {
     /**
-     *
+     * 
      * @type {string}
      * @memberof ValidationRule
      */
     pattern: string;
     /**
-     *
+     * 
      * @type {string}
      * @memberof ValidationRule
      */
     message: string;
+}
+/**
+ * 
+ * @export
+ * @interface VerifiedExternalAccountIntelligenceDeliveryContext
+ */
+export interface VerifiedExternalAccountIntelligenceDeliveryContext {
+    /**
+     * 
+     * @type {boolean}
+     * @memberof VerifiedExternalAccountIntelligenceDeliveryContext
+     */
+    verified: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifiedExternalAccountIntelligenceDeliveryContext
+     */
+    runId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifiedExternalAccountIntelligenceDeliveryContext
+     */
+    accountId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifiedExternalAccountIntelligenceDeliveryContext
+     */
+    intelligenceId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifiedExternalAccountIntelligenceDeliveryContext
+     */
+    intelligenceName: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifiedExternalAccountIntelligenceDeliveryContext
+     */
+    leaseExpiresAt: string;
+}
+/**
+ * 
+ * @export
+ * @interface VerifyExternalAccountIntelligenceDeliveryRequest
+ */
+export interface VerifyExternalAccountIntelligenceDeliveryRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifyExternalAccountIntelligenceDeliveryRequest
+     */
+    runId: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof VerifyExternalAccountIntelligenceDeliveryRequest
+     */
+    payloadHash: string;
 }

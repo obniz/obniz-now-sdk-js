@@ -21,12 +21,22 @@ import type {
   UnauthorizedError,
   UnitHistoryItem,
   UnitLoadResponse,
-  UploadAssetResponse,
+  UnitStateCasRequest,
+  UnitStateEntry,
+  UnitStateValue,
+  UploadAsset201Response,
 } from '../models/index';
+
+export interface UnitsApiCompareAndSetAccountUnitStateRequest {
+    unitId: string;
+    key: string;
+    unitStateCasRequest: UnitStateCasRequest;
+}
 
 export interface UnitsApiDeleteUnitStateRequest {
     unitId: string;
     key: string;
+    ifMatch?: string;
 }
 
 export interface UnitsApiDownloadAssetRequest {
@@ -57,6 +67,7 @@ export interface UnitsApiGetUnitStatesRequest {
 
 export interface UnitsApiLoadUnitDataRequest {
     unitId: string;
+    cursor?: string;
     start?: string;
     end?: string;
     ratio?: number;
@@ -64,12 +75,13 @@ export interface UnitsApiLoadUnitDataRequest {
 
 export interface UnitsApiUpdateUnitStatesRequest {
     unitId: string;
-    requestBody: { [key: string]: string; };
+    requestBody: { [key: string]: UnitStateValue; };
 }
 
 export interface UnitsApiUploadAssetRequest {
     unitId: string;
     file?: Blob;
+    files?: Array<Blob>;
 }
 
 /**
@@ -78,10 +90,66 @@ export interface UnitsApiUploadAssetRequest {
 export class UnitsApi extends runtime.BaseAPI {
 
     /**
-     * Permanently removes a specific state and its history for a unit  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:delete` permission is required 
-     * Delete a unit state by key
+     * For `account-{authenticatedAccountId}`, cookie users must be owners; API keys require `units:write`. Set `expectedRevision` to null for create-only, or to the exact decimal revision returned by GET for an update. Solution overrides may only be written here. `solution.{namespace}.defaults.*` is always rejected with `template_managed`. Group and Machine Units in the authenticated Account are also supported (`group-{groupId}` and `machine-{machineId}`). Owners and scoped members can write their states. Intelligence run credentials require units:write and a lease checked before and after persistence in the same transaction. 
+     * Create or update an Account, Group or Machine Unit state with CAS
      */
-    async deleteUnitStateRaw(requestParameters: UnitsApiDeleteUnitStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async compareAndSetAccountUnitStateRaw(requestParameters: UnitsApiCompareAndSetAccountUnitStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UnitStateEntry>> {
+        if (requestParameters['unitId'] == null) {
+            throw new runtime.RequiredError(
+                'unitId',
+                'Required parameter "unitId" was null or undefined when calling compareAndSetAccountUnitState().'
+            );
+        }
+
+        if (requestParameters['key'] == null) {
+            throw new runtime.RequiredError(
+                'key',
+                'Required parameter "key" was null or undefined when calling compareAndSetAccountUnitState().'
+            );
+        }
+
+        if (requestParameters['unitStateCasRequest'] == null) {
+            throw new runtime.RequiredError(
+                'unitStateCasRequest',
+                'Required parameter "unitStateCasRequest" was null or undefined when calling compareAndSetAccountUnitState().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/units/{unit_id}/states/{key}`.replace(`{${"unit_id"}}`, encodeURIComponent(String(requestParameters['unitId']))).replace(`{${"key"}}`, encodeURIComponent(String(requestParameters['key']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['unitStateCasRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * For `account-{authenticatedAccountId}`, cookie users must be owners; API keys require `units:write`. Set `expectedRevision` to null for create-only, or to the exact decimal revision returned by GET for an update. Solution overrides may only be written here. `solution.{namespace}.defaults.*` is always rejected with `template_managed`. Group and Machine Units in the authenticated Account are also supported (`group-{groupId}` and `machine-{machineId}`). Owners and scoped members can write their states. Intelligence run credentials require units:write and a lease checked before and after persistence in the same transaction. 
+     * Create or update an Account, Group or Machine Unit state with CAS
+     */
+    async compareAndSetAccountUnitState(requestParameters: UnitsApiCompareAndSetAccountUnitStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UnitStateEntry> {
+        const response = await this.compareAndSetAccountUnitStateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * `units:delete` is required. Cookie-authenticated Account Unit deletion is owner-only. A solution override requires one strong decimal ETag, for example `If-Match: \"7\"`; state and account-scoped history are deleted in the same transaction. Template defaults are always rejected. Ordinary keys keep the legacy behavior when If-Match is omitted. 
+     * Delete a unit state
+     */
+    async deleteUnitStateRaw(requestParameters: UnitsApiDeleteUnitStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['unitId'] == null) {
             throw new runtime.RequiredError(
                 'unitId',
@@ -100,6 +168,10 @@ export class UnitsApi extends runtime.BaseAPI {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
+        if (requestParameters['ifMatch'] != null) {
+            headerParameters['If-Match'] = String(requestParameters['ifMatch']);
+        }
+
         if (this.configuration && this.configuration.apiKey) {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
         }
@@ -111,20 +183,19 @@ export class UnitsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
-     * Permanently removes a specific state and its history for a unit  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:delete` permission is required 
-     * Delete a unit state by key
+     * `units:delete` is required. Cookie-authenticated Account Unit deletion is owner-only. A solution override requires one strong decimal ETag, for example `If-Match: \"7\"`; state and account-scoped history are deleted in the same transaction. Template defaults are always rejected. Ordinary keys keep the legacy behavior when If-Match is omitted. 
+     * Delete a unit state
      */
-    async deleteUnitState(requestParameters: UnitsApiDeleteUnitStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.deleteUnitStateRaw(requestParameters, initOverrides);
-        return await response.value();
+    async deleteUnitState(requestParameters: UnitsApiDeleteUnitStateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteUnitStateRaw(requestParameters, initOverrides);
     }
 
     /**
-     * Downloads a file asset from S3 storage. Optional contentType query parameter to retrieve JSON content inline.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:read` permission is required 
+     * Downloads a file asset from S3 storage. Optional contentType query parameter to retrieve JSON content inline.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:read` permission is required  Active Run credentials with units:read are also accepted. ETag comes from the same S3 response as the body and is exposed to browsers. 
      * Download an asset file
      */
     async downloadAssetRaw(requestParameters: UnitsApiDownloadAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Blob>> {
@@ -165,7 +236,7 @@ export class UnitsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Downloads a file asset from S3 storage. Optional contentType query parameter to retrieve JSON content inline.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:read` permission is required 
+     * Downloads a file asset from S3 storage. Optional contentType query parameter to retrieve JSON content inline.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:read` permission is required  Active Run credentials with units:read are also accepted. ETag comes from the same S3 response as the body and is exposed to browsers. 
      * Download an asset file
      */
     async downloadAsset(requestParameters: UnitsApiDownloadAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Blob> {
@@ -225,7 +296,7 @@ export class UnitsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieves historical state data for a specific unit.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:read` permission is required  **Query Parameters** - `keys` is required (comma-separated or array) - `start` and `end` define the time range (ISO8601 format) - `offset` and `limit` control pagination 
+     * Returns account-scoped history for a unit. `units:read` is required, and cookie members retain read access. For an Account Unit, `unit_id` must be exactly `account-{authenticatedAccountId}`. Defaults remain readable. Legacy `keys` handling is unchanged for non-Account Units: the comma-separated list is passed through without count or length bounds, and an empty `keys=` returns an empty 200 result. For Account Units, at most 100 keys of 1-255 code points each are accepted. 
      * Get unit state history
      */
     async getUnitStateHistoryRaw(requestParameters: UnitsApiGetUnitStateHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StateHistoryResponse>> {
@@ -282,7 +353,7 @@ export class UnitsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieves historical state data for a specific unit.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:read` permission is required  **Query Parameters** - `keys` is required (comma-separated or array) - `start` and `end` define the time range (ISO8601 format) - `offset` and `limit` control pagination 
+     * Returns account-scoped history for a unit. `units:read` is required, and cookie members retain read access. For an Account Unit, `unit_id` must be exactly `account-{authenticatedAccountId}`. Defaults remain readable. Legacy `keys` handling is unchanged for non-Account Units: the comma-separated list is passed through without count or length bounds, and an empty `keys=` returns an empty 200 result. For Account Units, at most 100 keys of 1-255 code points each are accepted. 
      * Get unit state history
      */
     async getUnitStateHistory(requestParameters: UnitsApiGetUnitStateHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StateHistoryResponse> {
@@ -291,10 +362,10 @@ export class UnitsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieves all state key-value pairs for a specific unit.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:read` permission is required 
+     * Returns each state as `{ value, ts, revision }`. The decimal string revision is used by CAS operations. `units:read` is required. For an Account Unit, `unit_id` must be exactly `account-{authenticatedAccountId}`. Template-managed defaults are readable. 
      * Get unit states
      */
-    async getUnitStatesRaw(requestParameters: UnitsApiGetUnitStatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: string; }>> {
+    async getUnitStatesRaw(requestParameters: UnitsApiGetUnitStatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: UnitStateEntry; }>> {
         if (requestParameters['unitId'] == null) {
             throw new runtime.RequiredError(
                 'unitId',
@@ -317,14 +388,14 @@ export class UnitsApi extends runtime.BaseAPI {
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.JSONApiResponse(response);
     }
 
     /**
-     * Retrieves all state key-value pairs for a specific unit.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:read` permission is required 
+     * Returns each state as `{ value, ts, revision }`. The decimal string revision is used by CAS operations. `units:read` is required. For an Account Unit, `unit_id` must be exactly `account-{authenticatedAccountId}`. Template-managed defaults are readable. 
      * Get unit states
      */
-    async getUnitStates(requestParameters: UnitsApiGetUnitStatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: string; }> {
+    async getUnitStates(requestParameters: UnitsApiGetUnitStatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: UnitStateEntry; }> {
         const response = await this.getUnitStatesRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -342,6 +413,10 @@ export class UnitsApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['cursor'] != null) {
+            queryParameters['cursor'] = requestParameters['cursor'];
+        }
 
         if (requestParameters['start'] != null) {
             queryParameters['start'] = requestParameters['start'];
@@ -381,10 +456,10 @@ export class UnitsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Inserts or updates state key-value pairs for a specific unit.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:write` permission is required  **Note** - Multiple key-value pairs can be updated in a single request - Each state change is recorded with a timestamp in history 
-     * Update unit states
+     * Atomically writes a key-value batch in one transaction. `units:write` is required. Existing non-Account Unit behavior is unchanged: this API imposes no batch-size, key-length, or value-length bounds on `machine-`/`obniz-` units. Account Unit (`account-*`) writes are bounded: at most 100 entries, keys of at most 255 code points, and string values of at most 65,535 code points. Cookie-authenticated Account Unit writes are owner-only. For Account Units, keys under `solution.{namespace}.defaults.*` and `solution.{namespace}.overrides.*` are rejected before any write; use the CAS PUT operation for overrides. 
+     * Update a legacy unit-state batch
      */
-    async updateUnitStatesRaw(requestParameters: UnitsApiUpdateUnitStatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<object>> {
+    async updateUnitStatesRaw(requestParameters: UnitsApiUpdateUnitStatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['unitId'] == null) {
             throw new runtime.RequiredError(
                 'unitId',
@@ -417,23 +492,22 @@ export class UnitsApi extends runtime.BaseAPI {
             body: requestParameters['requestBody'],
         }, initOverrides);
 
-        return new runtime.JSONApiResponse<any>(response);
+        return new runtime.VoidApiResponse(response);
     }
 
     /**
-     * Inserts or updates state key-value pairs for a specific unit.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:write` permission is required  **Note** - Multiple key-value pairs can be updated in a single request - Each state change is recorded with a timestamp in history 
-     * Update unit states
+     * Atomically writes a key-value batch in one transaction. `units:write` is required. Existing non-Account Unit behavior is unchanged: this API imposes no batch-size, key-length, or value-length bounds on `machine-`/`obniz-` units. Account Unit (`account-*`) writes are bounded: at most 100 entries, keys of at most 255 code points, and string values of at most 65,535 code points. Cookie-authenticated Account Unit writes are owner-only. For Account Units, keys under `solution.{namespace}.defaults.*` and `solution.{namespace}.overrides.*` are rejected before any write; use the CAS PUT operation for overrides. 
+     * Update a legacy unit-state batch
      */
-    async updateUnitStates(requestParameters: UnitsApiUpdateUnitStatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<object> {
-        const response = await this.updateUnitStatesRaw(requestParameters, initOverrides);
-        return await response.value();
+    async updateUnitStates(requestParameters: UnitsApiUpdateUnitStatesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.updateUnitStatesRaw(requestParameters, initOverrides);
     }
 
     /**
-     * Uploads a file asset to S3 storage for a specific unit.  Supports two methods: 1. multipart/form-data: For file uploads 2. application/json: For direct JSON content with {filename, content}  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:write` permission is required 
+     * Uploads a file asset to S3 storage for a specific unit.  Supports two methods: 1. multipart/form-data: For file uploads 2. application/json: For direct JSON content with {filename, content}  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:write` permission is required  expectedETag enables conditional S3 writes. A mismatch returns 409 asset_revision_conflict. Run credentials require units:write, an active lease, JSON content and an explicit expectedETag. The lease is checked before S3 submission. Expiry or disconnection after submission does not guarantee rollback. Multipart uses files; the legacy file alias is accepted, but both cannot be supplied together. PNG/JPEG/WebP are accepted. 
      * Upload an asset file
      */
-    async uploadAssetRaw(requestParameters: UnitsApiUploadAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UploadAssetResponse>> {
+    async uploadAssetRaw(requestParameters: UnitsApiUploadAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UploadAsset201Response>> {
         if (requestParameters['unitId'] == null) {
             throw new runtime.RequiredError(
                 'unitId',
@@ -460,6 +534,8 @@ export class UnitsApi extends runtime.BaseAPI {
         let useForm = false;
         // use FormData to transmit files using content-type "multipart/form-data"
         useForm = canConsumeForm;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
         if (useForm) {
             formParams = new FormData();
         } else {
@@ -468,6 +544,12 @@ export class UnitsApi extends runtime.BaseAPI {
 
         if (requestParameters['file'] != null) {
             formParams.append('file', requestParameters['file'] as any);
+        }
+
+        if (requestParameters['files'] != null) {
+            requestParameters['files'].forEach((element) => {
+                formParams.append('files', element as any);
+            })
         }
 
         const response = await this.request({
@@ -482,10 +564,10 @@ export class UnitsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Uploads a file asset to S3 storage for a specific unit.  Supports two methods: 1. multipart/form-data: For file uploads 2. application/json: For direct JSON content with {filename, content}  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:write` permission is required 
+     * Uploads a file asset to S3 storage for a specific unit.  Supports two methods: 1. multipart/form-data: For file uploads 2. application/json: For direct JSON content with {filename, content}  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `units:write` permission is required  expectedETag enables conditional S3 writes. A mismatch returns 409 asset_revision_conflict. Run credentials require units:write, an active lease, JSON content and an explicit expectedETag. The lease is checked before S3 submission. Expiry or disconnection after submission does not guarantee rollback. Multipart uses files; the legacy file alias is accepted, but both cannot be supplied together. PNG/JPEG/WebP are accepted. 
      * Upload an asset file
      */
-    async uploadAsset(requestParameters: UnitsApiUploadAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UploadAssetResponse> {
+    async uploadAsset(requestParameters: UnitsApiUploadAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UploadAsset201Response> {
         const response = await this.uploadAssetRaw(requestParameters, initOverrides);
         return await response.value();
     }

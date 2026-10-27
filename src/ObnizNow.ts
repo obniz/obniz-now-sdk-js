@@ -1,6 +1,7 @@
 import {
   Configuration,
   AccountApi,
+  AccountIntelligenceApi,
   AnalyticsApi,
   AuditLogsApi,
   ConnectionModelsApi,
@@ -28,6 +29,14 @@ import {
   UsersApi,
 } from "./sdk-core";
 import { wrapApiWithErrorHandling } from "./ObnizNowApiError";
+import {
+  createUnitStateSubscription,
+  type UnitStateSubscriptionError,
+  type UnitStateSubscriptionEvent,
+  type UnitStateSubscriptionFilter,
+  type UnitStateSubscriptionHandle,
+  type UnitStateSubscriptionOptions,
+} from "./unitStateSubscription";
 
 // Internal use only
 export interface CookieAuthOptions {
@@ -50,12 +59,28 @@ type WithCookies = {
   token?: never;
 };
 
+type WithoutAuthentication = {
+  token?: never;
+  cookies?: never;
+};
+
 export type ObnizNowTokenOptions = BaseOptions & WithoutCookies;
 export type ObnizNowCookiesOptions = BaseOptions & WithCookies;
 
 export type ObnizNowOptions =
-  | (BaseOptions & WithoutCookies)
-  | (BaseOptions & WithCookies);
+  (BaseOptions & WithoutCookies) | (BaseOptions & WithCookies) | (BaseOptions & WithoutAuthentication);
+
+const ENVIRONMENT_CONFIGURATION_ERROR =
+  "Either 'token' or 'cookies' must be provided; argumentless usage requires NOW_API_TOKEN and NOW_API_URL";
+
+function nodeEnvironment(name: "NOW_API_TOKEN" | "NOW_API_URL"): string | undefined {
+  const value = (
+    globalThis as typeof globalThis & {
+      process?: { env?: Partial<Record<"NOW_API_TOKEN" | "NOW_API_URL", string | undefined>> };
+    }
+  ).process?.env?.[name];
+  return typeof value === "string" && value.length > 0 ? value : undefined;
+}
 
 /**
  * ObnizNow SDK main class
@@ -64,7 +89,11 @@ export type ObnizNowOptions =
  *
  * @example
  * ```typescript
- * import { ObnizNow } from '@obniz/sdk';
+ * import { ObnizNow } from '@obniz/obniz-now-sdk';
+ *
+ * // In a hosted Account Intelligence process, NOW_API_URL and
+ * // the run-scoped NOW_API_TOKEN are read automatically.
+ * const hostedClient = new ObnizNow();
  *
  * // Initialize with your API token
  * const client = new ObnizNow({
@@ -91,14 +120,22 @@ export type ObnizNowOptions =
  * ```
  */
 export class ObnizNow {
-  /** Account API - Manage current account settings, members, API keys, plan, entitlements, usages, and secrets */
+  private readonly unitStateSubscriptionBaseUrl: string;
+  private readonly unitStateSubscriptionFetch: typeof fetch | undefined;
+
   public readonly account: AccountApi;
+  public readonly accountIntelligence: AccountIntelligenceApi;
+  public readonly auditLogs: AuditLogsApi;
+  public readonly customizes: CustomizesApi;
+  public readonly firmware: FirmwareApi;
+  public readonly invitations: InvitationsApi;
+  public readonly notificationHistory: NotificationHistoryApi;
+  public readonly obniz: ObnizApi;
+  public readonly session: SessionApi;
+  public readonly users: UsersApi;
 
   /** Analytics API - Execute and retrieve analytics results */
   public readonly analytics: AnalyticsApi;
-
-  /** Audit Logs API - Access account audit log entries */
-  public readonly auditLogs: AuditLogsApi;
 
   /** Connection Models API - Manage connection model configurations */
   public readonly connectionModels: ConnectionModelsApi;
@@ -109,14 +146,8 @@ export class ObnizNow {
   /** Converters API - Data format conversions */
   public readonly converters: ConvertersApi;
 
-  /** Customizes API - Resolve account, machine, group, and asset customizations */
-  public readonly customizes: CustomizesApi;
-
   /** Events API - Access event data and history */
   public readonly events: EventsApi;
-
-  /** Firmware API - Inspect and update device firmware */
-  public readonly firmware: FirmwareApi;
 
   /** Groups API - Organize machines into groups */
   public readonly groups: GroupsApi;
@@ -133,9 +164,6 @@ export class ObnizNow {
   /** Intelligences API - AI and intelligence features */
   public readonly intelligences: IntelligencesApi;
 
-  /** Invitations API - Manage account invitations */
-  public readonly invitations: InvitationsApi;
-
   /** Issues API - Track and manage issues */
   public readonly issues: IssuesApi;
 
@@ -145,20 +173,11 @@ export class ObnizNow {
   /** Machines API - Machine management and operations */
   public readonly machines: MachinesApi;
 
-  /** Notification History API - Access notification delivery history */
-  public readonly notificationHistory: NotificationHistoryApi;
-
   /** Notifications API - Manage notification settings */
   public readonly notifications: NotificationsApi;
 
-  /** Obniz API - Access obniz device metadata */
-  public readonly obniz: ObnizApi;
-
   /** Reports API - Generate and retrieve reports */
   public readonly reports: ReportsApi;
-
-  /** Session API - Browser session account selection and UI configuration */
-  public readonly session: SessionApi;
 
   /** Threads API - Discussion threads and communications */
   public readonly threads: ThreadsApi;
@@ -166,50 +185,66 @@ export class ObnizNow {
   /** Units API - Unit data and state management */
   public readonly units: UnitsApi;
 
-  /** Users API - Manage current user and profile pictures */
-  public readonly users: UsersApi;
+  public subscribeUnitStates(
+    filter: UnitStateSubscriptionFilter,
+    callback: (event: UnitStateSubscriptionEvent) => void,
+    options?: UnitStateSubscriptionOptions,
+  ): UnitStateSubscriptionHandle {
+    return createUnitStateSubscription(
+      { baseUrl: this.unitStateSubscriptionBaseUrl, fetchApi: this.unitStateSubscriptionFetch },
+      filter,
+      callback,
+      options,
+    );
+  }
 
   /**
    * Creates a new ObnizNow SDK client instance
    *
-   * @param options - Configuration options
-   * @param options.token - API authentication token (required)
+   * @param options - Configuration options. When authentication is omitted, NOW_API_URL and NOW_API_TOKEN are used.
+   * @param options.token - API authentication token (required unless cookies or environment authentication is used)
    * @param options.baseUrl - Base URL for API requests (optional, defaults to 'https://api.obniz.com')
    * @param options.fetch - Custom fetch implementation (optional, for Node.js < 18 or custom scenarios)
    *
-   * @throws {Error} When token is not provided
+   * @throws {Error} When neither explicit authentication nor the required environment values are available
    *
    * @example
    * ```typescript
+   * const hostedClient = new ObnizNow();
    * const client = new ObnizNow({ token: 'your-api-token' });
    * ```
    */
-  constructor(options: ObnizNowOptions) {
-    const token = (options as ObnizNowTokenOptions).token;
-    const cookies = (options as ObnizNowCookiesOptions).cookies;
-    const baseUrl = (options.baseUrl ?? "https://api.obniz.com").replace(/\/+$/, "");
-    const fetchApi =
-      options.fetch || (typeof fetch !== "undefined" ? fetch : undefined);
+  constructor(options: ObnizNowOptions = {}) {
+    const hasExplicitToken = Object.prototype.hasOwnProperty.call(options, "token");
+    const hasExplicitCookies = Object.prototype.hasOwnProperty.call(options, "cookies");
+    const usesEnvironmentAuthentication = !hasExplicitToken && !hasExplicitCookies;
+    const token = hasExplicitToken
+      ? (options as ObnizNowTokenOptions).token
+      : usesEnvironmentAuthentication
+        ? nodeEnvironment("NOW_API_TOKEN")
+        : undefined;
+    const cookies = hasExplicitCookies ? (options as ObnizNowCookiesOptions).cookies : undefined;
+    const environmentBaseUrl = usesEnvironmentAuthentication ? nodeEnvironment("NOW_API_URL") : undefined;
+    const baseUrl = (options.baseUrl ?? environmentBaseUrl ?? "https://api.obniz.com").replace(/\/+$/u, "");
+    const fetchApi = options.fetch || (typeof fetch !== "undefined" ? fetch : undefined);
 
     if (!token && !cookies) {
-      throw new Error("Either 'token' or 'cookies' must be provided");
+      throw new Error(ENVIRONMENT_CONFIGURATION_ERROR);
+    }
+
+    if (usesEnvironmentAuthentication && environmentBaseUrl === undefined && options.baseUrl === undefined) {
+      throw new Error(ENVIRONMENT_CONFIGURATION_ERROR);
     }
 
     if (token && cookies) {
-      throw new Error(
-        "Only one of 'token' or 'cookies' can be provided, not both",
-      );
+      throw new Error("Only one of 'token' or 'cookies' can be provided, not both");
     }
 
     let customFetch: typeof fetch | undefined;
     if (cookies) {
-      const isBrowser =
-        typeof window !== "undefined" && typeof document !== "undefined";
+      const isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
 
-      customFetch = async (
-        url: RequestInfo | URL,
-        init?: RequestInit,
-      ): Promise<Response> => {
+      customFetch = async (url: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
         const headers = new Headers(init?.headers);
 
         if (!isBrowser) {
@@ -231,6 +266,34 @@ export class ObnizNow {
           credentials: "include",
         });
       };
+    } else if (usesEnvironmentAuthentication && token) {
+      const runAuthorization = `Bearer ${token}`;
+      customFetch = async (url: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+        const headers = new Headers(init?.headers);
+        headers.set("Authorization", runAuthorization);
+        return (fetchApi || fetch)(url, { ...init, headers });
+      };
+    }
+
+    this.unitStateSubscriptionBaseUrl = baseUrl.replace(/\/+$/u, "");
+    if (fetchApi === undefined) {
+      this.unitStateSubscriptionFetch = undefined;
+    } else {
+      const isBrowser = typeof window !== "undefined" && typeof document !== "undefined";
+      const authorization = token === undefined ? undefined : `Bearer ${token}`;
+      this.unitStateSubscriptionFetch = async (url: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
+        const headers = new Headers(init?.headers);
+        if (authorization !== undefined) headers.set("Authorization", authorization);
+        if (cookies !== undefined && !isBrowser) {
+          const cookie = [`token=${cookies.token}`, `account_id=${cookies.accountId}`].join("; ");
+          headers.set("Cookie", cookie);
+        }
+        return fetchApi(url, {
+          ...init,
+          headers,
+          ...(cookies === undefined ? {} : { credentials: "include" }),
+        });
+      };
     }
 
     const config = new Configuration({
@@ -240,6 +303,7 @@ export class ObnizNow {
     });
 
     this.account = wrapApiWithErrorHandling(new AccountApi(config));
+    this.accountIntelligence = wrapApiWithErrorHandling(new AccountIntelligenceApi(config));
     this.analytics = wrapApiWithErrorHandling(new AnalyticsApi(config));
     this.auditLogs = wrapApiWithErrorHandling(new AuditLogsApi(config));
     this.connectionModels = wrapApiWithErrorHandling(new ConnectionModelsApi(config));

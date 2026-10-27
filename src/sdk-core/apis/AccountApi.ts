@@ -23,27 +23,34 @@ import type {
   CreateCurrentAccountApiKeyResponse,
   CreateCurrentAccountMember404Response,
   CreateCurrentAccountMemberRequest,
+  CreateCurrentAccountSecretAllowedKeyRequest,
   CurrentAccountApiKeyDetail,
   CurrentAccountApiKeyPermissionsResponse,
+  CurrentAccountBadRequestResponse,
   CurrentAccountForbiddenResponse,
   CurrentAccountOkResponse,
+  CurrentAccountResponse,
+  CurrentAccountSecretAllowedKey,
+  CurrentAccountSecretAllowedKeyErrorResponse,
   CurrentAccountSecretExistsResponse,
-  CurrentAccountSecretKey,
   EntitlementSummary,
   ErrorResponse,
   ForbiddenPermissionsError,
   ListCurrentAccountApiKeysResponse,
   ListCurrentAccountMembersResponse,
+  ListCurrentAccountSecretAllowedKeysResponse,
   ListCurrentAccountSecretsResponse,
   PlanKey,
   SetCurrentAccountSecretRequest,
   UnauthorizedError,
   UpdateCurrentAccountApiKeyRequest,
   UpdateCurrentAccountMemberRequest,
+  UpdateCurrentAccountRequest,
+  UpdateCurrentAccountSecretAllowedKeyRequest,
 } from '../models/index';
 
 export interface AccountApiCheckCurrentAccountSecretExistsRequest {
-    key: CurrentAccountSecretKey;
+    key: string;
 }
 
 export interface AccountApiCreateCurrentAccountApiKeyOperationRequest {
@@ -52,6 +59,10 @@ export interface AccountApiCreateCurrentAccountApiKeyOperationRequest {
 
 export interface AccountApiCreateCurrentAccountMemberOperationRequest {
     createCurrentAccountMemberRequest: CreateCurrentAccountMemberRequest;
+}
+
+export interface AccountApiCreateCurrentAccountSecretAllowedKeyOperationRequest {
+    createCurrentAccountSecretAllowedKeyRequest: CreateCurrentAccountSecretAllowedKeyRequest;
 }
 
 export interface AccountApiDeleteCurrentAccountApiKeyRequest {
@@ -63,7 +74,12 @@ export interface AccountApiDeleteCurrentAccountMemberRequest {
 }
 
 export interface AccountApiDeleteCurrentAccountSecretRequest {
-    key: CurrentAccountSecretKey;
+    key: string;
+}
+
+export interface AccountApiDeleteCurrentAccountSecretAllowedKeyRequest {
+    key: string;
+    ifMatch: string;
 }
 
 export interface AccountApiGetCurrentAccountApiKeyRequest {
@@ -80,6 +96,17 @@ export interface AccountApiListCurrentAccountApiKeysRequest {
 }
 
 export interface AccountApiListCurrentAccountMembersRequest {
+    q?: string;
+    userId?: string;
+    name?: string;
+    email?: string;
+    role?: ListCurrentAccountMembersRoleEnum;
+    groupId?: string;
+    hasGroup?: ListCurrentAccountMembersHasGroupEnum;
+    hasEmail?: ListCurrentAccountMembersHasEmailEnum;
+    sort?: ListCurrentAccountMembersSortEnum;
+    order?: ListCurrentAccountMembersOrderEnum;
+    countOnly?: ListCurrentAccountMembersCountOnlyEnum;
     limit?: number;
     offset?: number;
 }
@@ -89,9 +116,19 @@ export interface AccountApiListCurrentAccountSecretsRequest {
     offset?: number;
 }
 
+export interface AccountApiReplaceCurrentAccountSecretAllowedKeyRequest {
+    key: string;
+    ifMatch: string;
+    updateCurrentAccountSecretAllowedKeyRequest: UpdateCurrentAccountSecretAllowedKeyRequest;
+}
+
 export interface AccountApiSetCurrentAccountSecretOperationRequest {
-    key: CurrentAccountSecretKey;
+    key: string;
     setCurrentAccountSecretRequest: SetCurrentAccountSecretRequest;
+}
+
+export interface AccountApiUpdateCurrentAccountOperationRequest {
+    updateCurrentAccountRequest: UpdateCurrentAccountRequest;
 }
 
 export interface AccountApiUpdateCurrentAccountApiKeyOperationRequest {
@@ -104,13 +141,19 @@ export interface AccountApiUpdateCurrentAccountMemberOperationRequest {
     updateCurrentAccountMemberRequest: UpdateCurrentAccountMemberRequest;
 }
 
+export interface AccountApiUpdateCurrentAccountSecretAllowedKeyOperationRequest {
+    key: string;
+    ifMatch: string;
+    updateCurrentAccountSecretAllowedKeyRequest: UpdateCurrentAccountSecretAllowedKeyRequest;
+}
+
 /**
  * 
  */
 export class AccountApi extends runtime.BaseAPI {
 
     /**
-     * Checks whether a supported secret key exists. The secret value is never returned.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
+     * Checks whether a secret key registered in the dynamic allowlist has a stored value. The secret value is never returned.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
      * Check current account secret
      */
     async checkCurrentAccountSecretExistsRaw(requestParameters: AccountApiCheckCurrentAccountSecretExistsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CurrentAccountSecretExistsResponse>> {
@@ -136,7 +179,7 @@ export class AccountApi extends runtime.BaseAPI {
     }
 
     /**
-     * Checks whether a supported secret key exists. The secret value is never returned.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
+     * Checks whether a secret key registered in the dynamic allowlist has a stored value. The secret value is never returned.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
      * Check current account secret
      */
     async checkCurrentAccountSecretExists(requestParameters: AccountApiCheckCurrentAccountSecretExistsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CurrentAccountSecretExistsResponse> {
@@ -225,6 +268,44 @@ export class AccountApi extends runtime.BaseAPI {
     }
 
     /**
+     * Adds a dynamic allowed key so its secret value can be stored later. The created metadata is returned with its revision as a strong `ETag`, and no secret value is accepted or returned.  Browser cookie authentication with owner role and a same-origin request are required. API tokens cannot call this endpoint. 
+     * Create current account secret allowed key
+     */
+    async createCurrentAccountSecretAllowedKeyRaw(requestParameters: AccountApiCreateCurrentAccountSecretAllowedKeyOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CurrentAccountSecretAllowedKey>> {
+        if (requestParameters['createCurrentAccountSecretAllowedKeyRequest'] == null) {
+            throw new runtime.RequiredError(
+                'createCurrentAccountSecretAllowedKeyRequest',
+                'Required parameter "createCurrentAccountSecretAllowedKeyRequest" was null or undefined when calling createCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/1/account/secret-allowed-keys`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['createCurrentAccountSecretAllowedKeyRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Adds a dynamic allowed key so its secret value can be stored later. The created metadata is returned with its revision as a strong `ETag`, and no secret value is accepted or returned.  Browser cookie authentication with owner role and a same-origin request are required. API tokens cannot call this endpoint. 
+     * Create current account secret allowed key
+     */
+    async createCurrentAccountSecretAllowedKey(requestParameters: AccountApiCreateCurrentAccountSecretAllowedKeyOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CurrentAccountSecretAllowedKey> {
+        const response = await this.createCurrentAccountSecretAllowedKeyRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Revokes an API key in the selected account.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. The API keys feature must be available in the current plan. 
      * Delete current account API key
      */
@@ -297,7 +378,7 @@ export class AccountApi extends runtime.BaseAPI {
     }
 
     /**
-     * Deletes a supported secret key from the selected account.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
+     * Deletes a stored secret value from the selected account. Orphaned values can also be removed after their allowed-key definition is gone.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
      * Delete current account secret
      */
     async deleteCurrentAccountSecretRaw(requestParameters: AccountApiDeleteCurrentAccountSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CurrentAccountOkResponse>> {
@@ -323,11 +404,88 @@ export class AccountApi extends runtime.BaseAPI {
     }
 
     /**
-     * Deletes a supported secret key from the selected account.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
+     * Deletes a stored secret value from the selected account. Orphaned values can also be removed after their allowed-key definition is gone.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
      * Delete current account secret
      */
     async deleteCurrentAccountSecret(requestParameters: AccountApiDeleteCurrentAccountSecretRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CurrentAccountOkResponse> {
         const response = await this.deleteCurrentAccountSecretRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Deletes one dynamic allowed key with revision compare-and-set. `If-Match` must carry exactly one strong decimal revision. Template-managed keys cannot be deleted, and a key whose secret value is still stored is rejected until the value is deleted first.  Browser cookie authentication with owner role and a same-origin request are required. API tokens cannot call this endpoint. 
+     * Delete current account secret allowed key
+     */
+    async deleteCurrentAccountSecretAllowedKeyRaw(requestParameters: AccountApiDeleteCurrentAccountSecretAllowedKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['key'] == null) {
+            throw new runtime.RequiredError(
+                'key',
+                'Required parameter "key" was null or undefined when calling deleteCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        if (requestParameters['ifMatch'] == null) {
+            throw new runtime.RequiredError(
+                'ifMatch',
+                'Required parameter "ifMatch" was null or undefined when calling deleteCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (requestParameters['ifMatch'] != null) {
+            headerParameters['If-Match'] = String(requestParameters['ifMatch']);
+        }
+
+        const response = await this.request({
+            path: `/api/1/account/secret-allowed-keys/{key}`.replace(`{${"key"}}`, encodeURIComponent(String(requestParameters['key']))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Deletes one dynamic allowed key with revision compare-and-set. `If-Match` must carry exactly one strong decimal revision. Template-managed keys cannot be deleted, and a key whose secret value is still stored is rejected until the value is deleted first.  Browser cookie authentication with owner role and a same-origin request are required. API tokens cannot call this endpoint. 
+     * Delete current account secret allowed key
+     */
+    async deleteCurrentAccountSecretAllowedKey(requestParameters: AccountApiDeleteCurrentAccountSecretAllowedKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteCurrentAccountSecretAllowedKeyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Returns basic settings of the selected account.  Cookie authentication requires owner or member role. API token authentication requires `account:read`. 
+     * Get current account
+     */
+    async getCurrentAccountRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CurrentAccountResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
+
+        const response = await this.request({
+            path: `/api/1/account`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Returns basic settings of the selected account.  Cookie authentication requires owner or member role. API token authentication requires `account:read`. 
+     * Get current account
+     */
+    async getCurrentAccount(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CurrentAccountResponse> {
+        const response = await this.getCurrentAccountRaw(initOverrides);
         return await response.value();
     }
 
@@ -534,11 +692,55 @@ export class AccountApi extends runtime.BaseAPI {
     }
 
     /**
-     * Returns a paginated list of members in the selected account.  Cookie authentication requires owner or member role. A member with a group_id only sees members in that group. API token authentication requires `account:read` and `account_members:read`, and returns the whole account. 
+     * Returns a filtered, sorted, and paginated list of members in the selected account.  `q` performs a case-insensitive literal substring search across user ID, name, email address, and group name. Characters such as `%` and `_` are treated as ordinary search text rather than wildcards. Results are sorted by `user_id` in ascending order by default. When `count_only=true`, `members` is an empty array and `count` contains the number of members matching the filters.  Cookie authentication requires owner or member role. A member with a `group_id` is always restricted to members in that group, regardless of the requested search filters. A request for a different `group_id` is rejected with 403, and combining this scope with `has_group=false` is rejected with 400. API token authentication requires `account:read` and `account_members:read`, and returns the whole account. 
      * List current account members
      */
     async listCurrentAccountMembersRaw(requestParameters: AccountApiListCurrentAccountMembersRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListCurrentAccountMembersResponse>> {
         const queryParameters: any = {};
+
+        if (requestParameters['q'] != null) {
+            queryParameters['q'] = requestParameters['q'];
+        }
+
+        if (requestParameters['userId'] != null) {
+            queryParameters['user_id'] = requestParameters['userId'];
+        }
+
+        if (requestParameters['name'] != null) {
+            queryParameters['name'] = requestParameters['name'];
+        }
+
+        if (requestParameters['email'] != null) {
+            queryParameters['email'] = requestParameters['email'];
+        }
+
+        if (requestParameters['role'] != null) {
+            queryParameters['role'] = requestParameters['role'];
+        }
+
+        if (requestParameters['groupId'] != null) {
+            queryParameters['group_id'] = requestParameters['groupId'];
+        }
+
+        if (requestParameters['hasGroup'] != null) {
+            queryParameters['has_group'] = requestParameters['hasGroup'];
+        }
+
+        if (requestParameters['hasEmail'] != null) {
+            queryParameters['has_email'] = requestParameters['hasEmail'];
+        }
+
+        if (requestParameters['sort'] != null) {
+            queryParameters['sort'] = requestParameters['sort'];
+        }
+
+        if (requestParameters['order'] != null) {
+            queryParameters['order'] = requestParameters['order'];
+        }
+
+        if (requestParameters['countOnly'] != null) {
+            queryParameters['count_only'] = requestParameters['countOnly'];
+        }
 
         if (requestParameters['limit'] != null) {
             queryParameters['limit'] = requestParameters['limit'];
@@ -565,11 +767,39 @@ export class AccountApi extends runtime.BaseAPI {
     }
 
     /**
-     * Returns a paginated list of members in the selected account.  Cookie authentication requires owner or member role. A member with a group_id only sees members in that group. API token authentication requires `account:read` and `account_members:read`, and returns the whole account. 
+     * Returns a filtered, sorted, and paginated list of members in the selected account.  `q` performs a case-insensitive literal substring search across user ID, name, email address, and group name. Characters such as `%` and `_` are treated as ordinary search text rather than wildcards. Results are sorted by `user_id` in ascending order by default. When `count_only=true`, `members` is an empty array and `count` contains the number of members matching the filters.  Cookie authentication requires owner or member role. A member with a `group_id` is always restricted to members in that group, regardless of the requested search filters. A request for a different `group_id` is rejected with 403, and combining this scope with `has_group=false` is rejected with 400. API token authentication requires `account:read` and `account_members:read`, and returns the whole account. 
      * List current account members
      */
     async listCurrentAccountMembers(requestParameters: AccountApiListCurrentAccountMembersRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListCurrentAccountMembersResponse> {
         const response = await this.listCurrentAccountMembersRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Returns allowed-key metadata for the selected account, with existence-only booleans for template management and stored values. Secret values are never returned.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
+     * List current account secret allowed keys
+     */
+    async listCurrentAccountSecretAllowedKeysRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ListCurrentAccountSecretAllowedKeysResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/api/1/account/secret-allowed-keys`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Returns allowed-key metadata for the selected account, with existence-only booleans for template management and stored values. Secret values are never returned.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
+     * List current account secret allowed keys
+     */
+    async listCurrentAccountSecretAllowedKeys(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ListCurrentAccountSecretAllowedKeysResponse> {
+        const response = await this.listCurrentAccountSecretAllowedKeysRaw(initOverrides);
         return await response.value();
     }
 
@@ -642,7 +872,63 @@ export class AccountApi extends runtime.BaseAPI {
     }
 
     /**
-     * Stores an encrypted secret value for a supported key.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
+     * Replaces `description` and `required` of one dynamic allowed key with revision compare-and-set. `If-Match` must carry exactly one strong decimal revision, for example `If-Match: \"7\"`. Template-managed keys cannot be changed. Secret values are never returned.  Browser cookie authentication with owner role and a same-origin request are required. API tokens cannot call this endpoint. 
+     * Replace current account secret allowed key metadata
+     */
+    async replaceCurrentAccountSecretAllowedKeyRaw(requestParameters: AccountApiReplaceCurrentAccountSecretAllowedKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CurrentAccountSecretAllowedKey>> {
+        if (requestParameters['key'] == null) {
+            throw new runtime.RequiredError(
+                'key',
+                'Required parameter "key" was null or undefined when calling replaceCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        if (requestParameters['ifMatch'] == null) {
+            throw new runtime.RequiredError(
+                'ifMatch',
+                'Required parameter "ifMatch" was null or undefined when calling replaceCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        if (requestParameters['updateCurrentAccountSecretAllowedKeyRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateCurrentAccountSecretAllowedKeyRequest',
+                'Required parameter "updateCurrentAccountSecretAllowedKeyRequest" was null or undefined when calling replaceCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['ifMatch'] != null) {
+            headerParameters['If-Match'] = String(requestParameters['ifMatch']);
+        }
+
+        const response = await this.request({
+            path: `/api/1/account/secret-allowed-keys/{key}`.replace(`{${"key"}}`, encodeURIComponent(String(requestParameters['key']))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['updateCurrentAccountSecretAllowedKeyRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Replaces `description` and `required` of one dynamic allowed key with revision compare-and-set. `If-Match` must carry exactly one strong decimal revision, for example `If-Match: \"7\"`. Template-managed keys cannot be changed. Secret values are never returned.  Browser cookie authentication with owner role and a same-origin request are required. API tokens cannot call this endpoint. 
+     * Replace current account secret allowed key metadata
+     */
+    async replaceCurrentAccountSecretAllowedKey(requestParameters: AccountApiReplaceCurrentAccountSecretAllowedKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CurrentAccountSecretAllowedKey> {
+        const response = await this.replaceCurrentAccountSecretAllowedKeyRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Stores an encrypted secret value for a key registered in the dynamic allowlist.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
      * Set current account secret
      */
     async setCurrentAccountSecretRaw(requestParameters: AccountApiSetCurrentAccountSecretOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CurrentAccountOkResponse>> {
@@ -678,11 +964,49 @@ export class AccountApi extends runtime.BaseAPI {
     }
 
     /**
-     * Stores an encrypted secret value for a supported key.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
+     * Stores an encrypted secret value for a key registered in the dynamic allowlist.  Browser cookie authentication with owner role is required. API tokens cannot call this endpoint. 
      * Set current account secret
      */
     async setCurrentAccountSecret(requestParameters: AccountApiSetCurrentAccountSecretOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CurrentAccountOkResponse> {
         const response = await this.setCurrentAccountSecretRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Updates timezone and usageWarnings.integration for the selected account. Omitted warning fields are preserved. Missing stored keys default to disabled with a 90% threshold. Warning thresholds are integers from 1 to 99. Warnings are sent once per account per UTC month, only when usage crosses the threshold before exhaustion. Disabling warnings does not disable limit-reached emails. Pass the previously read usageWarnings as expectedUsageWarnings to detect stale edits, and expectedAccountId to guard against an account switch.  This endpoint is for browser sessions only and requires owner role. API tokens cannot call it. 
+     * Update current account
+     */
+    async updateCurrentAccountRaw(requestParameters: AccountApiUpdateCurrentAccountOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CurrentAccountResponse>> {
+        if (requestParameters['updateCurrentAccountRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateCurrentAccountRequest',
+                'Required parameter "updateCurrentAccountRequest" was null or undefined when calling updateCurrentAccount().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/api/1/account`,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['updateCurrentAccountRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Updates timezone and usageWarnings.integration for the selected account. Omitted warning fields are preserved. Missing stored keys default to disabled with a 90% threshold. Warning thresholds are integers from 1 to 99. Warnings are sent once per account per UTC month, only when usage crosses the threshold before exhaustion. Disabling warnings does not disable limit-reached emails. Pass the previously read usageWarnings as expectedUsageWarnings to detect stale edits, and expectedAccountId to guard against an account switch.  This endpoint is for browser sessions only and requires owner role. API tokens cannot call it. 
+     * Update current account
+     */
+    async updateCurrentAccount(requestParameters: AccountApiUpdateCurrentAccountOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CurrentAccountResponse> {
+        const response = await this.updateCurrentAccountRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -780,4 +1104,113 @@ export class AccountApi extends runtime.BaseAPI {
         return await response.value();
     }
 
+    /**
+     * Updates `description` and `required` of one dynamic allowed key with revision compare-and-set. The contract is identical to the PUT operation on this path: `If-Match` must carry exactly one strong decimal revision, and template-managed keys cannot be changed. Secret values are never returned.  Browser cookie authentication with owner role and a same-origin request are required. API tokens cannot call this endpoint. 
+     * Update current account secret allowed key metadata
+     */
+    async updateCurrentAccountSecretAllowedKeyRaw(requestParameters: AccountApiUpdateCurrentAccountSecretAllowedKeyOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CurrentAccountSecretAllowedKey>> {
+        if (requestParameters['key'] == null) {
+            throw new runtime.RequiredError(
+                'key',
+                'Required parameter "key" was null or undefined when calling updateCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        if (requestParameters['ifMatch'] == null) {
+            throw new runtime.RequiredError(
+                'ifMatch',
+                'Required parameter "ifMatch" was null or undefined when calling updateCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        if (requestParameters['updateCurrentAccountSecretAllowedKeyRequest'] == null) {
+            throw new runtime.RequiredError(
+                'updateCurrentAccountSecretAllowedKeyRequest',
+                'Required parameter "updateCurrentAccountSecretAllowedKeyRequest" was null or undefined when calling updateCurrentAccountSecretAllowedKey().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (requestParameters['ifMatch'] != null) {
+            headerParameters['If-Match'] = String(requestParameters['ifMatch']);
+        }
+
+        const response = await this.request({
+            path: `/api/1/account/secret-allowed-keys/{key}`.replace(`{${"key"}}`, encodeURIComponent(String(requestParameters['key']))),
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: requestParameters['updateCurrentAccountSecretAllowedKeyRequest'],
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response);
+    }
+
+    /**
+     * Updates `description` and `required` of one dynamic allowed key with revision compare-and-set. The contract is identical to the PUT operation on this path: `If-Match` must carry exactly one strong decimal revision, and template-managed keys cannot be changed. Secret values are never returned.  Browser cookie authentication with owner role and a same-origin request are required. API tokens cannot call this endpoint. 
+     * Update current account secret allowed key metadata
+     */
+    async updateCurrentAccountSecretAllowedKey(requestParameters: AccountApiUpdateCurrentAccountSecretAllowedKeyOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CurrentAccountSecretAllowedKey> {
+        const response = await this.updateCurrentAccountSecretAllowedKeyRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
 }
+
+/**
+ * @export
+ */
+export const ListCurrentAccountMembersRoleEnum = {
+    Owner: 'owner',
+    Member: 'member',
+    Guest: 'guest'
+} as const;
+export type ListCurrentAccountMembersRoleEnum = typeof ListCurrentAccountMembersRoleEnum[keyof typeof ListCurrentAccountMembersRoleEnum];
+/**
+ * @export
+ */
+export const ListCurrentAccountMembersHasGroupEnum = {
+    True: 'true',
+    False: 'false'
+} as const;
+export type ListCurrentAccountMembersHasGroupEnum = typeof ListCurrentAccountMembersHasGroupEnum[keyof typeof ListCurrentAccountMembersHasGroupEnum];
+/**
+ * @export
+ */
+export const ListCurrentAccountMembersHasEmailEnum = {
+    True: 'true',
+    False: 'false'
+} as const;
+export type ListCurrentAccountMembersHasEmailEnum = typeof ListCurrentAccountMembersHasEmailEnum[keyof typeof ListCurrentAccountMembersHasEmailEnum];
+/**
+ * @export
+ */
+export const ListCurrentAccountMembersSortEnum = {
+    UserId: 'user_id',
+    Name: 'name',
+    Email: 'email',
+    GroupName: 'group_name',
+    Role: 'role'
+} as const;
+export type ListCurrentAccountMembersSortEnum = typeof ListCurrentAccountMembersSortEnum[keyof typeof ListCurrentAccountMembersSortEnum];
+/**
+ * @export
+ */
+export const ListCurrentAccountMembersOrderEnum = {
+    Asc: 'asc',
+    Desc: 'desc'
+} as const;
+export type ListCurrentAccountMembersOrderEnum = typeof ListCurrentAccountMembersOrderEnum[keyof typeof ListCurrentAccountMembersOrderEnum];
+/**
+ * @export
+ */
+export const ListCurrentAccountMembersCountOnlyEnum = {
+    True: 'true',
+    False: 'false'
+} as const;
+export type ListCurrentAccountMembersCountOnlyEnum = typeof ListCurrentAccountMembersCountOnlyEnum[keyof typeof ListCurrentAccountMembersCountOnlyEnum];

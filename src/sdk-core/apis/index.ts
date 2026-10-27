@@ -1,6 +1,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export * from './AccountApi';
+export * from './AccountIntelligenceApi';
 export * from './AnalyticsApi';
 export * from './AuditLogsApi';
 export * from './ConnectionModelsApi';

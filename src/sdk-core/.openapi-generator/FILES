@@ -1,4 +1,5 @@
 apis/AccountApi.ts
+apis/AccountIntelligenceApi.ts
 apis/AnalyticsApi.ts
 apis/AuditLogsApi.ts
 apis/ConnectionModelsApi.ts

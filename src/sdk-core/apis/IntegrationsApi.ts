@@ -42,6 +42,13 @@ export interface IntegrationsApiGetIntegrationRequest {
 
 export interface IntegrationsApiGetIntegrationDataRequest {
     id: string;
+    limit?: number;
+    offset?: number;
+    searchFilter?: string;
+    searchWord?: string;
+    groupId?: string;
+    connectionModel?: string;
+    states?: string;
 }
 
 export interface IntegrationsApiListIntegrationsRequest {
@@ -66,7 +73,7 @@ export interface IntegrationsApiUpdateIntegrationOperationRequest {
 export class IntegrationsApi extends runtime.BaseAPI {
 
     /**
-     * Creates integrations for multiple machines in a single request.  One integration is created per machine.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `integrations:write` permission is required 
+     * Creates integrations for multiple machines in a single request.  One integration is created per machine.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `integrations:write` permission is required  **API Pull Query** Send `integrationType: apipullquery`, `machines: []`, `prefix: name`, and `service: {}` to create one integration without a fixed machine. Config requires `latest_only: true`, `minutes_interval` (compatibility field, not a schedule), `is_simplified`, `id_key`, and `timestamp_key`. `include_null` defaults to true. `idSource` accepts `machine_id` (default) or `machine_name`. Mapping schemas are shared with API Pull. Example: `schemaJson: {\"inUse\":\"inUse\",\"voltage\":\"battery_voltage\"}`. 
      * Add integrations for multiple machines
      */
     async addIntegrationsRaw(requestParameters: IntegrationsApiAddIntegrationsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AddIntegrationsResponse>> {
@@ -99,7 +106,7 @@ export class IntegrationsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Creates integrations for multiple machines in a single request.  One integration is created per machine.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `integrations:write` permission is required 
+     * Creates integrations for multiple machines in a single request.  One integration is created per machine.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `integrations:write` permission is required  **API Pull Query** Send `integrationType: apipullquery`, `machines: []`, `prefix: name`, and `service: {}` to create one integration without a fixed machine. Config requires `latest_only: true`, `minutes_interval` (compatibility field, not a schedule), `is_simplified`, `id_key`, and `timestamp_key`. `include_null` defaults to true. `idSource` accepts `machine_id` (default) or `machine_name`. Mapping schemas are shared with API Pull. Example: `schemaJson: {\"inUse\":\"inUse\",\"voltage\":\"battery_voltage\"}`. 
      * Add integrations for multiple machines
      */
     async addIntegrations(requestParameters: IntegrationsApiAddIntegrationsOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AddIntegrationsResponse> {
@@ -185,7 +192,7 @@ export class IntegrationsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieves transformed machine data through an API Pull integration.  This endpoint: - Validates the integration exists and is enabled - Collects machine state data since last usage - Transforms data according to integration schema  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `integrations:read` permission is required  **Rate Limiting** - Rate limits are based on account plan - Returns X-RateLimit-Limit and X-RateLimit-Remaining headers  **Notes** - Only works with APIPull type integrations - Returns data collected since the integration was last used (or last 30 minutes) 
+     * Retrieves transformed machine data through an API Pull integration.  This endpoint: - Validates the integration exists and is enabled - Collects machine state data since last usage - Transforms data according to integration schema  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `integrations:read` permission is required  **Rate Limiting** - Rate limits are based on account plan - Returns X-RateLimit-Limit and X-RateLimit-Remaining headers  **Notes** - Existing single-machine APIPull behavior is unchanged - Returns data collected since the integration was last used (or last 30 minutes)  **API Pull Query (`apipullquery`)** - Transforms the latest states of matching machines and returns `{count, limit, offset, items}`. - Count and offset refer to matching machines before transformation/null exclusion. Advance by offset + limit. - With `include_null: false` (default true), omit machines whose mapped values are all null. Partial-null results remain. - Filters are supplied per GET request. At most 100 machines are read per page. - Monthly usage increases by the number of returned items. Retained null items count; omitted nulls and empty pages do not. - If the remaining allowance cannot cover the whole page, the request returns 402 without consuming usage or returning a partial page. Reduce limit and retry. Failed requests consume no usage; successful retries are counted again. - A zero allowance or an already exhausted quota returns 402. X-RateLimit-Remaining reports the unused allowance after this request. - The integration must belong to the authenticated account. Historical data is not supported. 
      * Get integration data
      */
     async getIntegrationDataRaw(requestParameters: IntegrationsApiGetIntegrationDataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<{ [key: string]: any; }>> {
@@ -197,6 +204,34 @@ export class IntegrationsApi extends runtime.BaseAPI {
         }
 
         const queryParameters: any = {};
+
+        if (requestParameters['limit'] != null) {
+            queryParameters['limit'] = requestParameters['limit'];
+        }
+
+        if (requestParameters['offset'] != null) {
+            queryParameters['offset'] = requestParameters['offset'];
+        }
+
+        if (requestParameters['searchFilter'] != null) {
+            queryParameters['search_filter'] = requestParameters['searchFilter'];
+        }
+
+        if (requestParameters['searchWord'] != null) {
+            queryParameters['search_word'] = requestParameters['searchWord'];
+        }
+
+        if (requestParameters['groupId'] != null) {
+            queryParameters['group_id'] = requestParameters['groupId'];
+        }
+
+        if (requestParameters['connectionModel'] != null) {
+            queryParameters['connection_model'] = requestParameters['connectionModel'];
+        }
+
+        if (requestParameters['states'] != null) {
+            queryParameters['states'] = requestParameters['states'];
+        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -215,7 +250,7 @@ export class IntegrationsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Retrieves transformed machine data through an API Pull integration.  This endpoint: - Validates the integration exists and is enabled - Collects machine state data since last usage - Transforms data according to integration schema  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `integrations:read` permission is required  **Rate Limiting** - Rate limits are based on account plan - Returns X-RateLimit-Limit and X-RateLimit-Remaining headers  **Notes** - Only works with APIPull type integrations - Returns data collected since the integration was last used (or last 30 minutes) 
+     * Retrieves transformed machine data through an API Pull integration.  This endpoint: - Validates the integration exists and is enabled - Collects machine state data since last usage - Transforms data according to integration schema  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `integrations:read` permission is required  **Rate Limiting** - Rate limits are based on account plan - Returns X-RateLimit-Limit and X-RateLimit-Remaining headers  **Notes** - Existing single-machine APIPull behavior is unchanged - Returns data collected since the integration was last used (or last 30 minutes)  **API Pull Query (`apipullquery`)** - Transforms the latest states of matching machines and returns `{count, limit, offset, items}`. - Count and offset refer to matching machines before transformation/null exclusion. Advance by offset + limit. - With `include_null: false` (default true), omit machines whose mapped values are all null. Partial-null results remain. - Filters are supplied per GET request. At most 100 machines are read per page. - Monthly usage increases by the number of returned items. Retained null items count; omitted nulls and empty pages do not. - If the remaining allowance cannot cover the whole page, the request returns 402 without consuming usage or returning a partial page. Reduce limit and retry. Failed requests consume no usage; successful retries are counted again. - A zero allowance or an already exhausted quota returns 402. X-RateLimit-Remaining reports the unused allowance after this request. - The integration must belong to the authenticated account. Historical data is not supported. 
      * Get integration data
      */
     async getIntegrationData(requestParameters: IntegrationsApiGetIntegrationDataRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<{ [key: string]: any; }> {

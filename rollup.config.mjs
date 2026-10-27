@@ -1,41 +1,41 @@
-import typescript from '@rollup/plugin-typescript';
-import { defineConfig } from 'rollup';
+import { builtinModules } from "node:module";
+import typescript from "@rollup/plugin-typescript";
+import { defineConfig } from "rollup";
 
-export default defineConfig([
-  // ESM build
-  {
-    input: 'src/index.ts',
-    output: {
-      file: 'dist/index.mjs',
-      format: 'es',
-      sourcemap: true,
-    },
-    external: [],
-    plugins: [
-      typescript({
-        tsconfig: './tsconfig.json',
-        declaration: true,
-        declarationDir: './dist',
-        rootDir: './src',
-      }),
-    ],
-  },
-  // CommonJS build
-  {
-    input: 'src/index.ts',
-    output: {
-      file: 'dist/index.js',
-      format: 'cjs',
-      sourcemap: true,
-      exports: 'named',
-    },
-    external: [],
-    plugins: [
-      typescript({
-        tsconfig: './tsconfig.json',
-        declaration: false,
-        rootDir: './src',
-      }),
-    ],
-  },
-]);
+const builtins = new Set(builtinModules.flatMap((name) => [name, `node:${name}`]));
+
+export default defineConfig(
+  ["index", "browser"].flatMap((entry) =>
+    ["es", "cjs"].map((format) => ({
+      input: `src/${entry}.ts`,
+      output: {
+        file: `dist/${entry}.${format === "es" ? "mjs" : "js"}`,
+        format,
+        sourcemap: true,
+        ...(format === "cjs" ? { exports: "named" } : {}),
+      },
+      external: (source) => entry === "index" && builtins.has(source),
+      onwarn(warning, warn) {
+        if (warning.code === "UNRESOLVED_IMPORT") throw new Error(warning.message);
+        warn(warning);
+      },
+      plugins: [
+        {
+          name: "browser-runtime-boundary",
+          resolveId(source) {
+            if (entry === "browser" && builtins.has(source))
+              throw new Error(`Node module cannot enter the browser SDK: ${source}`);
+            return null;
+          },
+        },
+        typescript({
+          tsconfig: "./tsconfig.json",
+          noEmitOnError: true,
+          declaration: format === "es",
+          ...(format === "es" ? { declarationDir: "./dist" } : {}),
+          rootDir: "./src",
+        }),
+      ],
+    })),
+  ),
+);

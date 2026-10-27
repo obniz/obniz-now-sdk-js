@@ -51,6 +51,7 @@ export interface MachinesApiGetDevicesListRequest {
     searchFilter?: GetDevicesListSearchFilterEnum;
     searchWord?: string;
     groupId?: string;
+    includeDescendants?: boolean;
 }
 
 export interface MachinesApiListMachinesRequest {
@@ -58,6 +59,8 @@ export interface MachinesApiListMachinesRequest {
     offset?: number;
     searchFilter?: ListMachinesSearchFilterEnum;
     searchWord?: string;
+    groupId?: string;
+    connectionModel?: string;
     states?: string;
 }
 
@@ -76,7 +79,7 @@ export interface MachinesApiUpdateMachineOperationRequest {
 export class MachinesApi extends runtime.BaseAPI {
 
     /**
-     * Creates a new machine for a Bluetooth Low Energy (BLE) device.  This operation performs the following steps: - Creates a new machine within the account - Optionally installs a controller based on the specified `parts` value - Assigns the machine to one or more groups - Creates a BLE converter linking the device address to the machine  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Notes** - If the specified `parts` value does not have a corresponding controller, the machine is created without installing a controller - The BLE address must be unique within the account 
+     * Creates a new machine for a Bluetooth Low Energy (BLE) device.  This operation performs the following steps: - Creates a new machine within the account - Optionally installs a controller based on the specified `parts` value - Assigns the machine to one or more groups - Creates a BLE converter linking the device address to the machine - For `I_OfficeSensor` and `I_OfficeBox`, saves `ble_device_type` and `converter_id` in machine State so the device can be listed and selected before its first reception. Measurements and reception timestamps are not initialized.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Notes** - If the specified `parts` value does not have a corresponding controller, the machine is created without installing a controller - The BLE address must be unique within the account 
      * Add a BLE device as a machine
      */
     async addBleMachineRaw(requestParameters: MachinesApiAddBleMachineOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AddBleMachineResponse>> {
@@ -109,7 +112,7 @@ export class MachinesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Creates a new machine for a Bluetooth Low Energy (BLE) device.  This operation performs the following steps: - Creates a new machine within the account - Optionally installs a controller based on the specified `parts` value - Assigns the machine to one or more groups - Creates a BLE converter linking the device address to the machine  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Notes** - If the specified `parts` value does not have a corresponding controller, the machine is created without installing a controller - The BLE address must be unique within the account 
+     * Creates a new machine for a Bluetooth Low Energy (BLE) device.  This operation performs the following steps: - Creates a new machine within the account - Optionally installs a controller based on the specified `parts` value - Assigns the machine to one or more groups - Creates a BLE converter linking the device address to the machine - For `I_OfficeSensor` and `I_OfficeBox`, saves `ble_device_type` and `converter_id` in machine State so the device can be listed and selected before its first reception. Measurements and reception timestamps are not initialized.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Notes** - If the specified `parts` value does not have a corresponding controller, the machine is created without installing a controller - The BLE address must be unique within the account 
      * Add a BLE device as a machine
      */
     async addBleMachine(requestParameters: MachinesApiAddBleMachineOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AddBleMachineResponse> {
@@ -214,7 +217,7 @@ export class MachinesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Returns a paginated list of machines that have connected obniz_id, including their states and groups.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - Requires appropriate permissions for machines - Non-owner users are automatically filtered to their assigned group  **Filtering** - `only_with_obniz: true` - Only returns machines with obniz_id - Only firmware_version and hardware_type states are returned - Optional search by machine name or obniz ID - Optional filter by group_id 
+     * Returns a paginated list of machines that have connected obniz_id, including their states and groups.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - Requires appropriate permissions for machines - Non-owner users are automatically filtered to their assigned group  **Filtering** - `only_with_obniz: true` - Only returns machines with obniz_id - Only firmware_version and hardware_type states are returned - Optional search by machine name or obniz ID - Optional filter by group_id - Set include_descendants=true with group_id to include all descendant groups within the user\'s accessible scope 
      * Get paginated list of devices (machines with obniz_id)
      */
     async getDevicesListRaw(requestParameters: MachinesApiGetDevicesListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<DevicesListResponse>> {
@@ -240,6 +243,10 @@ export class MachinesApi extends runtime.BaseAPI {
             queryParameters['group_id'] = requestParameters['groupId'];
         }
 
+        if (requestParameters['includeDescendants'] != null) {
+            queryParameters['include_descendants'] = requestParameters['includeDescendants'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.apiKey) {
@@ -257,7 +264,7 @@ export class MachinesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Returns a paginated list of machines that have connected obniz_id, including their states and groups.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - Requires appropriate permissions for machines - Non-owner users are automatically filtered to their assigned group  **Filtering** - `only_with_obniz: true` - Only returns machines with obniz_id - Only firmware_version and hardware_type states are returned - Optional search by machine name or obniz ID - Optional filter by group_id 
+     * Returns a paginated list of machines that have connected obniz_id, including their states and groups.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - Requires appropriate permissions for machines - Non-owner users are automatically filtered to their assigned group  **Filtering** - `only_with_obniz: true` - Only returns machines with obniz_id - Only firmware_version and hardware_type states are returned - Optional search by machine name or obniz ID - Optional filter by group_id - Set include_descendants=true with group_id to include all descendant groups within the user\'s accessible scope 
      * Get paginated list of devices (machines with obniz_id)
      */
     async getDevicesList(requestParameters: MachinesApiGetDevicesListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<DevicesListResponse> {
@@ -286,6 +293,14 @@ export class MachinesApi extends runtime.BaseAPI {
 
         if (requestParameters['searchWord'] != null) {
             queryParameters['search_word'] = requestParameters['searchWord'];
+        }
+
+        if (requestParameters['groupId'] != null) {
+            queryParameters['group_id'] = requestParameters['groupId'];
+        }
+
+        if (requestParameters['connectionModel'] != null) {
+            queryParameters['connection_model'] = requestParameters['connectionModel'];
         }
 
         if (requestParameters['states'] != null) {

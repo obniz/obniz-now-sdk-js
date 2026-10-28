@@ -27,8 +27,6 @@ import type {
   UpdateConnectionModelsResponse,
   UpdateInstallConfigRequest,
   UpdateInstallConfigResponse,
-  UpdateMachinePublicRequest,
-  UpdateMachinePublicResponse,
 } from '../models/index';
 
 export interface MachineApiDeleteMachineRequest {
@@ -67,11 +65,6 @@ export interface MachineApiUpdateConnectionModelInstallConfigRequest {
 export interface MachineApiUpdateConnectionModelsOperationRequest {
     machineId: string;
     updateConnectionModelsRequest: UpdateConnectionModelsRequest;
-}
-
-export interface MachineApiUpdateMachinePublicOperationRequest {
-    machineId: string;
-    updateMachinePublicRequest: UpdateMachinePublicRequest;
 }
 
 /**
@@ -433,55 +426,5 @@ export class MachineApi extends runtime.BaseAPI {
         return await response.value();
     }
 
-    /**
-     * **Deprecated**: This endpoint is deprecated and will be removed in the future.  Public access to machines will be migrated to a read-only API key based mechanism.  Updates the public visibility status of a machine. When a machine is public,  its data can be accessed without authentication through public endpoints.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Side effects** - Updates `is_public` flag on the machine 
-     * Update machine public visibility
-     * @deprecated
-     */
-    async updateMachinePublicRaw(requestParameters: MachineApiUpdateMachinePublicOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UpdateMachinePublicResponse>> {
-        if (requestParameters['machineId'] == null) {
-            throw new runtime.RequiredError(
-                'machineId',
-                'Required parameter "machineId" was null or undefined when calling updateMachinePublic().'
-            );
-        }
-
-        if (requestParameters['updateMachinePublicRequest'] == null) {
-            throw new runtime.RequiredError(
-                'updateMachinePublicRequest',
-                'Required parameter "updateMachinePublicRequest" was null or undefined when calling updateMachinePublic().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
-        }
-
-        const response = await this.request({
-            path: `/api/1/machine/{machine_id}/public`.replace(`{${"machine_id"}}`, encodeURIComponent(String(requestParameters['machineId']))),
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: requestParameters['updateMachinePublicRequest'],
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response);
-    }
-
-    /**
-     * **Deprecated**: This endpoint is deprecated and will be removed in the future.  Public access to machines will be migrated to a read-only API key based mechanism.  Updates the public visibility status of a machine. When a machine is public,  its data can be accessed without authentication through public endpoints.  **Authorization** - API token is required in the `Authorization` header  **Permissions** - `machines:write` permission is required  **Side effects** - Updates `is_public` flag on the machine 
-     * Update machine public visibility
-     * @deprecated
-     */
-    async updateMachinePublic(requestParameters: MachineApiUpdateMachinePublicOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UpdateMachinePublicResponse> {
-        const response = await this.updateMachinePublicRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
 }

@@ -2414,7 +2414,7 @@
       "get": {
         "operationId": "getCustomizeAsset",
         "summary": "Get customize asset",
-        "description": "Serves a resolved HTML or Svelte JavaScript asset.\nAuthenticated requests can resolve account-specific DB templates.\nUnauthenticated public machine requests can resolve only non-account-specific theme files.\nMachine and group assets include resource query parameters so scoped API tokens can be rechecked.\n",
+        "description": "Serves a resolved HTML or Svelte JavaScript asset.\nAuthenticated requests can resolve account-specific DB templates.\nMachine and group assets include resource query parameters so scoped API tokens can be rechecked.\n",
         "tags": [
           "Customizes"
         ],
@@ -2475,18 +2475,6 @@
               "type": "string"
             },
             "description": "Group context for group view assets."
-          },
-          {
-            "name": "public",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "1"
-              ]
-            },
-            "description": "Public machine asset marker."
           }
         ],
         "responses": {
@@ -2524,8 +2512,19 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenPermissions"
           }
-        }
+        },
+        "security": [
+          {
+            "ApiToken": []
+          }
+        ]
       }
     },
     "/api/1/machine/{machine_id}/customizes": {
@@ -2570,48 +2569,6 @@
           },
           "404": {
             "description": "Machine not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/1/machine/{machine_id}/customizes/public": {
-      "get": {
-        "operationId": "getPublicMachineCustomizes",
-        "summary": "Get public machine customizes",
-        "description": "Resolves customization assets for a public machine page.\nAccount-specific DB templates and controller widgets are not used by this unauthenticated endpoint.\n",
-        "tags": [
-          "Customizes"
-        ],
-        "parameters": [
-          {
-            "name": "machine_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Customizes resolved successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CustomizeResolveResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Machine not found or not public",
             "content": {
               "application/json": {
                 "schema": {
@@ -8428,75 +8385,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/1/machine/{machine_id}/public": {
-      "post": {
-        "tags": [
-          "Machine"
-        ],
-        "security": [
-          {
-            "ApiToken": []
-          }
-        ],
-        "deprecated": true,
-        "summary": "Update machine public visibility",
-        "description": "**Deprecated**: This endpoint is deprecated and will be removed in the future.\n\nPublic access to machines will be migrated to a read-only API key based mechanism.\n\nUpdates the public visibility status of a machine. When a machine is public,\n\nits data can be accessed without authentication through public endpoints.\n\n**Authorization**\n- API token is required in the `Authorization` header\n\n**Permissions**\n- `machines:write` permission is required\n\n**Side effects**\n- Updates `is_public` flag on the machine\n",
-        "operationId": "updateMachinePublic",
-        "parameters": [
-          {
-            "name": "machine_id",
-            "in": "path",
-            "required": true,
-            "description": "The unique identifier of the machine",
-            "schema": {
-              "type": "string",
-              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateMachinePublicRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully updated machine public visibility",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateMachinePublicResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request - is_public parameter is missing",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                },
-                "example": {
-                  "error": "is_public is required"
-                }
-              }
-            }
-          },
-          "401": {
-            "$ref": "#/components/responses/Unauthorized"
-          },
-          "403": {
-            "$ref": "#/components/responses/ForbiddenPermissions"
           }
         }
       }
@@ -14991,7 +14879,7 @@
             "format": "date-time"
           },
           "is_public": {
-            "description": "Whether the machine is publicly accessible",
+            "description": "Legacy visibility flag retained for compatibility; anonymous machine access is disabled.",
             "example": false,
             "type": "boolean"
           }
@@ -18108,32 +17996,6 @@
           }
         },
         "description": "Response containing machine's assigned groups"
-      },
-      "UpdateMachinePublicRequest": {
-        "type": "object",
-        "required": [
-          "is_public"
-        ],
-        "properties": {
-          "is_public": {
-            "type": "boolean",
-            "description": "Whether the machine should be publicly accessible",
-            "example": true
-          }
-        },
-        "description": "Request body for updating machine public visibility"
-      },
-      "UpdateMachinePublicResponse": {
-        "type": "object",
-        "required": [
-          "machine"
-        ],
-        "properties": {
-          "machine": {
-            "$ref": "#/components/schemas/Machine"
-          }
-        },
-        "description": "Response containing updated machine with new public visibility status"
       },
       "UpdateInstallConfigRequest": {
         "type": "object",

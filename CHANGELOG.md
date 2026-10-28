@@ -14,6 +14,11 @@
 - Generated API coverage for Account Intelligence and updated account, event,
   notification, audit-log, unit-state and other Now API contracts.
 
+### Removed
+
+- Legacy anonymous machine customization and public visibility operations.
+  The matching server paths are retired; use authenticated machine and asset APIs.
+
 ### Upgrade notes
 
 - Preserve all public 0.1.15 client namespaces, HTTP error conversion to
@@ -32,8 +37,9 @@
 - Stream and Account Intelligence features require compatible server endpoints
   and permissions. This package does not enable server features or migrate data.
 
-This candidate was generated from obniz-machines master
-`ca956a11f441d447fb6646774a44ad517728a63d`.
+The base candidate was generated from obniz-machines master
+`ca956a11f441d447fb6646774a44ad517728a63d`. The public-machine
+retirement changes follow `fix/retire-public-machine-access` at `287e588d9`.
 
 ## 0.1.15
 

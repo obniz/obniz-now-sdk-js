@@ -3,8 +3,9 @@
 ## Prepared 0.2.0 candidate
 
 The manifest and lockfile already contain version **0.2.0**. Do not bump the
-version again for this candidate. The generated source corresponds to
-obniz-machines master `ca956a11f441d447fb6646774a44ad517728a63d`.
+version again for this candidate. Its base API source is obniz-machines master
+`ca956a11f441d447fb6646774a44ad517728a63d`; the public-machine
+retirement changes follow `fix/retire-public-machine-access` at `287e588d9`.
 
 Before publication, review and merge the SDK candidate into this repository's
 `main` branch, then validate the exact commit to be tagged:

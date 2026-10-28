@@ -2,66 +2,6 @@
 export const browserRoutePolicies = [
   {
     "method": "GET",
-    "path": "/api/1/analytics/:analytics_model_id/results/public",
-    "expression": "^\\/api\\/1\\/analytics(?:\\/([^/]+?))\\/results\\/public\\/?$",
-    "flags": "i",
-    "parameters": [
-      "analytics_model_id"
-    ],
-    "variants": [
-      {
-        "match": "default",
-        "allowed": false
-      }
-    ]
-  },
-  {
-    "method": "GET",
-    "path": "/api/1/machine/:machine_id/public",
-    "expression": "^\\/api\\/1\\/machine(?:\\/([^/]+?))\\/public\\/?$",
-    "flags": "i",
-    "parameters": [
-      "machine_id"
-    ],
-    "variants": [
-      {
-        "match": "default",
-        "allowed": false
-      }
-    ]
-  },
-  {
-    "method": "GET",
-    "path": "/api/1/units/:unit_id/history/public",
-    "expression": "^\\/api\\/1\\/units(?:\\/([^/]+?))\\/history\\/public\\/?$",
-    "flags": "i",
-    "parameters": [
-      "unit_id"
-    ],
-    "variants": [
-      {
-        "match": "default",
-        "allowed": false
-      }
-    ]
-  },
-  {
-    "method": "GET",
-    "path": "/api/1/units/:unit_id/load/public",
-    "expression": "^\\/api\\/1\\/units(?:\\/([^/]+?))\\/load\\/public\\/?$",
-    "flags": "i",
-    "parameters": [
-      "unit_id"
-    ],
-    "variants": [
-      {
-        "match": "default",
-        "allowed": false
-      }
-    ]
-  },
-  {
-    "method": "GET",
     "path": "/api/1/docs/*",
     "expression": "^\\/api\\/1\\/docs\\/(.*)\\/?$",
     "flags": "i",
@@ -773,17 +713,6 @@ export const browserRoutePolicies = [
       "extension"
     ],
     "variants": [
-      {
-        "match": {
-          "params": {
-            "category": "machine"
-          },
-          "query": {
-            "public": "1"
-          }
-        },
-        "allowed": false
-      },
       {
         "match": "default",
         "allowed": true
@@ -1511,36 +1440,6 @@ export const browserRoutePolicies = [
       {
         "match": "default",
         "allowed": true
-      }
-    ]
-  },
-  {
-    "method": "GET",
-    "path": "/api/1/machine/:machine_id/customizes/public",
-    "expression": "^\\/api\\/1\\/machine(?:\\/([^/]+?))\\/customizes\\/public\\/?$",
-    "flags": "i",
-    "parameters": [
-      "machine_id"
-    ],
-    "variants": [
-      {
-        "match": "default",
-        "allowed": false
-      }
-    ]
-  },
-  {
-    "method": "POST",
-    "path": "/api/1/machine/:machine_id/public",
-    "expression": "^\\/api\\/1\\/machine(?:\\/([^/]+?))\\/public\\/?$",
-    "flags": "i",
-    "parameters": [
-      "machine_id"
-    ],
-    "variants": [
-      {
-        "match": "default",
-        "allowed": false
       }
     ]
   },

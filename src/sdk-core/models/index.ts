@@ -6299,7 +6299,7 @@ export interface Machine {
      */
     updated_at: string;
     /**
-     * Whether the machine is publicly accessible
+     * Legacy visibility flag; anonymous machine access is disabled.
      * @type {boolean}
      * @memberof Machine
      */
@@ -9738,32 +9738,6 @@ export interface UpdateIntegrationRequest {
      * @memberof UpdateIntegrationRequest
      */
     credentials?: { [key: string]: any; };
-}
-/**
- * Request body for updating machine public visibility
- * @export
- * @interface UpdateMachinePublicRequest
- */
-export interface UpdateMachinePublicRequest {
-    /**
-     * Whether the machine should be publicly accessible
-     * @type {boolean}
-     * @memberof UpdateMachinePublicRequest
-     */
-    is_public: boolean;
-}
-/**
- * Response containing updated machine with new public visibility status
- * @export
- * @interface UpdateMachinePublicResponse
- */
-export interface UpdateMachinePublicResponse {
-    /**
-     * 
-     * @type {Machine}
-     * @memberof UpdateMachinePublicResponse
-     */
-    machine: Machine;
 }
 /**
  * Request body for updating machine name and/or metadata. At least one of name or metadata is required.

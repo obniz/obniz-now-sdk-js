@@ -33,7 +33,6 @@ export interface CustomizesApiGetCustomizeAssetRequest {
     extension: GetCustomizeAssetExtensionEnum;
     machineId?: string;
     groupId?: string;
-    _public?: GetCustomizeAssetPublicEnum;
 }
 
 export interface CustomizesApiGetGroupCustomizesRequest {
@@ -41,10 +40,6 @@ export interface CustomizesApiGetGroupCustomizesRequest {
 }
 
 export interface CustomizesApiGetMachineCustomizesRequest {
-    machineId: string;
-}
-
-export interface CustomizesApiGetPublicMachineCustomizesRequest {
     machineId: string;
 }
 
@@ -97,7 +92,7 @@ export class CustomizesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Serves a resolved HTML or Svelte JavaScript asset. Authenticated requests can resolve account-specific DB templates. Unauthenticated public machine requests can resolve only non-account-specific theme files. Machine and group assets include resource query parameters so scoped API tokens can be rechecked. 
+     * Serves a resolved HTML or Svelte JavaScript asset. Authenticated requests can resolve account-specific DB templates. Machine and group assets include resource query parameters so scoped API tokens can be rechecked.
      * Get customize asset
      */
     async getCustomizeAssetRaw(requestParameters: CustomizesApiGetCustomizeAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
@@ -139,11 +134,11 @@ export class CustomizesApi extends runtime.BaseAPI {
             queryParameters['group_id'] = requestParameters['groupId'];
         }
 
-        if (requestParameters['_public'] != null) {
-            queryParameters['public'] = requestParameters['_public'];
-        }
-
         const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiToken authentication
+        }
 
         const response = await this.request({
             path: `/api/1/customizes/assets/{category}/{model}/{version}.{extension}`.replace(`{${"category"}}`, encodeURIComponent(String(requestParameters['category']))).replace(`{${"model"}}`, encodeURIComponent(String(requestParameters['model']))).replace(`{${"version"}}`, encodeURIComponent(String(requestParameters['version']))).replace(`{${"extension"}}`, encodeURIComponent(String(requestParameters['extension']))),
@@ -160,7 +155,7 @@ export class CustomizesApi extends runtime.BaseAPI {
     }
 
     /**
-     * Serves a resolved HTML or Svelte JavaScript asset. Authenticated requests can resolve account-specific DB templates. Unauthenticated public machine requests can resolve only non-account-specific theme files. Machine and group assets include resource query parameters so scoped API tokens can be rechecked. 
+     * Serves a resolved HTML or Svelte JavaScript asset. Authenticated requests can resolve account-specific DB templates. Machine and group assets include resource query parameters so scoped API tokens can be rechecked.
      * Get customize asset
      */
     async getCustomizeAsset(requestParameters: CustomizesApiGetCustomizeAssetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
@@ -246,40 +241,6 @@ export class CustomizesApi extends runtime.BaseAPI {
         return await response.value();
     }
 
-    /**
-     * Resolves customization assets for a public machine page. Account-specific DB templates and controller widgets are not used by this unauthenticated endpoint. 
-     * Get public machine customizes
-     */
-    async getPublicMachineCustomizesRaw(requestParameters: CustomizesApiGetPublicMachineCustomizesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CustomizeResolveResponse>> {
-        if (requestParameters['machineId'] == null) {
-            throw new runtime.RequiredError(
-                'machineId',
-                'Required parameter "machineId" was null or undefined when calling getPublicMachineCustomizes().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/api/1/machine/{machine_id}/customizes/public`.replace(`{${"machine_id"}}`, encodeURIComponent(String(requestParameters['machineId']))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response);
-    }
-
-    /**
-     * Resolves customization assets for a public machine page. Account-specific DB templates and controller widgets are not used by this unauthenticated endpoint. 
-     * Get public machine customizes
-     */
-    async getPublicMachineCustomizes(requestParameters: CustomizesApiGetPublicMachineCustomizesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CustomizeResolveResponse> {
-        const response = await this.getPublicMachineCustomizesRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
 
 }
 
@@ -291,10 +252,3 @@ export const GetCustomizeAssetExtensionEnum = {
     Js: 'js'
 } as const;
 export type GetCustomizeAssetExtensionEnum = typeof GetCustomizeAssetExtensionEnum[keyof typeof GetCustomizeAssetExtensionEnum];
-/**
- * @export
- */
-export const GetCustomizeAssetPublicEnum = {
-    _1: '1'
-} as const;
-export type GetCustomizeAssetPublicEnum = typeof GetCustomizeAssetPublicEnum[keyof typeof GetCustomizeAssetPublicEnum];
